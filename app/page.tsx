@@ -13,7 +13,7 @@ export default function Home() {
 
   const statusText = useMemo(() => {
     if (state === "generating") {
-      return "Planning scenes, writing a composition, and rendering an MP4 locally...";
+      return "Directing a storyboard, drawing SVG motion, and rendering an MP4 locally...";
     }
 
     if (state === "complete") {
@@ -63,11 +63,11 @@ export default function Home() {
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.48em] text-amber-200/75">Aster MVP</p>
             <h1 className="mt-7 font-[var(--font-display)] text-5xl leading-[0.92] tracking-[-0.07em] md:text-7xl">
-              Turn a question into a cinematic mini lesson.
+              Turn a question into a liquid-glass mini lesson.
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-8 text-stone-200/75">
-              Ask anything you are trying to understand. Aster asks OpenAI for a teaching plan,
-              writes a Hyperframes composition, renders it locally, and gives you an MP4.
+              Ask anything you are trying to understand. Aster directs a visual storyboard,
+              draws safe SVG diagrams, renders a Hyperframes composition, and gives you an MP4.
             </p>
           </div>
 
@@ -108,9 +108,9 @@ export default function Home() {
               ) : (
                 <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.16),transparent_30rem)] p-10 text-center">
                   <div>
-                    <p className="text-sm font-bold uppercase tracking-[0.32em] text-amber-200/70">Preview</p>
+                    <p className="text-sm font-bold uppercase tracking-[0.32em] text-stone-300/70">Preview</p>
                     <p className="mt-4 max-w-md text-2xl font-semibold leading-snug text-stone-100">
-                      Your generated Hyperframes MP4 will appear here after rendering.
+                      Your monochrome liquid-glass lesson will appear here after rendering.
                     </p>
                   </div>
                 </div>
@@ -118,27 +118,27 @@ export default function Home() {
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <InfoCard label="Pipeline" value="OpenAI JSON -> Hyperframes HTML -> MP4" />
+              <InfoCard label="Pipeline" value="Storyboard -> SVG motion -> MP4" />
               <InfoCard label="Storage" value={result ? result.video.jobId : "Local generated job"} />
             </div>
 
             {result ? (
-              <div className="mt-6 flex-1 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5">
-                <p className="text-sm font-bold uppercase tracking-[0.28em] text-amber-200/70">Scene Plan</p>
+              <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5">
+                <p className="text-sm font-bold uppercase tracking-[0.28em] text-stone-300/70">Rendered Lesson</p>
                 <h2 className="mt-4 font-[var(--font-display)] text-4xl leading-none tracking-[-0.05em]">
-                  {result.plan.title}
+                  {result.title}
                 </h2>
-                <p className="mt-3 text-stone-300">{result.plan.objective}</p>
-                <div className="mt-5 space-y-3">
-                  {result.plan.scenes.map((scene, index) => (
-                    <details key={`${scene.title}-${index}`} className="rounded-2xl bg-black/20 p-4">
-                      <summary className="cursor-pointer font-semibold text-stone-100">
-                        {index + 1}. {scene.title}
-                      </summary>
-                      <p className="mt-3 text-sm leading-6 text-stone-300">{scene.narration}</p>
-                      <p className="mt-2 text-sm text-amber-100/80">{scene.emphasis}</p>
-                    </details>
-                  ))}
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <a
+                    href={result.video.publicUrl}
+                    download
+                    className="rounded-full border border-white/15 bg-white/90 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-stone-950 transition hover:bg-white"
+                  >
+                    Download MP4
+                  </a>
+                  <span className="rounded-full border border-white/10 px-5 py-3 text-sm text-stone-300">
+                    Job {result.video.jobId}
+                  </span>
                 </div>
               </div>
             ) : null}

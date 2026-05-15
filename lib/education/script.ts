@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { parseScenePlan, type ScenePlan } from "./schema";
+import { parseStoryboard, type Storyboard } from "./schema";
 
 type ChatCompletionRequest = {
   model: string;
@@ -21,7 +21,7 @@ type ChatCompletionResponse = {
   }>;
 };
 
-export type ScenePlannerClient = {
+export type StoryboardPlannerClient = {
   chat: {
     completions: {
       create(request: ChatCompletionRequest): Promise<ChatCompletionResponse>;
@@ -29,17 +29,17 @@ export type ScenePlannerClient = {
   };
 };
 
-type CreateScenePlanOptions = {
-  client?: ScenePlannerClient;
+type CreateStoryboardOptions = {
+  client?: StoryboardPlannerClient;
   model?: string;
 };
 
 const DEFAULT_MODEL = "gpt-4.1-mini";
 
-export async function createScenePlan(
+export async function createStoryboard(
   question: string,
-  options: CreateScenePlanOptions = {},
-): Promise<ScenePlan> {
+  options: CreateStoryboardOptions = {},
+): Promise<Storyboard> {
   const trimmedQuestion = question.trim();
 
   if (!trimmedQuestion) {
@@ -57,11 +57,11 @@ export async function createScenePlan(
       {
         role: "system",
         content:
-          "You are an expert teacher and video lesson director. Return only valid JSON that matches the requested schema.",
+          "You are an expert teacher, motion designer, and video director. Return only valid JSON that matches the requested schema.",
       },
       {
         role: "user",
-        content: buildScenePlanPrompt(trimmedQuestion),
+        content: buildStoryboardPrompt(trimmedQuestion),
       },
     ],
   });
@@ -69,35 +69,53 @@ export async function createScenePlan(
   const rawContent = response.choices[0]?.message.content;
 
   if (!rawContent) {
-    throw new Error("OpenAI returned an empty scene plan");
+    throw new Error("OpenAI returned an empty storyboard");
   }
 
-  return parseScenePlan(JSON.parse(rawContent));
+  return parseStoryboard(JSON.parse(rawContent));
 }
 
-function buildScenePlanPrompt(question: string): string {
-  return `Create a short educational video plan for this question: "${question}".
+function buildStoryboardPrompt(question: string): string {
+  return `Create a visual-first educational video storyboard for this question: "${question}".
 
 Return JSON with exactly this shape:
 {
-  "title": "short video title",
-  "objective": "one sentence learning objective",
-  "audience": "who this is for",
-  "durationSeconds": 24,
+  "lesson": {
+    "title": "short video title",
+    "coreIdea": "one sentence learning objective",
+    "learnerLevel": "who this is for",
+    "durationSeconds": 24
+  },
+  "style": "monochromeLiquidGlass",
   "scenes": [
     {
       "title": "scene title",
       "narration": "one or two spoken sentences, concrete and intuitive",
-      "visual": "specific visual direction for the animation",
-      "emphasis": "short on-screen phrase or formula"
+      "onScreenText": "short sparse text, formula, or key phrase",
+      "visualMetaphor": "specific visual metaphor for a black-and-white liquid-glass animation",
+      "diagram": {
+        "type": "fractionBars | flow | particles | numberLine | comparison | equationTransform | orbit | wave | blankCanvas",
+        "label": "short diagram label",
+        "values": ["up to eight short labels, numbers, formulas, or concepts"]
+      },
+      "motionBeats": [
+        {
+          "type": "drawPath | morphBlob | revealText | pulseNode | slidePanel | transformEquation | scatterParticles",
+          "target": "ambient | scene | diagram | equation | keyLine | particles",
+          "at": 0.8
+        }
+      ]
     }
   ]
 }
 
 Rules:
 - Use 4 scenes.
+- Set style exactly to "monochromeLiquidGlass".
 - Keep durationSeconds between 20 and 30.
 - Explain by analogy, then principle, then example, then recap.
 - Avoid jargon unless you define it immediately.
-- Make every visual feasible with text, simple shapes, and motion graphics.`;
+- Make every visual feasible with SVG, text, simple shapes, particles, linework, and GSAP motion.
+- Do not include HTML, CSS, JavaScript, markdown, image URLs, or arbitrary code.
+- Prefer sparse on-screen text over paragraphs.`;
 }

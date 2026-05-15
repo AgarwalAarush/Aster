@@ -1,49 +1,60 @@
 import { describe, expect, it } from "vitest";
 import { createVideoFromQuestion } from "./create";
-import type { ScenePlan } from "../education/schema";
+import type { Storyboard } from "../education/schema";
 
-const plan: ScenePlan = {
-  title: "Why the sky is blue",
-  objective: "Explain scattering with a simple light analogy.",
-  audience: "curious learner",
-  durationSeconds: 24,
+const storyboard: Storyboard = {
+  lesson: {
+    title: "Why the sky is blue",
+    coreIdea: "Air scatters shorter blue wavelengths across the sky.",
+    learnerLevel: "curious learner",
+    durationSeconds: 24,
+  },
+  style: "monochromeLiquidGlass",
   scenes: [
     {
       title: "Sunlight arrives",
       narration: "White sunlight carries many colors as it enters the air.",
-      visual: "A white beam enters a field of small air dots.",
-      emphasis: "sunlight contains many colors",
+      onScreenText: "Sunlight enters the atmosphere",
+      visualMetaphor: "A white wave passes through glass particles.",
+      diagram: { type: "wave", label: "white light", values: ["white", "blue", "red"] },
+      motionBeats: [{ type: "drawPath", target: "diagram", at: 0.8 }],
     },
     {
       title: "Tiny particles",
       narration: "Air molecules scatter shorter blue waves more than red waves.",
-      visual: "Blue waves bounce outward while red waves pass through.",
-      emphasis: "blue scatters more",
+      onScreenText: "Blue scatters more",
+      visualMetaphor: "Small bright particles redirect thin white lines.",
+      diagram: { type: "particles", label: "scatter", values: ["air", "blue"] },
+      motionBeats: [{ type: "scatterParticles", target: "particles", at: 1 }],
     },
     {
       title: "Every direction",
       narration: "Scattered blue light reaches your eyes from all across the sky.",
-      visual: "Blue arrows arrive from the whole dome above.",
-      emphasis: "blue comes from everywhere",
+      onScreenText: "Light reaches you from every direction",
+      visualMetaphor: "A dome of fine lines bends toward an eye.",
+      diagram: { type: "orbit", label: "sky dome", values: ["sky", "eye"] },
+      motionBeats: [{ type: "pulseNode", target: "diagram", at: 1.2 }],
     },
     {
       title: "The recap",
       narration: "The sky looks blue because air redirects blue light toward us.",
-      visual: "A final sky dome fills with soft blue.",
-      emphasis: "air redirects blue light",
+      onScreenText: "Air redirects blue light",
+      visualMetaphor: "A black lens reveals a clean white takeaway.",
+      diagram: { type: "flow", label: "light path", values: ["sun", "air", "eye"] },
+      motionBeats: [{ type: "revealText", target: "keyLine", at: 1.4 }],
     },
   ],
 };
 
 describe("createVideoFromQuestion", () => {
-  it("creates a scene plan and renders it into a video response", async () => {
+  it("creates a storyboard and returns a product-facing video response", async () => {
     const result = await createVideoFromQuestion("Why is the sky blue?", {
-      planQuestion: async (question) => {
+      planStoryboard: async (question) => {
         expect(question).toBe("Why is the sky blue?");
-        return plan;
+        return storyboard;
       },
-      renderPlan: async (scenePlan, question) => {
-        expect(scenePlan).toBe(plan);
+      renderStoryboard: async (visualStoryboard, question) => {
+        expect(visualStoryboard).toBe(storyboard);
         expect(question).toBe("Why is the sky blue?");
         return {
           jobId: "job-abc",
@@ -55,7 +66,8 @@ describe("createVideoFromQuestion", () => {
     });
 
     expect(result.video.publicUrl).toBe("/renders/job-abc.mp4");
-    expect(result.plan.title).toBe("Why the sky is blue");
+    expect(result.title).toBe("Why the sky is blue");
+    expect("storyboard" in result).toBe(false);
   });
 
   it("rejects very short questions before doing expensive work", async () => {
@@ -63,11 +75,11 @@ describe("createVideoFromQuestion", () => {
 
     await expect(
       createVideoFromQuestion("why?", {
-        planQuestion: async () => {
+        planStoryboard: async () => {
           called = true;
-          return plan;
+          return storyboard;
         },
-        renderPlan: async () => {
+        renderStoryboard: async () => {
           called = true;
           throw new Error("should not render");
         },

@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
-import type { ScenePlan } from "../education/schema";
+import type { Storyboard } from "../education/schema";
 import { generateCompositionHtml } from "./composition";
 
 const execFileAsync = promisify(execFile);
@@ -18,7 +18,7 @@ export type RunCommand = (
   options: RunCommandOptions,
 ) => Promise<void>;
 
-type RenderScenePlanOptions = {
+type RenderStoryboardOptions = {
   generatedRoot?: string;
   rendersRoot?: string;
   jobId?: string;
@@ -33,10 +33,10 @@ export type RenderResult = {
   publicUrl: string;
 };
 
-export async function renderScenePlan(
-  plan: ScenePlan,
+export async function renderStoryboard(
+  storyboard: Storyboard,
   question: string,
-  options: RenderScenePlanOptions = {},
+  options: RenderStoryboardOptions = {},
 ): Promise<RenderResult> {
   const jobId = options.jobId ?? randomUUID();
   const quality = options.quality ?? process.env.HYPERFRAMES_RENDER_QUALITY ?? "standard";
@@ -51,9 +51,9 @@ export async function renderScenePlan(
 
   await mkdir(jobDir, { recursive: true });
   await mkdir(rendersRoot, { recursive: true });
-  await writeFile(join(jobDir, "index.html"), generateCompositionHtml(plan, question), "utf8");
+  await writeFile(join(jobDir, "index.html"), generateCompositionHtml(storyboard, question), "utf8");
   await writeFile(join(jobDir, "question.txt"), question, "utf8");
-  await writeFile(join(jobDir, "scene-plan.json"), `${JSON.stringify(plan, null, 2)}\n`, "utf8");
+  await writeFile(join(jobDir, "storyboard.json"), `${JSON.stringify(storyboard, null, 2)}\n`, "utf8");
 
   await runCommand("npx", ["hyperframes", "lint", jobDir], {});
   await runCommand(

@@ -1,14 +1,14 @@
-import type { ScenePlan } from "../education/schema";
+import type { Storyboard } from "../education/schema";
 import type { RenderResult } from "../hyperframes/render";
 
 type CreateVideoDependencies = {
-  planQuestion?: (question: string) => Promise<ScenePlan>;
-  renderPlan?: (plan: ScenePlan, question: string) => Promise<RenderResult>;
+  planStoryboard?: (question: string) => Promise<Storyboard>;
+  renderStoryboard?: (storyboard: Storyboard, question: string) => Promise<RenderResult>;
 };
 
 export type CreateVideoResponse = {
   question: string;
-  plan: ScenePlan;
+  title: string;
   video: {
     jobId: string;
     publicUrl: string;
@@ -25,16 +25,16 @@ export async function createVideoFromQuestion(
     throw new Error("Enter a more specific question");
   }
 
-  const planQuestion =
-    dependencies.planQuestion ?? (await import("../education/script")).createScenePlan;
-  const renderPlan =
-    dependencies.renderPlan ?? (await import("../hyperframes/render")).renderScenePlan;
-  const plan = await planQuestion(normalizedQuestion);
-  const render = await renderPlan(plan, normalizedQuestion);
+  const planStoryboard =
+    dependencies.planStoryboard ?? (await import("../education/script")).createStoryboard;
+  const renderStoryboard =
+    dependencies.renderStoryboard ?? (await import("../hyperframes/render")).renderStoryboard;
+  const storyboard = await planStoryboard(normalizedQuestion);
+  const render = await renderStoryboard(storyboard, normalizedQuestion);
 
   return {
     question: normalizedQuestion,
-    plan,
+    title: storyboard.lesson.title,
     video: {
       jobId: render.jobId,
       publicUrl: render.publicUrl,
