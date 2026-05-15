@@ -39,11 +39,14 @@ export async function renderScenePlan(
   options: RenderScenePlanOptions = {},
 ): Promise<RenderResult> {
   const jobId = options.jobId ?? randomUUID();
-  const generatedRoot = options.generatedRoot ?? join(process.cwd(), "generated");
-  const rendersRoot = options.rendersRoot ?? join(process.cwd(), "public", "renders");
   const quality = options.quality ?? process.env.HYPERFRAMES_RENDER_QUALITY ?? "standard";
-  const jobDir = join(generatedRoot, jobId);
-  const outputPath = join(rendersRoot, `${jobId}.mp4`);
+  const jobDir = options.generatedRoot
+    ? join(options.generatedRoot, jobId)
+    : join(process.cwd(), "generated", jobId);
+  const rendersRoot = options.rendersRoot ?? join(process.cwd(), "public", "renders");
+  const outputPath = options.rendersRoot
+    ? join(options.rendersRoot, `${jobId}.mp4`)
+    : join(process.cwd(), "public", "renders", `${jobId}.mp4`);
   const runCommand = options.runCommand ?? runCommandWithExecFile;
 
   await mkdir(jobDir, { recursive: true });

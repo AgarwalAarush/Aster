@@ -1,6 +1,5 @@
 import type { ScenePlan } from "../education/schema";
-import { createScenePlan } from "../education/script";
-import { renderScenePlan, type RenderResult } from "../hyperframes/render";
+import type { RenderResult } from "../hyperframes/render";
 
 type CreateVideoDependencies = {
   planQuestion?: (question: string) => Promise<ScenePlan>;
@@ -26,8 +25,10 @@ export async function createVideoFromQuestion(
     throw new Error("Enter a more specific question");
   }
 
-  const planQuestion = dependencies.planQuestion ?? createScenePlan;
-  const renderPlan = dependencies.renderPlan ?? renderScenePlan;
+  const planQuestion =
+    dependencies.planQuestion ?? (await import("../education/script")).createScenePlan;
+  const renderPlan =
+    dependencies.renderPlan ?? (await import("../hyperframes/render")).renderScenePlan;
   const plan = await planQuestion(normalizedQuestion);
   const render = await renderPlan(plan, normalizedQuestion);
 
