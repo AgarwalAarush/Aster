@@ -1,0 +1,12 @@
+.env
+.env*.local
+.next/
+node_modules/
+generated/*
+!generated/.gitkeep
+public/renders/*
+!public/renders/.gitkeep
+coverage/
+dist/
+*.tsbuildinfo
+npm-debug.log*
