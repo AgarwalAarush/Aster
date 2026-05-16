@@ -13,7 +13,7 @@ export default function Home() {
 
   const statusText = useMemo(() => {
     if (state === "generating") {
-      return "Directing a storyboard, drawing SVG motion, and rendering an MP4 locally...";
+      return "Planning a whiteboard lesson and rendering 1080p locally...";
     }
 
     if (state === "complete") {
@@ -64,11 +64,11 @@ export default function Home() {
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.48em] text-neutral-500">Aster Studio</p>
             <h1 className="mt-7 font-[var(--font-display)] text-5xl leading-[0.92] tracking-[-0.07em] text-neutral-950 md:text-7xl">
-              Turn a question into a liquid-glass mini lesson.
+              Turn a question into a whiteboard lesson.
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-8 text-neutral-600">
-              Ask anything you are trying to understand. Aster directs a visual storyboard,
-              draws safe SVG diagrams, renders a Hyperframes composition, and gives you an MP4.
+              Ask anything you are trying to understand. Aster plans a continuous whiteboard
+              lesson with payoff, staircase, and destination, then renders a 1080p MP4 locally.
             </p>
           </div>
 
@@ -121,7 +121,7 @@ export default function Home() {
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <InfoCard label="Pipeline" value="Storyboard -> SVG motion -> MP4" />
+              <InfoCard label="Pipeline" value="Lesson plan -> Whiteboard timeline -> MP4" />
               <InfoCard label="Storage" value={result ? result.video.jobId : "Local generated job"} />
             </div>
 

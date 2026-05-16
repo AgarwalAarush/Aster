@@ -2,59 +2,50 @@ import { mkdtemp, readFile, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { renderStoryboard } from "./render";
-import type { Storyboard } from "../education/schema";
+import { renderLesson } from "./render.ts";
+import type { LectureLesson } from "../education/loop/schema.ts";
 
-const storyboard: Storyboard = {
-  lesson: {
+const lesson: LectureLesson = {
+  id: "ice-floats-001",
+  topic: {
+    id: "ice-floats",
     title: "Why ice floats",
-    coreIdea: "Ice floats because it is less dense than liquid water.",
-    learnerLevel: "curious learner",
-    durationSeconds: 24,
+    question: "Why does ice float on water?",
+    domain: "ml-dl",
   },
-  style: "monochromeLiquidGlass",
-  scenes: [
-    {
-      title: "The surprise",
-      narration: "Ice floats because frozen water takes up more space than liquid water.",
-      onScreenText: "More space, same stuff",
-      visualMetaphor: "A white cube rises through a black liquid plane.",
-      diagram: { type: "comparison", label: "ice and water", values: ["ice", "water"] },
-      motionBeats: [{ type: "slidePanel", target: "scene", at: 0.2 }],
-    },
-    {
-      title: "Density",
-      narration: "Density compares how much matter is packed into each bit of space.",
-      onScreenText: "Density = matter per space",
-      visualMetaphor: "Packed and sparse particles sit in adjacent lenses.",
-      diagram: { type: "particles", label: "packing", values: ["dense", "spread"] },
-      motionBeats: [{ type: "scatterParticles", target: "particles", at: 1 }],
-    },
-    {
-      title: "Water expands",
-      narration: "When water freezes, its molecules lock into an open crystal pattern.",
-      onScreenText: "Freezing opens the structure",
-      visualMetaphor: "Particles snap into a crystal lattice.",
-      diagram: { type: "flow", label: "freezing", values: ["liquid", "open", "solid"] },
-      motionBeats: [{ type: "pulseNode", target: "diagram", at: 1 }],
-    },
-    {
-      title: "The result",
-      narration: "That open structure makes ice less dense, so it rides on top.",
-      onScreenText: "Less dense floats",
-      visualMetaphor: "A final cube floats in a liquid-glass frame.",
-      diagram: { type: "numberLine", label: "density line", values: ["less", "more"] },
-      motionBeats: [{ type: "revealText", target: "keyLine", at: 1.4 }],
-    },
-  ],
+  promptVariant: { id: "whiteboard-v2", name: "Whiteboard v2 test fixture" },
+  metadata: { generator: "openai-via-test", createdAt: "2026-05-15T00:00:00Z" },
+  lesson: {
+    title: "Why Ice Floats on Water",
+    learnerLevel: "curious learner",
+    durationSeconds: 90,
+    payoff: "Ice is roughly 9 percent less dense than liquid water, so it always floats",
+    staircase: ["density definition", "water expands when frozen", "less dense floats"],
+    destination:
+      "You will hold the rule density = mass / volume and know that ice has lower density than liquid water due to its open hexagonal crystal structure",
+  },
+  narration: {
+    fullText:
+      "narration full text body that is long enough to satisfy the minimum one hundred and twenty character requirement here ok",
+    beats: [
+      { atSec: 0, text: "first beat of narration content", whyThisBeat: "introduce the topic rung one" },
+      { atSec: 45, text: "second beat closes the lesson", whyThisBeat: "wrap rung two cleanly" },
+    ],
+  },
+  board: {
+    actions: [
+      { at: 0, kind: "write", targetId: "title_lbl", content: "Why Ice Floats", region: "top-left" },
+      { at: 10, kind: "draw", targetId: "diagram_1", content: "water molecules in lattice", region: "center" },
+    ],
+  },
 };
 
-describe("renderStoryboard", () => {
-  it("writes a composition and runs Hyperframes lint before render", async () => {
+describe("renderLesson", () => {
+  it("writes a whiteboard composition and runs Hyperframes lint before render", async () => {
     const root = await mkdtemp(join(tmpdir(), "aster-render-"));
     const commands: Array<{ command: string; args: string[]; cwd?: string }> = [];
 
-    const result = await renderStoryboard(storyboard, "Why does ice float?", {
+    const result = await renderLesson(lesson, "Why does ice float?", {
       generatedRoot: join(root, "generated"),
       rendersRoot: join(root, "renders"),
       jobId: "job-123",
@@ -67,8 +58,8 @@ describe("renderStoryboard", () => {
     await expect(readFile(join(root, "generated", "job-123", "question.txt"), "utf8")).resolves.toBe(
       "Why does ice float?",
     );
-    await expect(readFile(join(root, "generated", "job-123", "storyboard.json"), "utf8")).resolves.toContain(
-      "monochromeLiquidGlass",
+    await expect(readFile(join(root, "generated", "job-123", "lesson.json"), "utf8")).resolves.toContain(
+      "whiteboard-v2",
     );
     expect(result.publicUrl).toBe("/renders/job-123.mp4");
     expect(commands).toEqual([

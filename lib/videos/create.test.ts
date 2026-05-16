@@ -1,60 +1,51 @@
 import { describe, expect, it } from "vitest";
-import { createVideoFromQuestion } from "./create";
-import type { Storyboard } from "../education/schema";
+import { createVideoFromQuestion } from "./create.ts";
+import type { LectureLesson } from "../education/loop/schema.ts";
 
-const storyboard: Storyboard = {
-  lesson: {
+const lesson: LectureLesson = {
+  id: "sky-blue-001",
+  topic: {
+    id: "sky-blue",
     title: "Why the sky is blue",
-    coreIdea: "Air scatters shorter blue wavelengths across the sky.",
-    learnerLevel: "curious learner",
-    durationSeconds: 24,
+    question: "Why is the sky blue?",
+    domain: "ml-dl",
   },
-  style: "monochromeLiquidGlass",
-  scenes: [
-    {
-      title: "Sunlight arrives",
-      narration: "White sunlight carries many colors as it enters the air.",
-      onScreenText: "Sunlight enters the atmosphere",
-      visualMetaphor: "A white wave passes through glass particles.",
-      diagram: { type: "wave", label: "white light", values: ["white", "blue", "red"] },
-      motionBeats: [{ type: "drawPath", target: "diagram", at: 0.8 }],
-    },
-    {
-      title: "Tiny particles",
-      narration: "Air molecules scatter shorter blue waves more than red waves.",
-      onScreenText: "Blue scatters more",
-      visualMetaphor: "Small bright particles redirect thin white lines.",
-      diagram: { type: "particles", label: "scatter", values: ["air", "blue"] },
-      motionBeats: [{ type: "scatterParticles", target: "particles", at: 1 }],
-    },
-    {
-      title: "Every direction",
-      narration: "Scattered blue light reaches your eyes from all across the sky.",
-      onScreenText: "Light reaches you from every direction",
-      visualMetaphor: "A dome of fine lines bends toward an eye.",
-      diagram: { type: "orbit", label: "sky dome", values: ["sky", "eye"] },
-      motionBeats: [{ type: "pulseNode", target: "diagram", at: 1.2 }],
-    },
-    {
-      title: "The recap",
-      narration: "The sky looks blue because air redirects blue light toward us.",
-      onScreenText: "Air redirects blue light",
-      visualMetaphor: "A black lens reveals a clean white takeaway.",
-      diagram: { type: "flow", label: "light path", values: ["sun", "air", "eye"] },
-      motionBeats: [{ type: "revealText", target: "keyLine", at: 1.4 }],
-    },
-  ],
+  promptVariant: { id: "whiteboard-v2", name: "Whiteboard v2 test fixture" },
+  metadata: { generator: "openai-via-test", createdAt: "2026-05-15T00:00:00Z" },
+  lesson: {
+    title: "Why the Sky Is Blue",
+    learnerLevel: "curious learner",
+    durationSeconds: 90,
+    payoff: "Blue light scatters about ten times more than red light, painting the whole sky",
+    staircase: ["sunlight is many colors", "air scatters short wavelengths"],
+    destination:
+      "You will hold the rule that Rayleigh scattering goes as one over wavelength to the fourth power, explaining why blue dominates",
+  },
+  narration: {
+    fullText:
+      "narration full text body that is long enough to satisfy the minimum one hundred and twenty character requirement here ok",
+    beats: [
+      { atSec: 0, text: "sunlight enters the air", whyThisBeat: "introduce the topic rung one" },
+      { atSec: 45, text: "blue light scatters most", whyThisBeat: "wrap rung two cleanly" },
+    ],
+  },
+  board: {
+    actions: [
+      { at: 0, kind: "write", targetId: "title_lbl", content: "Why the Sky Is Blue", region: "top-left" },
+      { at: 10, kind: "draw", targetId: "diagram_1", content: "white light splits into colors", region: "center" },
+    ],
+  },
 };
 
 describe("createVideoFromQuestion", () => {
-  it("creates a storyboard and returns a product-facing video response", async () => {
+  it("creates a lesson and returns a product-facing video response", async () => {
     const result = await createVideoFromQuestion("Why is the sky blue?", {
-      planStoryboard: async (question) => {
+      planLesson: async (question) => {
         expect(question).toBe("Why is the sky blue?");
-        return storyboard;
+        return lesson;
       },
-      renderStoryboard: async (visualStoryboard, question) => {
-        expect(visualStoryboard).toBe(storyboard);
+      renderLesson: async (lessonArg, question) => {
+        expect(lessonArg).toBe(lesson);
         expect(question).toBe("Why is the sky blue?");
         return {
           jobId: "job-abc",
@@ -66,8 +57,8 @@ describe("createVideoFromQuestion", () => {
     });
 
     expect(result.video.publicUrl).toBe("/renders/job-abc.mp4");
-    expect(result.title).toBe("Why the sky is blue");
-    expect("storyboard" in result).toBe(false);
+    expect(result.title).toBe("Why the Sky Is Blue");
+    expect("lesson" in result).toBe(false);
   });
 
   it("rejects very short questions before doing expensive work", async () => {
@@ -75,11 +66,11 @@ describe("createVideoFromQuestion", () => {
 
     await expect(
       createVideoFromQuestion("why?", {
-        planStoryboard: async () => {
+        planLesson: async () => {
           called = true;
-          return storyboard;
+          return lesson;
         },
-        renderStoryboard: async () => {
+        renderLesson: async () => {
           called = true;
           throw new Error("should not render");
         },

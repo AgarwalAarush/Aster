@@ -3,8 +3,8 @@ import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
-import type { Storyboard } from "../education/schema";
-import { generateCompositionHtml } from "./composition";
+import type { LectureLesson } from "../education/loop/schema.ts";
+import { generateWhiteboardHtml } from "./whiteboard-composition.ts";
 
 const execFileAsync = promisify(execFile);
 
@@ -18,7 +18,7 @@ export type RunCommand = (
   options: RunCommandOptions,
 ) => Promise<void>;
 
-type RenderStoryboardOptions = {
+type RenderLessonOptions = {
   generatedRoot?: string;
   rendersRoot?: string;
   jobId?: string;
@@ -33,10 +33,10 @@ export type RenderResult = {
   publicUrl: string;
 };
 
-export async function renderStoryboard(
-  storyboard: Storyboard,
+export async function renderLesson(
+  lesson: LectureLesson,
   question: string,
-  options: RenderStoryboardOptions = {},
+  options: RenderLessonOptions = {},
 ): Promise<RenderResult> {
   const jobId = options.jobId ?? randomUUID();
   const quality = options.quality ?? process.env.HYPERFRAMES_RENDER_QUALITY ?? "standard";
@@ -51,9 +51,9 @@ export async function renderStoryboard(
 
   await mkdir(jobDir, { recursive: true });
   await mkdir(rendersRoot, { recursive: true });
-  await writeFile(join(jobDir, "index.html"), generateCompositionHtml(storyboard, question), "utf8");
+  await writeFile(join(jobDir, "index.html"), generateWhiteboardHtml(lesson, question), "utf8");
   await writeFile(join(jobDir, "question.txt"), question, "utf8");
-  await writeFile(join(jobDir, "storyboard.json"), `${JSON.stringify(storyboard, null, 2)}\n`, "utf8");
+  await writeFile(join(jobDir, "lesson.json"), `${JSON.stringify(lesson, null, 2)}\n`, "utf8");
 
   await runCommand("npx", ["hyperframes", "lint", jobDir], {});
   await runCommand(
