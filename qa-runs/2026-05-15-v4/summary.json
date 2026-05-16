@@ -1,0 +1,216 @@
+{
+  "sweepId": "2026-05-15-v4",
+  "promptVariantIds": [
+    "whiteboard-v4"
+  ],
+  "subjectCount": 5,
+  "recommendedCount": 5,
+  "mean": 91.4,
+  "median": 92,
+  "min": 87,
+  "max": 94,
+  "perSubject": [
+    {
+      "subjectId": "bayes-rule",
+      "domain": "probability-stats",
+      "difficulty": "intro",
+      "percent": 94,
+      "totalScore": 94,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Payoff and beat at t=150 claim '900x jump from 0.1% to 4.7%' but actual factor is ~47x; correct the arithmetic",
+        "Proportionality tagline repeated 3 times; tighten to two instances",
+        "'False-positive rate' introduced as informal label for P(E|not-H) before unpacking; brief gloss on first use"
+      ]
+    },
+    {
+      "subjectId": "dynamic-programming",
+      "domain": "cs-theory",
+      "difficulty": "intermediate",
+      "percent": 94,
+      "totalScore": 94,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Beat at 225s introduces 'edit distance' without definition for intermediate learners; either define briefly or replace with self-contained second example",
+        "Pacing at 225s is rushed: two distinct complexity analyses packed into one 25s beat",
+        "Optimal substructure appears third in staircase but is introduced first in narration; reorder staircase to match"
+      ]
+    },
+    {
+      "subjectId": "em-algorithm",
+      "domain": "classical-ml",
+      "difficulty": "advanced",
+      "percent": 92,
+      "totalScore": 92,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Beat at t=130 conflates M-step maximization and convergence inequality; split into two beats",
+        "Summary beat at t=218 restates convergence guarantee nearly verbatim from t=155; convert to pure mnemonic ('lift-and-shift')",
+        "ASCII 'q parallel p' notation in fullText inconsistent with '||' used elsewhere; standardize"
+      ]
+    },
+    {
+      "subjectId": "dropout-regularization",
+      "domain": "ml-dl",
+      "difficulty": "intro",
+      "percent": 90,
+      "totalScore": 90,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "fullText narration describes 'scaled by one-over-p' (inverted dropout convention) mid-explanation before inverted dropout is introduced -- conflates the two variants",
+        "'Co-adapted' (key technical term) used without definition",
+        "Beat at 200s carries two distinct ideas (inverted dropout + closing summary) in single ~40s beat"
+      ]
+    },
+    {
+      "subjectId": "eigenvectors-pca",
+      "domain": "pure-math",
+      "difficulty": "intermediate",
+      "percent": 87,
+      "totalScore": 87,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Top-right region congestion: by t=215 holds goal_label, cov_matrix_def, constraint_label, ranking_label, pc2_note simultaneously without erasure",
+        "PC2 mentioned in narration but never drawn orthogonal to PC1 on data cloud; missed visual reinforcement of orthogonality",
+        "Lagrange-multiplier beat at t=110 (40s) packs Lagrangian + gradient + eigenvector conclusion in one beat; split for clarity"
+      ]
+    }
+  ],
+  "perCriterion": [
+    {
+      "id": "pacing-and-density",
+      "meanScore": 8.2,
+      "maxScore": 10,
+      "meanPercent": 82,
+      "lowestSubjectId": "dropout-regularization",
+      "lowestScore": 8
+    },
+    {
+      "id": "redundancy-and-focus",
+      "meanScore": 7,
+      "maxScore": 8,
+      "meanPercent": 87.5,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 7
+    },
+    {
+      "id": "board-coherence",
+      "meanScore": 8.8,
+      "maxScore": 10,
+      "meanPercent": 88,
+      "lowestSubjectId": "eigenvectors-pca",
+      "lowestScore": 8
+    },
+    {
+      "id": "narration-clarity",
+      "meanScore": 10.8,
+      "maxScore": 12,
+      "meanPercent": 90,
+      "lowestSubjectId": "eigenvectors-pca",
+      "lowestScore": 10
+    },
+    {
+      "id": "math-notation-correctness",
+      "meanScore": 9,
+      "maxScore": 10,
+      "meanPercent": 90,
+      "lowestSubjectId": "dropout-regularization",
+      "lowestScore": 8
+    },
+    {
+      "id": "staircase-coherence",
+      "meanScore": 9.2,
+      "maxScore": 10,
+      "meanPercent": 92,
+      "lowestSubjectId": "dropout-regularization",
+      "lowestScore": 9
+    },
+    {
+      "id": "board-specificity",
+      "meanScore": 9.2,
+      "maxScore": 10,
+      "meanPercent": 92,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 9
+    },
+    {
+      "id": "payoff-concreteness",
+      "meanScore": 7.6,
+      "maxScore": 8,
+      "meanPercent": 95,
+      "lowestSubjectId": "dropout-regularization",
+      "lowestScore": 7
+    },
+    {
+      "id": "code-content-decision",
+      "meanScore": 5.8,
+      "maxScore": 6,
+      "meanPercent": 96.7,
+      "lowestSubjectId": "eigenvectors-pca",
+      "lowestScore": 5
+    },
+    {
+      "id": "board-visual-balance",
+      "meanScore": 7.8,
+      "maxScore": 8,
+      "meanPercent": 97.5,
+      "lowestSubjectId": "eigenvectors-pca",
+      "lowestScore": 7
+    },
+    {
+      "id": "destination-precision",
+      "meanScore": 8,
+      "maxScore": 8,
+      "meanPercent": 100,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    }
+  ],
+  "commonIssues": [
+    {
+      "issue": "payoff and beat at t=150 claim '900x jump from 0.1% to 4.7%' but actual factor is ~47x; correct the arithmetic",
+      "count": 1
+    },
+    {
+      "issue": "proportionality tagline repeated 3 times; tighten to two instances",
+      "count": 1
+    },
+    {
+      "issue": "'false-positive rate' introduced as informal label for p(e|not-h) before unpacking; brief gloss on first use",
+      "count": 1
+    },
+    {
+      "issue": "fulltext narration describes 'scaled by one-over-p' (inverted dropout convention) mid-explanation before inverted dropout is introduced -- conflates the two variants",
+      "count": 1
+    },
+    {
+      "issue": "'co-adapted' (key technical term) used without definition",
+      "count": 1
+    },
+    {
+      "issue": "beat at 200s carries two distinct ideas (inverted dropout + closing summary) in single ~40s beat",
+      "count": 1
+    },
+    {
+      "issue": "beat at 225s introduces 'edit distance' without definition for intermediate learners; either define briefly or replace with self-contained second example",
+      "count": 1
+    },
+    {
+      "issue": "pacing at 225s is rushed: two distinct complexity analyses packed into one 25s beat",
+      "count": 1
+    },
+    {
+      "issue": "optimal substructure appears third in staircase but is introduced first in narration; reorder staircase to match",
+      "count": 1
+    },
+    {
+      "issue": "top-right region congestion: by t=215 holds goal_label, cov_matrix_def, constraint_label, ranking_label, pc2_note simultaneously without erasure",
+      "count": 1
+    }
+  ]
+}

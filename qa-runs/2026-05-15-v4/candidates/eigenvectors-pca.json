@@ -1,0 +1,219 @@
+{
+  "id": "eigenvectors-pca-v4-001",
+  "topic": {
+    "id": "eigenvectors-pca",
+    "title": "Eigenvectors and PCA",
+    "question": "Why are PCA's principal components the eigenvectors of the data covariance matrix, ranked by eigenvalue?",
+    "domain": "pure-math"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v4",
+    "name": "Whiteboard prompt v4 - board state coherence check"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T12:00:00Z"
+  },
+  "lesson": {
+    "title": "Why PCA Principal Components Are Eigenvectors of the Covariance Matrix",
+    "learnerLevel": "undergraduates who know linear algebra and basic statistics",
+    "durationSeconds": 240,
+    "payoff": "PCA's eigenvector decomposition lets you compress a 1000-dimensional dataset to 10 dimensions capturing over 90% of variance with a single matrix multiply -- no exhaustive search over all possible projection directions needed",
+    "staircase": [
+      "variance as the projection goal",
+      "covariance matrix encodes all pairwise spreads",
+      "maximizing variance as a constrained optimization -- the Rayleigh quotient",
+      "Lagrange multiplier condition forces the eigenvector equation",
+      "eigenvalue equals captured variance",
+      "ranking eigenvectors by eigenvalue ranks them by variance"
+    ],
+    "destination": "The sample covariance matrix C satisfies C u = lambda u where u is a unit direction and lambda is the variance of the data projected onto u; the principal components are the eigenvectors of C ordered so lambda_1 >= lambda_2 >= ... >= lambda_d, because solving the constrained variance-maximization problem via Lagrange multipliers directly produces this eigenvector equation"
+  },
+  "narration": {
+    "fullText": "Suppose we have a dataset of n points in d dimensions. We want a single direction -- a unit vector u -- that captures as much spread in the data as possible. That spread is measured by variance: the average squared distance of each projected point from the projection mean. So PCA's goal is to find u maximizing the variance of the scalar projections u-transpose x_i. Now, the sample covariance matrix C -- defined as the average outer product of mean-centered data points, where mean-centered means we have subtracted the dataset mean from every point so the mean is zero -- encodes exactly those pairwise spreads. The variance of projections onto u equals u-transpose C u, which we call the Rayleigh quotient of C at u. We want to maximize u-transpose C u subject to the constraint u-transpose u equals 1, keeping u a unit vector. Introducing a Lagrange multiplier -- a scalar lambda that enforces the constraint by penalizing any deviation from unit length -- the optimality condition is the gradient of the Lagrangian equals zero, which gives C u equals lambda u. That is the eigenvector equation: u must be an eigenvector of C, and lambda is the corresponding eigenvalue. Substituting back, the variance captured equals u-transpose C u equals u-transpose lambda u equals lambda. So the eigenvalue lambda is not just an abstract algebraic quantity -- it literally equals the variance of the data along the direction u. The first principal component is the eigenvector with the largest eigenvalue lambda_1 because it captures the most variance; the second is the eigenvector with the next largest eigenvalue, orthogonal to the first, and so on. Every principal component is an eigenvector of C, ranked by eigenvalue, because the constrained optimization forces it.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Suppose we have a dataset of n points in d dimensions. We want a single direction -- a unit vector u -- that captures as much spread in the data as possible.",
+        "whyThisBeat": "variance as the projection goal"
+      },
+      {
+        "atSec": 20,
+        "text": "That spread is measured by variance: the average squared distance of each projected point from the projection mean. So PCA's goal is to find u maximizing the variance of the scalar projections u-transpose x_i.",
+        "whyThisBeat": "variance as the projection goal -- making the objective precise"
+      },
+      {
+        "atSec": 45,
+        "text": "Now, the sample covariance matrix C -- defined as the average outer product of mean-centered data points, where mean-centered means we have subtracted the dataset mean from every point so the mean is zero -- encodes exactly those pairwise spreads.",
+        "whyThisBeat": "covariance matrix encodes all pairwise spreads"
+      },
+      {
+        "atSec": 75,
+        "text": "The variance of projections onto u equals u-transpose C u, which we call the Rayleigh quotient of C at u. We want to maximize u-transpose C u subject to the constraint u-transpose u equals 1, keeping u a unit vector.",
+        "whyThisBeat": "maximizing variance as a constrained optimization -- the Rayleigh quotient"
+      },
+      {
+        "atSec": 110,
+        "text": "Introducing a Lagrange multiplier -- a scalar lambda that enforces the constraint by penalizing any deviation from unit length -- the optimality condition is the gradient of the Lagrangian equals zero, which gives C u equals lambda u.",
+        "whyThisBeat": "Lagrange multiplier condition forces the eigenvector equation"
+      },
+      {
+        "atSec": 150,
+        "text": "That is the eigenvector equation: u must be an eigenvector of C, and lambda is the corresponding eigenvalue. Substituting back, the variance captured equals u-transpose C u equals u-transpose lambda u equals lambda.",
+        "whyThisBeat": "eigenvalue equals captured variance"
+      },
+      {
+        "atSec": 185,
+        "text": "So the eigenvalue lambda is not just an abstract algebraic quantity -- it literally equals the variance of the data along the direction u.",
+        "whyThisBeat": "eigenvalue equals captured variance -- cementing the interpretation"
+      },
+      {
+        "atSec": 200,
+        "text": "The first principal component is the eigenvector with the largest eigenvalue lambda_1 because it captures the most variance; the second is the eigenvector with the next largest eigenvalue, orthogonal to the first, and so on. Every principal component is an eigenvector of C, ranked by eigenvalue, because the constrained optimization forces it.",
+        "whyThisBeat": "ranking eigenvectors by eigenvalue ranks them by variance"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title_label",
+        "content": "PCA: Why Eigenvectors?",
+        "region": "top-center"
+      },
+      {
+        "at": 10,
+        "kind": "draw",
+        "targetId": "data_cloud",
+        "content": "2D scatter cloud of roughly 20 points arranged in an elongated ellipse tilted at about 30 degrees from horizontal, with horizontal axis labeled x_1 and vertical axis labeled x_2, centered near the origin, points drawn as small filled circles",
+        "region": "left-half"
+      },
+      {
+        "at": 22,
+        "kind": "write",
+        "targetId": "goal_label",
+        "content": "Goal: find unit vector u maximizing Var(u^T x_i)",
+        "region": "top-right"
+      },
+      {
+        "at": 35,
+        "kind": "draw",
+        "targetId": "pc1_arrow",
+        "content": "bold arrow from the origin pointing in the direction of the elongated axis of the data cloud (about 30 degrees above horizontal), labeled u (PC1), length spanning most of the cloud",
+        "region": "left-half"
+      },
+      {
+        "at": 48,
+        "kind": "write",
+        "targetId": "cov_matrix_def",
+        "content": "C = (1/n) sum_i x_i x_i^T   (mean-centered: mean already subtracted)",
+        "region": "top-right"
+      },
+      {
+        "at": 60,
+        "kind": "write",
+        "targetId": "rayleigh_eq",
+        "content": "Var(u^T x_i) = u^T C u",
+        "region": "right-half"
+      },
+      {
+        "at": 78,
+        "kind": "write",
+        "targetId": "constraint_label",
+        "content": "subject to: u^T u = 1",
+        "region": "right-half"
+      },
+      {
+        "at": 80,
+        "kind": "draw",
+        "targetId": "projection_diagram",
+        "content": "single data point p drawn as a filled circle above the PC1 arrow in the left-half diagram, with a dashed perpendicular line dropping from p to the nearest point on the u arrow, and that foot labeled u^T p (the scalar projection)",
+        "region": "left-half"
+      },
+      {
+        "at": 112,
+        "kind": "write",
+        "targetId": "lagrangian_eq",
+        "content": "L(u,lambda) = u^T C u - lambda (u^T u - 1)",
+        "region": "right-half"
+      },
+      {
+        "at": 125,
+        "kind": "write",
+        "targetId": "gradient_eq",
+        "content": "dL/du = 0  =>  2Cu - 2 lambda u = 0  =>  Cu = lambda u",
+        "region": "right-half"
+      },
+      {
+        "at": 140,
+        "kind": "draw",
+        "targetId": "eigen_box",
+        "content": "rectangle drawn around the equation Cu = lambda u with a bold border, labeled eigenvector equation below it",
+        "region": "right-half"
+      },
+      {
+        "at": 152,
+        "kind": "highlight",
+        "targetId": "gradient_eq",
+        "content": "underline Cu = lambda u in red to mark it as the key result",
+        "region": "right-half"
+      },
+      {
+        "at": 165,
+        "kind": "write",
+        "targetId": "variance_chain",
+        "content": "Var = u^T C u = u^T (lambda u) = lambda (u^T u) = lambda",
+        "region": "right-half"
+      },
+      {
+        "at": 180,
+        "kind": "highlight",
+        "targetId": "variance_chain",
+        "content": "box the final equality = lambda in blue to show eigenvalue equals captured variance",
+        "region": "right-half"
+      },
+      {
+        "at": 188,
+        "kind": "erase",
+        "targetId": "lagrangian_eq",
+        "content": "all"
+      },
+      {
+        "at": 190,
+        "kind": "write",
+        "targetId": "ranking_label",
+        "content": "Rank eigenvectors: lambda_1 >= lambda_2 >= ... >= lambda_d",
+        "region": "top-right"
+      },
+      {
+        "at": 200,
+        "kind": "highlight",
+        "targetId": "pc1_arrow",
+        "content": "thicken the PC1 arrow and annotate it with lambda_1 = max variance direction",
+        "region": "left-half"
+      },
+      {
+        "at": 215,
+        "kind": "write",
+        "targetId": "pc2_note",
+        "content": "PC2: eigenvector for lambda_2, orthogonal to PC1",
+        "region": "top-right"
+      },
+      {
+        "at": 225,
+        "kind": "highlight",
+        "targetId": "ranking_label",
+        "content": "circle lambda_1 in green to emphasize it is the largest eigenvalue and thus the first principal component",
+        "region": "top-right"
+      },
+      {
+        "at": 230,
+        "kind": "erase",
+        "targetId": "title_label",
+        "content": "all"
+      }
+    ]
+  }
+}

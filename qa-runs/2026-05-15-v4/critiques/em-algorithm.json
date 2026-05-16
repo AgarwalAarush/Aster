@@ -1,0 +1,94 @@
+{
+  "candidateId": "em-algorithm-v4-001",
+  "subjectId": "em-algorithm",
+  "promptVariantId": "whiteboard-v4",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 8,
+      "notes": "Exact O(N*K) per iteration vs 2^N brute-force with explicit asymptotic contrast."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Six rungs prerequisite. Minor: monotone-convergence rung overlaps with destination."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "Exact identity log p(X;theta) = ELBO + KL, E-step rule, M-step ELBO maximization, likelihood inequality."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 11,
+      "notes": "All symbols defined: MLE, ELBO, KL, argmax, ell, r_ik. Minor: 'ell' as log-likelihood symbol not explicitly named."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 9,
+      "notes": "Central diagram very specific. E-step zoomed copy slightly renderer-dependent."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Highlight targets correctly written first. Minor: summary_label region reuses freed top-right space."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 8,
+      "notes": "Three distinct draws plus highlights. Excellent mix for geometric topic."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 9,
+      "notes": "All formulas correct. Minor: 'q parallel p' in fullText is unusual ASCII; board uses '||' consistently."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 6,
+      "notes": "Correct: log-sum-exp for stability, multivariate_normal.logpdf, weighted mean+covariance updates. Placed at t=172 matching GMM beat."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 8,
+      "notes": "11 beats / 240s. Beat at t=130 combines M-step + convergence implication."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 7,
+      "notes": "Stays focused. Convergence restated nearly verbatim across t=155 and t=218."
+    }
+  ],
+  "totalScore": 92,
+  "maxScore": 100,
+  "percent": 92,
+  "topThreeIssues": [
+    "Beat at t=130 conflates M-step maximization and convergence inequality; split into two beats",
+    "Summary beat at t=218 restates convergence guarantee nearly verbatim from t=155; convert to pure mnemonic ('lift-and-shift')",
+    "ASCII 'q parallel p' notation in fullText inconsistent with '||' used elsewhere; standardize"
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "High-quality plan correctly executing the geometric EM proof via ELBO-KL decomposition with concrete formulas, well-sequenced staircase, and numerically stable GMM code. Main weaknesses: slightly overloaded beat at t=130 and near-verbatim convergence restatement in summary."
+}

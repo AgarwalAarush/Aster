@@ -1,0 +1,38 @@
+Sweep: 2026-05-15-v4
+Prompt variant(s): whiteboard-v4
+Subjects critiqued: 5
+Mean: 91.4%   Median: 92%   Min: 87%   Max: 94%
+Recommended for pipeline: 5 / 5
+
+Per subject (sorted by percent, descending):
+  94 %  probability-stats   intro         bayes-rule [REC]
+  94 %  cs-theory           intermediate  dynamic-programming [REC]
+  92 %  classical-ml        advanced      em-algorithm [REC]
+  90 %  ml-dl               intro         dropout-regularization [REC]
+  87 %  pure-math           intermediate  eigenvectors-pca [REC]
+
+Per criterion (sorted by mean percent, ascending — worst first):
+  pct%  mean/max  criterion-id                       lowest-subject
+  82    8.2/10    pacing-and-density                dropout-regularization (8)
+  87.5  7/8       redundancy-and-focus              bayes-rule (7)
+  88    8.8/10    board-coherence                   eigenvectors-pca (8)
+  90    10.8/12   narration-clarity                 eigenvectors-pca (10)
+  90    9/10      math-notation-correctness         dropout-regularization (8)
+  92    9.2/10    staircase-coherence               dropout-regularization (9)
+  92    9.2/10    board-specificity                 bayes-rule (9)
+  95    7.6/8     payoff-concreteness               dropout-regularization (7)
+  96.7  5.8/6     code-content-decision             eigenvectors-pca (5)
+  97.5  7.8/8     board-visual-balance              eigenvectors-pca (7)
+  100   8/8       destination-precision             bayes-rule (8)
+
+Most common issues raised across subjects:
+  x1  payoff and beat at t=150 claim '900x jump from 0.1% to 4.7%' but actual factor is ~47x; correct the arithmetic
+  x1  proportionality tagline repeated 3 times; tighten to two instances
+  x1  'false-positive rate' introduced as informal label for p(e|not-h) before unpacking; brief gloss on first use
+  x1  fulltext narration describes 'scaled by one-over-p' (inverted dropout convention) mid-explanation before inverted dropout is introduced -- …
+  x1  'co-adapted' (key technical term) used without definition
+  x1  beat at 200s carries two distinct ideas (inverted dropout + closing summary) in single ~40s beat
+  x1  beat at 225s introduces 'edit distance' without definition for intermediate learners; either define briefly or replace with self-contained …
+  x1  pacing at 225s is rushed: two distinct complexity analyses packed into one 25s beat
+  x1  optimal substructure appears third in staircase but is introduced first in narration; reorder staircase to match
+  x1  top-right region congestion: by t=215 holds goal_label, cov_matrix_def, constraint_label, ranking_label, pc2_note simultaneously without er…

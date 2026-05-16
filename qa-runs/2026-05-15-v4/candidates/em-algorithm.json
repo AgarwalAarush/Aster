@@ -1,0 +1,222 @@
+{
+  "id": "em-algorithm-v4-001",
+  "topic": {
+    "id": "em-algorithm",
+    "title": "Expectation-Maximization",
+    "question": "How does the EM algorithm find local maxima of likelihood for latent-variable models, and why does it always converge?",
+    "domain": "classical-ml"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v4",
+    "name": "Whiteboard prompt v4 - board state coherence check"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "EM: Climbing Likelihood Without Seeing the Labels",
+    "learnerLevel": "graduate students and ML practitioners familiar with MLE and basic probability",
+    "durationSeconds": 240,
+    "payoff": "EM fits a K-component mixture model in O(N*K) work per iteration; the naive brute-force enumeration over all hidden-label assignments would require 2^N evaluations -- exponential in the dataset size.",
+    "staircase": [
+      "latent-variable models and why direct MLE is intractable",
+      "the log-likelihood decomposed into ELBO plus KL divergence",
+      "E-step: choosing q to collapse the KL gap to zero",
+      "M-step: maximizing the ELBO over theta to raise the likelihood",
+      "the monotone convergence guarantee: each full iteration never decreases the log-likelihood",
+      "concrete GMM responsibility formula instantiating the abstract steps"
+    ],
+    "destination": "You will hold the identity log p(X;theta) = ELBO(q,theta) + KL(q || p(Z|X,theta)), understand that the E-step sets q = p(Z|X,theta^old) making KL=0 so ELBO equals the log-likelihood, and that the M-step then maximizes that ELBO over theta, proving ell(theta^new) >= ell(theta^old) at every iteration."
+  },
+  "narration": {
+    "fullText": "Suppose your data X were produced by a latent-variable model -- a data-generating process, meaning the probability model assumed to have produced the observations, that involves hidden variables Z you never observe. In a Gaussian mixture model, Z is the unobserved cluster assignment for each point. Direct MLE -- maximum-likelihood estimation, choosing the parameter value theta that makes the observed data most probable -- requires summing over all possible Z, giving a log of a sum that resists closed-form optimization. A brute-force search over all 2^N label assignments is exponential and completely infeasible. EM escapes this trap through a geometric insight. The log-likelihood ell of theta decomposes exactly as ell(theta) equals ELBO(q, theta) plus KL(q parallel p(Z given X, theta)). Here ELBO stands for evidence lower bound -- a function of both a distribution q over Z and the parameter theta that sits below the log-likelihood and is computable without evaluating that intractable sum. KL divergence measures how much the auxiliary distribution q differs from the true posterior over Z; it is always non-negative, so the ELBO is always a lower bound on ell. Picture this on the board: a smooth log-likelihood curve over a theta axis, and below it a lower-bound curve that touches the likelihood at one point. The gap between the curves at any theta is exactly the KL divergence. The E-step chooses q to be the exact posterior p(Z given X, theta^old), which drives KL to zero, making the ELBO kiss the likelihood curve at theta^old. The M-step then finds theta^new as the argmax -- the argument, meaning the input value, that produces the largest output -- of the ELBO over theta. Because the ELBO is now equal to the likelihood at theta^old and we are moving theta to increase it, we are guaranteed ell(theta^new) is at least ell(theta^old). This is the convergence proof in one sentence: each M-step maximizes a function that equals the log-likelihood at the current point, so the sequence of likelihoods is monotone non-decreasing. In the GMM concretely, with K components and mixing weights pi_k, the E-step computes responsibilities r_ik equals pi_k times N(x_i; mu_k, Sigma_k) divided by the sum over j of pi_j times N(x_i; mu_j, Sigma_j) -- that fraction is the posterior probability that point i came from cluster k. The M-step re-estimates mu_k as the responsibility-weighted mean of all points. The algorithm iterates until ell stops changing: no exponential search, just O(N times K) arithmetic per iteration, converging to a local maximum.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Suppose your data X were produced by a latent-variable model -- a data-generating process, meaning the probability model assumed to have produced the observations, that involves hidden variables Z you never observe. In a Gaussian mixture model, Z is the unobserved cluster assignment for each point.",
+        "whyThisBeat": "latent-variable models and why direct MLE is intractable"
+      },
+      {
+        "atSec": 22,
+        "text": "Direct MLE -- maximum-likelihood estimation, choosing the parameter value theta that makes the observed data most probable -- requires summing over all possible Z, giving a log of a sum with no closed form. Brute-force enumeration over all 2^N label assignments is exponential and completely infeasible.",
+        "whyThisBeat": "latent-variable models and why direct MLE is intractable"
+      },
+      {
+        "atSec": 45,
+        "text": "EM escapes this trap through a geometric insight. The log-likelihood ell of theta decomposes exactly as ell(theta) equals ELBO(q, theta) plus KL(q parallel p(Z given X, theta)).",
+        "whyThisBeat": "the log-likelihood decomposed into ELBO plus KL divergence"
+      },
+      {
+        "atSec": 62,
+        "text": "Here ELBO stands for evidence lower bound -- a function of both an auxiliary distribution q over Z and the parameter theta that sits below the log-likelihood and is computable without evaluating the intractable sum. KL divergence measures how much q differs from the true posterior; it is always non-negative, so the ELBO is always a lower bound.",
+        "whyThisBeat": "the log-likelihood decomposed into ELBO plus KL divergence"
+      },
+      {
+        "atSec": 88,
+        "text": "Picture this: a smooth log-likelihood curve over a theta axis, and below it a lower-bound curve. The gap between them at any theta is the KL divergence. They touch at exactly one point -- the current theta.",
+        "whyThisBeat": "the log-likelihood decomposed into ELBO plus KL divergence"
+      },
+      {
+        "atSec": 108,
+        "text": "The E-step chooses q to be the exact posterior p(Z given X, theta^old), which drives KL to zero, making the ELBO kiss the likelihood curve at theta^old. Now the lower bound and the likelihood are equal at the current parameter.",
+        "whyThisBeat": "E-step: choosing q to collapse the KL gap to zero"
+      },
+      {
+        "atSec": 130,
+        "text": "The M-step then finds theta^new as the argmax -- the input value that produces the largest output -- of the ELBO over theta. Because the ELBO equals the log-likelihood at theta^old and we move theta to increase it, ell(theta^new) is at least ell(theta^old).",
+        "whyThisBeat": "M-step: maximizing the ELBO over theta to raise the likelihood"
+      },
+      {
+        "atSec": 155,
+        "text": "This is the convergence proof: each M-step maximizes a function that equals the log-likelihood at the current point, so the sequence of likelihoods is monotone non-decreasing and converges to a local maximum.",
+        "whyThisBeat": "the monotone convergence guarantee: each full iteration never decreases the log-likelihood"
+      },
+      {
+        "atSec": 172,
+        "text": "In a Gaussian mixture with K components and mixing weights pi_k, the E-step computes the responsibility r_ik -- the posterior probability that point i came from cluster k -- as pi_k times N(x_i; mu_k, Sigma_k) divided by the normalizing sum over all components.",
+        "whyThisBeat": "concrete GMM responsibility formula instantiating the abstract steps"
+      },
+      {
+        "atSec": 197,
+        "text": "The M-step re-estimates mu_k as the responsibility-weighted mean of all points. The algorithm iterates until ell stops changing: no exponential search, just O(N times K) arithmetic per iteration, converging to a local maximum.",
+        "whyThisBeat": "concrete GMM responsibility formula instantiating the abstract steps"
+      },
+      {
+        "atSec": 218,
+        "text": "So EM is a lift-and-shift: E lifts the bound to touch the likelihood, M shifts theta to the new peak of that bound. Monotone convergence is baked into the geometry.",
+        "whyThisBeat": "the monotone convergence guarantee: each full iteration never decreases the log-likelihood"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title_lv_model",
+        "content": "Latent-variable model: observe X, hidden Z",
+        "region": "top-center"
+      },
+      {
+        "at": 8,
+        "kind": "write",
+        "targetId": "brute_force_cost",
+        "content": "Brute-force: 2^N label assignments -- exponential",
+        "region": "top-right"
+      },
+      {
+        "at": 15,
+        "kind": "draw",
+        "targetId": "likelihood_bound_diagram",
+        "content": "Smooth concave log-likelihood curve ell(theta) plotted over a horizontal theta axis spanning the full width; below it a second smooth curve labeled ELBO(q,theta) with a smaller hump; a vertical double-headed arrow between the two curves at a theta value three-quarters from the left, labeled KL gap; the two curves meet and touch at a point labeled theta^old with a filled dot",
+        "region": "center"
+      },
+      {
+        "at": 45,
+        "kind": "write",
+        "targetId": "decomp_eq",
+        "content": "ell(theta) = ELBO(q, theta) + KL(q || p(Z|X,theta))",
+        "region": "bottom-left"
+      },
+      {
+        "at": 62,
+        "kind": "highlight",
+        "targetId": "decomp_eq",
+        "content": "underline ELBO(q,theta) in blue to flag it as the computable lower bound",
+        "region": "bottom-left"
+      },
+      {
+        "at": 70,
+        "kind": "highlight",
+        "targetId": "decomp_eq",
+        "content": "circle KL(q || p(Z|X,theta)) in red to flag it as the always-nonnegative gap",
+        "region": "bottom-left"
+      },
+      {
+        "at": 80,
+        "kind": "highlight",
+        "targetId": "likelihood_bound_diagram",
+        "content": "draw a red double-headed arrow between the ell curve and the ELBO curve at the KL-gap position, labeling it KL >= 0",
+        "region": "center"
+      },
+      {
+        "at": 108,
+        "kind": "draw",
+        "targetId": "e_step_diagram",
+        "content": "A copy of the touching-point region of the likelihood_bound_diagram, zoomed in: the ell curve and ELBO curve now coincide at theta^old (gap collapses to zero), with a bracket labeled E-step: q = p(Z|X,theta^old), KL=0 pointing to the contact point",
+        "region": "bottom-right"
+      },
+      {
+        "at": 130,
+        "kind": "draw",
+        "targetId": "m_step_arrow",
+        "content": "On the shared theta axis of likelihood_bound_diagram, a rightward curved arrow from theta^old to a new point theta^new further right where the ELBO curve peaks, labeled M-step: argmax_theta ELBO; the ell curve is visibly higher at theta^new than at theta^old, with a small upward bracket labeled ell increases",
+        "region": "center-right"
+      },
+      {
+        "at": 145,
+        "kind": "write",
+        "targetId": "convergence_statement",
+        "content": "ell(theta^new) >= ell(theta^old)  [monotone non-decreasing]",
+        "region": "top-left"
+      },
+      {
+        "at": 155,
+        "kind": "highlight",
+        "targetId": "convergence_statement",
+        "content": "box the entire inequality ell(theta^new) >= ell(theta^old) in green as the convergence guarantee",
+        "region": "top-left"
+      },
+      {
+        "at": 165,
+        "kind": "erase",
+        "targetId": "brute_force_cost",
+        "content": "all"
+      },
+      {
+        "at": 172,
+        "kind": "write",
+        "targetId": "responsibility_eq",
+        "content": "r_ik = [pi_k * N(x_i; mu_k, Sigma_k)] / [sum_j pi_j * N(x_i; mu_j, Sigma_j)]",
+        "region": "right-half"
+      },
+      {
+        "at": 197,
+        "kind": "write",
+        "targetId": "m_step_mean_eq",
+        "content": "mu_k <- [sum_i r_ik * x_i] / [sum_i r_ik]   (M-step)",
+        "region": "right-half"
+      },
+      {
+        "at": 210,
+        "kind": "highlight",
+        "targetId": "responsibility_eq",
+        "content": "underline the numerator pi_k * N(x_i; mu_k, Sigma_k) in blue as the unnormalized posterior contribution of component k",
+        "region": "right-half"
+      },
+      {
+        "at": 218,
+        "kind": "write",
+        "targetId": "summary_label",
+        "content": "EM: E lifts bound to touch ell -- M shifts theta to new peak -- monotone convergence",
+        "region": "top-right"
+      },
+      {
+        "at": 228,
+        "kind": "highlight",
+        "targetId": "summary_label",
+        "content": "box the phrase monotone convergence in green",
+        "region": "top-right"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 172,
+      "language": "python",
+      "code": "import numpy as np\nfrom scipy.stats import multivariate_normal\n\ndef em_gmm(X, K, n_iter=50):\n    N, D = X.shape\n    pi = np.ones(K) / K\n    mu = X[np.random.choice(N, K, replace=False)]\n    Sigma = [np.eye(D) for _ in range(K)]\n\n    for _ in range(n_iter):\n        log_r = np.array([\n            np.log(pi[k] + 1e-300) + multivariate_normal.logpdf(X, mu[k], Sigma[k])\n            for k in range(K)\n        ]).T\n        log_r -= log_r.max(axis=1, keepdims=True)\n        r = np.exp(log_r); r /= r.sum(axis=1, keepdims=True)\n        Nk = r.sum(axis=0)\n        pi = Nk / N\n        mu = (r.T @ X) / Nk[:, None]\n        for k in range(K):\n            diff = X - mu[k]\n            Sigma[k] = (r[:, k:k+1] * diff).T @ diff / Nk[k]\n\n    return pi, mu, Sigma, r",
+      "purpose": "Makes the abstract E-step responsibility formula and M-step weighted-mean update concrete and runnable for a K-component Gaussian mixture, showing how O(N*K) arithmetic per iteration replaces exponential enumeration"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "candidateId": "bayes-rule-v4-001",
+  "subjectId": "bayes-rule",
+  "promptVariantId": "whiteboard-v4",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 8,
+      "notes": "1-in-1000 base rate, 900x shift, exact formula, three named applications. Quantified and sharp."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 10,
+      "notes": "Six rungs build cleanly. No gaps, no rung duplicates the destination."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "Explicitly states formula, normalizing constant role, proportionality."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 11,
+      "notes": "Nearly all symbols defined on first use. Minor: 'false-positive rate' label without unpacking."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 9,
+      "notes": "Tree and bar both renderer-executable. Minor leaf layout ambiguity."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Timeline well-ordered. Hook erased before bayes formula occupies same region. Minor right-half crowding."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 8,
+      "notes": "Two draws, multiple highlights/transforms/writes. Good mix."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 9,
+      "notes": "Formula correct. Arithmetic verified. ERROR: payoff says '900x jump from 0.1% to 4.7%' but actual factor is ~47x. Minor deduction since formula and arithmetic are correct; error is in interpretive gloss only."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 6,
+      "notes": "Correct omission for derivation."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 9,
+      "notes": "Nine beats / 210s averages 23s/beat. Last beat at t=185 leaves 25s closing window."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 7,
+      "notes": "Proportionality tagline repeated 3 times across t=135, t=185, t=195 plus narration."
+    }
+  ],
+  "totalScore": 94,
+  "maxScore": 100,
+  "percent": 94,
+  "topThreeIssues": [
+    "Payoff and beat at t=150 claim '900x jump from 0.1% to 4.7%' but actual factor is ~47x; correct the arithmetic",
+    "Proportionality tagline repeated 3 times; tighten to two instances",
+    "'False-positive rate' introduced as informal label for P(E|not-H) before unpacking; brief gloss on first use"
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "High-quality plan with precise destination, well-ordered staircase, fully specified board. One substantive error: posterior-to-prior ratio is ~47x not 900x as stated. Minor redundancy in proportionality tagline. Pipeline-ready aside from arithmetic gloss correction."
+}

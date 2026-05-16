@@ -1,0 +1,18 @@
+New sweep:     2026-05-15-v4 (whiteboard-v4)
+  mean=91.4%  min=87%  max=94%
+Champion:      2026-05-15-v2 (whiteboard-v2)
+  mean=91.2%  min=90%
+Mean delta:    +0.2pp
+Min delta:     -3.0pp
+Per-subject regressions (>3pp drop vs champion on a shared subject): 1
+  - eigenvectors-pca: 92% -> 87%
+
+Decision: REJECT
+Reason:   1 subject(s) regressed by >3pp
+
+Threshold check (mean>=90 & all-criteria-mean>=85 & all-subjects>=82):
+  mean>=90:           PASS  (91.4%)
+  per-criterion>=85:  FAIL  (worst: pacing-and-density 82%)
+  per-subject>=82:    PASS  (worst: eigenvectors-pca 87%)
+
+THRESHOLD NOT MET — continue iterating.

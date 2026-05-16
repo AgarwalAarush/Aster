@@ -1,0 +1,222 @@
+{
+  "id": "dynamic-programming-v4-001",
+  "topic": {
+    "id": "dynamic-programming",
+    "title": "Dynamic Programming",
+    "question": "Why does dynamic programming work, and how do optimal substructure and overlapping subproblems tell you when to use it?",
+    "domain": "cs-theory"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v4",
+    "name": "Whiteboard prompt v4 - board state coherence check"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Dynamic Programming: Optimal Substructure and Overlapping Subproblems",
+    "learnerLevel": "intermediate CS students who know recursion",
+    "durationSeconds": 250,
+    "payoff": "Naive recursive Fibonacci runs in O(2^n) time because it re-computes the same sub-answers exponentially many times; DP collapses all those redundant calls into at most n distinct computations, turning an exponential algorithm into a linear one -- a difference of billions of operations at n=50.",
+    "staircase": [
+      "naive recursion is exponential because of repeated work",
+      "overlapping subproblems: the same sub-problem recurs in multiple branches",
+      "optimal substructure: the optimal answer composes from optimal sub-answers",
+      "memoization caches sub-answers to avoid recomputation",
+      "tabulation fills a table bottom-up to the same effect",
+      "two-condition test tells you when DP applies"
+    ],
+    "destination": "You will hold the two necessary conditions for DP -- optimal substructure (the optimal solution to a problem is built from optimal solutions to its sub-problems) and overlapping subproblems (the recursion tree contains the same node more than once) -- and understand that satisfying both conditions justifies caching or tabulation, compressing O(2^n) branching into O(n) or O(n^2) unique computations depending on the problem."
+  },
+  "narration": {
+    "fullText": "Imagine you want to compute F of n, the nth Fibonacci number -- defined as F(n) = F(n-1) + F(n-2), with base cases F(0)=0 and F(1)=1. A straightforward recursive implementation branches into two calls at every step, so let me draw the call tree for F of 4. Notice that F(2) appears twice, once under F(3) and once directly under F(4). F(1) appears three times. In general, the naive recursion evaluates F(n) in O(2^n) time -- exponential -- because it recomputes the same sub-answers over and over. This repeated recomputation is the key pathology we will cure. To understand the cure, we need two definitions. The first is optimal substructure -- a problem has optimal substructure when an optimal solution to the whole problem is built entirely from optimal solutions to its sub-problems. For Fibonacci this is trivial -- F(n) is exactly F(n-1) plus F(n-2), so the correct answer decomposes into correct sub-answers. For shortest paths: the shortest path from A to C through B is the shortest path from A to B plus the shortest from B to C. Optimal substructure is what lets you write a correct recurrence. The second condition is overlapping subproblems -- meaning the same sub-problem instance appears in multiple branches of the recursion tree. Look at the tree: F(2) is computed in two separate branches. If sub-problems were all distinct, like in merge sort where each sub-array is unique, caching would buy nothing. But when sub-problems overlap, we can memoize -- that means store the answer the first time a sub-problem is solved, and look it up instantly for every future occurrence. Let me show the memoized call tree: F(2) is computed once, then all other calls to F(2) hit the cache and return immediately. The call tree collapses from an exponential bush to a linear chain of n unique nodes. Alternatively, we can go bottom-up with tabulation -- fill an array T where T[0]=0, T[1]=1, then T[i]=T[i-1]+T[i-2] for i from 2 to n -- no recursion at all, just a loop that builds the answer from smaller to larger sub-problems. So here is the two-condition test: before applying DP, ask: one, does the problem have optimal substructure -- can I write a correct recurrence? And two, does that recurrence have overlapping sub-problems -- does the call tree revisit the same node? If both answers are yes, DP -- either memoization or tabulation -- is applicable and will compress the cost to the number of distinct sub-problems times the cost to solve each one given its children. For Fibonacci that is O(n). For edit distance between two strings of lengths m and n, there are m times n distinct sub-problems, giving O(m n) total. The structure of the sub-problem space -- its size and shape -- determines the DP complexity.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Imagine you want to compute F of n, the nth Fibonacci number -- defined as F(n) = F(n-1) + F(n-2), with base cases F(0)=0 and F(1)=1. A straightforward recursive implementation branches into two calls at every step.",
+        "whyThisBeat": "introduce the running example and set up the exponential recursion"
+      },
+      {
+        "atSec": 18,
+        "text": "Let me draw the call tree for F of 4. F(4) calls F(3) and F(2). F(3) calls F(2) and F(1). F(2) calls F(1) and F(0). Notice F(2) appears twice, F(1) appears three times.",
+        "whyThisBeat": "make overlapping subproblems visible before naming them"
+      },
+      {
+        "atSec": 40,
+        "text": "In general the naive recursion evaluates F(n) in O(2^n) time -- exponential -- because it recomputes the same sub-answers over and over. This repeated recomputation is the key pathology we will cure.",
+        "whyThisBeat": "quantify the cost of naive recursion to motivate DP"
+      },
+      {
+        "atSec": 58,
+        "text": "To understand the cure, we need two definitions. The first is optimal substructure -- a problem has optimal substructure when an optimal solution to the whole problem is built entirely from optimal solutions to its sub-problems. For Fibonacci, F(n) is exactly F(n-1) plus F(n-2), so the correct answer decomposes into correct sub-answers.",
+        "whyThisBeat": "define optimal substructure on first use with the running example"
+      },
+      {
+        "atSec": 88,
+        "text": "Optimal substructure is what lets you write a correct recurrence. For shortest paths: the shortest path from A to C through B is the shortest path from A to B plus the shortest from B to C -- optimal sub-paths compose into an optimal full path.",
+        "whyThisBeat": "reinforce optimal substructure with a second example to show generality"
+      },
+      {
+        "atSec": 115,
+        "text": "The second condition is overlapping subproblems -- meaning the same sub-problem instance appears in multiple branches of the recursion tree. Look at the tree: F(2) is computed in two separate branches. If sub-problems were all distinct, like in merge sort where each sub-array is unique, caching would buy nothing.",
+        "whyThisBeat": "define overlapping subproblems on first use and contrast with non-overlapping case"
+      },
+      {
+        "atSec": 143,
+        "text": "But when sub-problems overlap, we can memoize -- that means store the answer the first time a sub-problem is solved, and look it up instantly for every future occurrence. Let me show the memoized call graph: F(2) is computed once, all other calls to F(2) hit the cache and return immediately.",
+        "whyThisBeat": "introduce memoization as the direct fix for overlapping subproblems"
+      },
+      {
+        "atSec": 170,
+        "text": "The call tree collapses from an exponential bush to a linear chain of n unique nodes, bringing the cost from O(2^n) down to O(n). Alternatively, we can go bottom-up with tabulation -- fill an array T where T[0]=0 and T[1]=1, then T[i] = T[i-1] + T[i-2] for i from 2 to n -- no recursion at all, just a loop.",
+        "whyThisBeat": "show tabulation as the bottom-up alternative and state the complexity win"
+      },
+      {
+        "atSec": 200,
+        "text": "So here is the two-condition test: before applying DP, ask -- one, does the problem have optimal substructure, meaning can I write a correct recurrence? And two, does that recurrence have overlapping sub-problems, meaning does the call tree revisit the same node? If both answers are yes, DP applies.",
+        "whyThisBeat": "synthesize the two conditions into a concrete decision rule"
+      },
+      {
+        "atSec": 225,
+        "text": "The number of distinct sub-problems times the cost to solve each one given its children gives you the DP complexity. For Fibonacci that is O(n). For edit distance between strings of lengths m and n, there are m times n distinct sub-problems, giving O(m times n) total. The shape of the sub-problem space determines the cost.",
+        "whyThisBeat": "show how DP complexity is analyzed and close with a second worked example"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "recurrence_def",
+        "content": "F(n) = F(n-1) + F(n-2),  F(0)=0, F(1)=1",
+        "region": "top-center"
+      },
+      {
+        "at": 15,
+        "kind": "draw",
+        "targetId": "call_tree",
+        "content": "Recursion tree rooted at node labeled F(4) at top-center; two children F(3) on the left and F(2) on the right; F(3) has children F(2) on the left and F(1) on the right; the left F(2) has children F(1) on the left and F(0) on the right; all nodes are circles with labels; draw the two F(2) nodes in red to highlight they are duplicate; draw the three F(1) nodes in red; connect all edges with directed arrows pointing downward",
+        "region": "center"
+      },
+      {
+        "at": 40,
+        "kind": "write",
+        "targetId": "complexity_naive",
+        "content": "Naive recursion: O(2^n) time",
+        "region": "top-right"
+      },
+      {
+        "at": 55,
+        "kind": "highlight",
+        "targetId": "call_tree",
+        "content": "circle both red F(2) nodes with a thick orange loop to show they are the same sub-problem computed twice",
+        "region": "center"
+      },
+      {
+        "at": 65,
+        "kind": "write",
+        "targetId": "def_opt_sub",
+        "content": "Optimal substructure: OPT(problem) built from OPT(sub-problems)",
+        "region": "bottom-left"
+      },
+      {
+        "at": 80,
+        "kind": "draw",
+        "targetId": "shortest_path_diagram",
+        "content": "Three nodes arranged left to right labeled A, B, C with directed arrows A to B and B to C; below the arrows write labels d(A,B) and d(B,C); draw a curved arrow from A to C labeled d(A,C) = d(A,B) + d(B,C)",
+        "region": "bottom-right"
+      },
+      {
+        "at": 115,
+        "kind": "write",
+        "targetId": "def_overlap",
+        "content": "Overlapping subproblems: same node recurs in multiple branches",
+        "region": "top-left"
+      },
+      {
+        "at": 128,
+        "kind": "highlight",
+        "targetId": "def_opt_sub",
+        "content": "underline the word OPT in blue in both occurrences to stress that sub-answers must themselves be optimal",
+        "region": "bottom-left"
+      },
+      {
+        "at": 143,
+        "kind": "draw",
+        "targetId": "memo_dag",
+        "content": "DAG of memoized calls: root node F(4) at top; two children F(3) and F(2); F(3) has children F(2) and F(1); the second occurrence of F(2) is shown as a dashed box with label cache hit and no further children; F(1) leaf nodes shown normally; all edges are directed downward with solid arrows except the cache-hit edge which is dashed",
+        "region": "center"
+      },
+      {
+        "at": 155,
+        "kind": "erase",
+        "targetId": "call_tree",
+        "content": "all"
+      },
+      {
+        "at": 160,
+        "kind": "write",
+        "targetId": "complexity_memo",
+        "content": "Memoization: O(n) unique sub-problems => O(n) time",
+        "region": "top-right"
+      },
+      {
+        "at": 170,
+        "kind": "erase",
+        "targetId": "complexity_naive",
+        "content": "all"
+      },
+      {
+        "at": 175,
+        "kind": "write",
+        "targetId": "tabulation_recurrence",
+        "content": "Tabulation: T[0]=0, T[1]=1; for i in 2..n: T[i] = T[i-1] + T[i-2]",
+        "region": "bottom-left"
+      },
+      {
+        "at": 195,
+        "kind": "erase",
+        "targetId": "def_opt_sub",
+        "content": "all"
+      },
+      {
+        "at": 200,
+        "kind": "write",
+        "targetId": "two_conditions",
+        "content": "Apply DP when: 1. Optimal substructure (correct recurrence exists); 2. Overlapping subproblems (call tree revisits same node)",
+        "region": "center-left"
+      },
+      {
+        "at": 215,
+        "kind": "draw",
+        "targetId": "complexity_table",
+        "content": "Small two-column table with header row Problem and DP complexity; row 1: Fibonacci and O(n); row 2: Edit distance (m x n strings) and O(m*n); table drawn with lines separating rows and columns",
+        "region": "bottom-center"
+      },
+      {
+        "at": 230,
+        "kind": "highlight",
+        "targetId": "two_conditions",
+        "content": "box both numbered conditions with a green rectangle to signal the decision checklist",
+        "region": "center-left"
+      },
+      {
+        "at": 245,
+        "kind": "highlight",
+        "targetId": "complexity_table",
+        "content": "underline O(m*n) in red to show how sub-problem count determines DP cost",
+        "region": "bottom-center"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 143,
+      "language": "python",
+      "code": "from functools import lru_cache\n\n@lru_cache(maxsize=None)\ndef fib(n):\n    if n <= 1:\n        return n\n    return fib(n - 1) + fib(n - 2)",
+      "purpose": "Show memoization in three lines: the decorator caches every unique (n,) call, so each sub-problem is solved exactly once, collapsing 2^n calls to n calls"
+    }
+  ]
+}

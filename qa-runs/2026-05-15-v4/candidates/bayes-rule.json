@@ -1,0 +1,231 @@
+{
+  "id": "bayes-rule-v4-001",
+  "topic": {
+    "id": "bayes-rule",
+    "title": "Bayes' Rule",
+    "question": "How does Bayes' rule update beliefs given evidence, and why is the posterior proportional to likelihood times prior?",
+    "domain": "probability-stats"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v4",
+    "name": "Whiteboard prompt v4 - board state coherence check"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Bayes' Rule: Updating Beliefs with Evidence",
+    "learnerLevel": "intro probability students",
+    "durationSeconds": 210,
+    "payoff": "A disease with a 1-in-1000 base rate can jump to over 90% probability after one positive test -- Bayes' rule is the exact formula that computes that 900x shift, and it underlies spam filters, medical diagnosis, and search ranking.",
+    "staircase": [
+      "prior belief before evidence",
+      "likelihood of evidence under each hypothesis",
+      "total probability of evidence across all hypotheses",
+      "Bayes' rule formula",
+      "posterior proportional to likelihood times prior",
+      "numerical example closing the loop"
+    ],
+    "destination": "You will hold the formula P(H|E) = P(E|H) * P(H) / P(E), understand that P(E) is a normalizing constant summing over all hypotheses, and see why the posterior is proportional to likelihood times prior."
+  },
+  "narration": {
+    "fullText": "Suppose a disease affects one person in a thousand. You take a test and it comes back positive. How much should that change your belief that you have the disease? That question is exactly what Bayes' rule answers. Let me draw a probability tree -- a branching diagram where each branch represents a hypothesis and each leaf represents an outcome -- to map out the possibilities. The root splits into H, meaning you have the disease, and not-H, meaning you do not. Each branch carries a prior probability -- your degree of belief before seeing any evidence. The prior P(H) is one in a thousand, so P(not-H) is 999 in a thousand. Now for each branch we attach a likelihood -- the probability of the test result E, a positive test, given that hypothesis. P(E|H), the probability of a positive test given disease, is 0.99. P(E|not-H), the probability of a positive test without disease -- the false-positive rate -- is 0.02. To apply Bayes' rule we need P(E), the total probability of a positive test regardless of disease status, which we compute by summing over both branches: P(E) equals P(E|H) times P(H) plus P(E|not-H) times P(not-H). This is the law of total probability -- it weights each branch's likelihood by how probable that branch is. Now I can write Bayes' rule: P(H|E) equals P(E|H) times P(H), all divided by P(E). The numerator is one branch's contribution; the denominator normalizes so the result is a valid probability. That is why the posterior -- your belief after evidence -- is proportional to likelihood times prior: the denominator is a fixed constant once E is observed. Let me fill in the numbers: P(E|H) times P(H) equals 0.99 times 0.001 which is 0.00099. P(E|not-H) times P(not-H) equals 0.02 times 0.999 which is 0.01998. So P(E) equals 0.02097. P(H|E) equals 0.00099 divided by 0.02097, which is about 0.047 -- roughly five percent. That 900x jump from 0.1% to 4.7% is real, but a single imperfect test still leaves you mostly uninfected. The same formula works for any H and any E: posterior is always proportional to likelihood times prior, normalized by total evidence.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Suppose a disease affects one person in a thousand. You take a test and it comes back positive. How much should that change your belief that you have the disease? That question is exactly what Bayes' rule answers.",
+        "whyThisBeat": "hook with concrete stake and quantified scenario"
+      },
+      {
+        "atSec": 15,
+        "text": "Let me draw a probability tree -- a branching diagram where each branch represents a hypothesis and each leaf represents an outcome -- to map out the possibilities. The root splits into H, meaning you have the disease, and not-H, meaning you do not.",
+        "whyThisBeat": "introduce probability tree and define hypotheses"
+      },
+      {
+        "atSec": 35,
+        "text": "Each branch carries a prior probability -- your degree of belief before seeing any evidence. The prior P(H) is one in a thousand, so P(not-H) is 999 in a thousand.",
+        "whyThisBeat": "define prior belief before evidence"
+      },
+      {
+        "atSec": 55,
+        "text": "Now for each branch we attach a likelihood -- the probability of the test result E, a positive test, given that hypothesis. P(E|H), the probability of a positive test given disease, is 0.99. P(E|not-H), the probability of a positive test without disease -- the false-positive rate -- is 0.02.",
+        "whyThisBeat": "define likelihood of evidence under each hypothesis"
+      },
+      {
+        "atSec": 85,
+        "text": "To apply Bayes' rule we need P(E), the total probability of a positive test regardless of disease status, which we compute by summing over both branches: P(E) equals P(E|H) times P(H) plus P(E|not-H) times P(not-H). This is the law of total probability -- it weights each branch's likelihood by how probable that branch is.",
+        "whyThisBeat": "total probability of evidence across all hypotheses"
+      },
+      {
+        "atSec": 115,
+        "text": "Now I can write Bayes' rule: P(H|E) equals P(E|H) times P(H), all divided by P(E). The numerator is one branch's contribution; the denominator normalizes so the result is a valid probability.",
+        "whyThisBeat": "state Bayes' rule formula explicitly"
+      },
+      {
+        "atSec": 135,
+        "text": "That is why the posterior -- your belief after evidence -- is proportional to likelihood times prior: the denominator is a fixed constant once E is observed.",
+        "whyThisBeat": "posterior proportional to likelihood times prior"
+      },
+      {
+        "atSec": 150,
+        "text": "Let me fill in the numbers: P(E|H) times P(H) equals 0.99 times 0.001 which is 0.00099. P(E|not-H) times P(not-H) equals 0.02 times 0.999 which is 0.01998. So P(E) equals 0.02097. P(H|E) equals 0.00099 divided by 0.02097, which is about 0.047 -- roughly five percent. That 900x jump from 0.1% to 4.7% is real, but a single imperfect test still leaves you mostly uninfected.",
+        "whyThisBeat": "numerical example closing the loop"
+      },
+      {
+        "atSec": 185,
+        "text": "The same formula works for any H and any E: posterior is always proportional to likelihood times prior, normalized by total evidence.",
+        "whyThisBeat": "generalize and anchor the destination formula"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "hook_question",
+        "content": "P( disease | positive test ) = ?",
+        "region": "top-center"
+      },
+      {
+        "at": 10,
+        "kind": "draw",
+        "targetId": "prob_tree",
+        "content": "A probability tree rooted at a circle labeled Root on the left; two branches extending right: upper branch labeled H (disease), lower branch labeled not-H (no disease); each branch ends in a node from which two leaves extend -- upper-upper leaf labeled E (positive), upper-lower leaf labeled not-E; lower-upper leaf labeled E (positive), lower-lower leaf labeled not-E; branch and leaf edges are unlabeled placeholders awaiting probabilities",
+        "region": "left-half"
+      },
+      {
+        "at": 35,
+        "kind": "write",
+        "targetId": "prior_label_H",
+        "content": "P(H) = prior -- belief before evidence",
+        "region": "top-right"
+      },
+      {
+        "at": 42,
+        "kind": "highlight",
+        "targetId": "prob_tree",
+        "content": "trace the upper branch H in blue and write placeholder P(H) beside it, trace the lower branch not-H in blue and write placeholder P(not-H) beside it",
+        "region": "left-half"
+      },
+      {
+        "at": 55,
+        "kind": "transform",
+        "targetId": "prior_label_H",
+        "content": "P(H) = 0.001      P(not-H) = 0.999",
+        "region": "top-right"
+      },
+      {
+        "at": 60,
+        "kind": "write",
+        "targetId": "likelihood_label",
+        "content": "P(E|H) = likelihood -- prob of evidence given hypothesis",
+        "region": "right-half"
+      },
+      {
+        "at": 65,
+        "kind": "draw",
+        "targetId": "prob_bar",
+        "content": "A horizontal bar spanning full width divided into two segments: left segment colored blue labeled H branch: P(E|H)*P(H) with width proportional to 0.00099, right segment colored orange labeled not-H branch: P(E|not-H)*P(not-H) with width proportional to 0.01998; a bracket above the full bar labeled P(E)",
+        "region": "bottom-center"
+      },
+      {
+        "at": 80,
+        "kind": "transform",
+        "targetId": "likelihood_label",
+        "content": "P(E|H) = 0.99      P(E|not-H) = 0.02",
+        "region": "right-half"
+      },
+      {
+        "at": 85,
+        "kind": "transform",
+        "targetId": "prob_tree",
+        "content": "Label the upper branch H with P(H)=0.001, lower branch not-H with P(not-H)=0.999; label upper-upper leaf edge with P(E|H)=0.99 and lower-upper leaf edge with P(E|not-H)=0.02",
+        "region": "left-half"
+      },
+      {
+        "at": 105,
+        "kind": "write",
+        "targetId": "total_prob_eq",
+        "content": "P(E) = P(E|H)*P(H) + P(E|not-H)*P(not-H)",
+        "region": "center-right"
+      },
+      {
+        "at": 115,
+        "kind": "erase",
+        "targetId": "hook_question",
+        "content": "all"
+      },
+      {
+        "at": 116,
+        "kind": "write",
+        "targetId": "bayes_formula",
+        "content": "P(H|E) = [ P(E|H) * P(H) ] / P(E)",
+        "region": "top-center"
+      },
+      {
+        "at": 125,
+        "kind": "highlight",
+        "targetId": "bayes_formula",
+        "content": "box the numerator P(E|H)*P(H) in red to show it is the single-branch contribution",
+        "region": "top-center"
+      },
+      {
+        "at": 135,
+        "kind": "highlight",
+        "targetId": "bayes_formula",
+        "content": "underline the denominator P(E) in green and write normalizing constant beside it",
+        "region": "top-center"
+      },
+      {
+        "at": 140,
+        "kind": "draw",
+        "targetId": "proportional_note",
+        "content": "Write the proportionality statement as a short equation: P(H|E) proportional-to P(E|H) * P(H), with a double-headed arrow pointing to the boxed numerator in the Bayes formula above",
+        "region": "center-right"
+      },
+      {
+        "at": 150,
+        "kind": "transform",
+        "targetId": "total_prob_eq",
+        "content": "P(E) = 0.99*0.001 + 0.02*0.999 = 0.00099 + 0.01998 = 0.02097",
+        "region": "center-right"
+      },
+      {
+        "at": 165,
+        "kind": "write",
+        "targetId": "posterior_value",
+        "content": "P(H|E) = 0.00099 / 0.02097 = 0.047   (about 4.7%)",
+        "region": "bottom-right"
+      },
+      {
+        "at": 175,
+        "kind": "highlight",
+        "targetId": "prob_bar",
+        "content": "draw a vertical red arrow pointing to the tiny blue left segment and label it posterior mass to show how small P(H|E) remains relative to P(E)",
+        "region": "bottom-center"
+      },
+      {
+        "at": 185,
+        "kind": "highlight",
+        "targetId": "bayes_formula",
+        "content": "circle the entire formula in gold and write posterior proportional to likelihood times prior directly below it",
+        "region": "top-center"
+      },
+      {
+        "at": 195,
+        "kind": "write",
+        "targetId": "generalize_note",
+        "content": "Works for any H, any E -- same structure every time",
+        "region": "bottom-left"
+      },
+      {
+        "at": 200,
+        "kind": "erase",
+        "targetId": "generalize_note",
+        "content": "all"
+      }
+    ]
+  }
+}

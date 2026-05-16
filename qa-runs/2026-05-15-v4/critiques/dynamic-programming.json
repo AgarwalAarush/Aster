@@ -1,0 +1,94 @@
+{
+  "candidateId": "dynamic-programming-v4-001",
+  "subjectId": "dynamic-programming",
+  "promptVariantId": "whiteboard-v4",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 8,
+      "notes": "Names naive recursive Fibonacci, O(2^n) vs O(n), n=50 threshold, 'billions of operations'."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Six rungs from diagnosis through both cures and decision rule. Minor: optimal-substructure rung 3 vs narration intro at 58s."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "Both conditions defined precisely; both techniques named; complexity implication stated."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 11,
+      "notes": "Nearly every term defined on first appearance. Minor: 'edit distance' at t=225 introduced without unpacking."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 10,
+      "notes": "Every draw renderer-executable: tree, shortest-path diagram, memo DAG, complexity table. All write actions verbatim."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Timeline well-ordered. Minor: complexity_naive and complexity_memo coexist briefly in top-right (160-170s)."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 8,
+      "notes": "Four draws plus highlights/writes. Excellent mix for graph/tree-heavy topic."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 10,
+      "notes": "Recurrence, base cases, complexity all correct. Edit distance O(m*n) correct."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 6,
+      "notes": "lru_cache snippet at t=143 idiomatic and correct. Granularity matches the beat."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 8,
+      "notes": "Ten beats / 250s averages 25s/beat. Beat at 225s slightly rushed (two complexity analyses in 25s)."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 7,
+      "notes": "Stays focused. Mild redundancy: 40s beat partly echoes payoff framing."
+    }
+  ],
+  "totalScore": 94,
+  "maxScore": 100,
+  "percent": 94,
+  "topThreeIssues": [
+    "Beat at 225s introduces 'edit distance' without definition for intermediate learners; either define briefly or replace with self-contained second example",
+    "Pacing at 225s is rushed: two distinct complexity analyses packed into one 25s beat",
+    "Optimal substructure appears third in staircase but is introduced first in narration; reorder staircase to match"
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "Strong plan earning near-full marks across all criteria: payoff quantified, staircase gap-free, board renderer-executable, code correct and well-timed. Only meaningful weaknesses are the undefined 'edit distance' term and slight rush in final complexity analysis."
+}
