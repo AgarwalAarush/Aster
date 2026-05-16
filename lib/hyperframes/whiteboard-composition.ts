@@ -1,5 +1,10 @@
 import type { BoardAction, LectureLesson, NarrationBeat } from "../education/loop/schema.ts";
+import {
+  DEFAULT_COMPOSITION_OPTIONS,
+  type WhiteboardCompositionOptions,
+} from "./composition-options.ts";
 import { regionToCssInline } from "./regions.ts";
+import { renderDrawInnerHtml } from "./templates/registry.ts";
 import { renderWhiteboardTheme } from "./whiteboard-theme.ts";
 import { renderWhiteboardTimeline } from "./whiteboard-timeline.ts";
 import { escapeHtml, escapeHtmlAttr, roundTime } from "./util.ts";
@@ -8,7 +13,12 @@ const WIDTH = 1920;
 const HEIGHT = 1080;
 const COMPOSITION_ID = "aster-lesson";
 
-export function generateWhiteboardHtml(lesson: LectureLesson, question: string): string {
+export function generateWhiteboardHtml(
+  lesson: LectureLesson,
+  question: string,
+  options: WhiteboardCompositionOptions = DEFAULT_COMPOSITION_OPTIONS,
+): string {
+  const architecture = options.architecture ?? "baseline";
   const boardItems = lesson.board.actions.map(renderBoardItem).join("\n        ");
   const beats = lesson.narration.beats.map(renderBeat).join("\n        ");
   const codeDeck = renderCodeDeck(lesson);
@@ -21,10 +31,14 @@ export function generateWhiteboardHtml(lesson: LectureLesson, question: string):
     <title>${escapeHtml(lesson.lesson.title)}</title>
     <style>
       ${renderWhiteboardTheme()}
+      .template-diagram { width: 100%; height: 100%; }
+      .matrix-table { border-collapse: collapse; font-size: 18px; }
+      .matrix-table td { border: 1px solid #1a1a1a; padding: 8px 12px; }
+      .matrix-title { font-weight: 600; margin-bottom: 8px; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="${COMPOSITION_ID}" data-start="0" data-width="${WIDTH}" data-height="${HEIGHT}">
+    <div id="root" data-composition-id="${COMPOSITION_ID}" data-start="0" data-width="${WIDTH}" data-height="${HEIGHT}" data-architecture="${escapeHtmlAttr(architecture)}">
       <header class="lesson-header">
         <p class="question">Question: ${escapeHtml(question)}</p>
         <h1 class="lesson-title">${escapeHtml(lesson.lesson.title)}</h1>
@@ -37,7 +51,7 @@ export function generateWhiteboardHtml(lesson: LectureLesson, question: string):
         ${beats}
       </section>
     </div>
-    ${renderWhiteboardTimeline(lesson)}
+    ${renderWhiteboardTimeline(lesson, options)}
   </body>
 </html>`;
 }
@@ -45,13 +59,14 @@ export function generateWhiteboardHtml(lesson: LectureLesson, question: string):
 function renderBoardItem(action: BoardAction, index: number): string {
   const at = roundTime(action.at);
   const region = regionToCssInline(action.region);
-  const common = `class="board-item kind-${action.kind}" data-action-id="${escapeHtmlAttr(action.targetId)}" data-action-index="${index}" data-at="${at}" data-region="${escapeHtmlAttr(action.region ?? "center")}" style="${region}"`;
+  const regionKey = escapeHtmlAttr(action.region ?? "center");
+  const common = `class="board-item kind-${action.kind}" data-action-id="${escapeHtmlAttr(action.targetId)}" data-action-index="${index}" data-at="${at}" data-region="${regionKey}" style="${region}"`;
 
   switch (action.kind) {
     case "write":
       return `<div ${common}><div class="write-content">${escapeHtml(action.content)}</div></div>`;
     case "draw":
-      return `<div ${common}><div class="draw-content"><span class="draw-tag">DIAGRAM</span><div class="draw-description">${escapeHtml(action.content)}</div></div></div>`;
+      return `<div ${common}><div class="draw-content">${renderDrawInnerHtml(action)}</div></div>`;
     case "highlight":
       return `<div ${common}><div class="highlight-overlay"></div></div>`;
     case "transform":

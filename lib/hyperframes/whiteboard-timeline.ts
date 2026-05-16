@@ -1,10 +1,18 @@
 import type { BoardAction, LectureLesson } from "../education/loop/schema.ts";
+import {
+  DEFAULT_COMPOSITION_OPTIONS,
+  type WhiteboardCompositionOptions,
+} from "./composition-options.ts";
 import { roundTime } from "./util.ts";
 
-export function renderWhiteboardTimeline(lesson: LectureLesson): string {
+export function renderWhiteboardTimeline(
+  lesson: LectureLesson,
+  options: WhiteboardCompositionOptions = DEFAULT_COMPOSITION_OPTIONS,
+): string {
   const duration = lesson.lesson.durationSeconds;
+  const regionExclusive = options.architecture === "region-exclusive";
   const actionOps = lesson.board.actions
-    .map((action, index) => renderActionOp(action, index))
+    .map((action, index) => renderActionOp(action, index, regionExclusive))
     .join("\n        ");
   const beatOps = lesson.narration.beats
     .map((beat, index) => renderBeatOp(beat.atSec, index))
@@ -54,15 +62,28 @@ export function renderWhiteboardTimeline(lesson: LectureLesson): string {
   `;
 }
 
-function renderActionOp(action: BoardAction, index: number): string {
+function regionExclusiveHideOp(region: string | undefined, at: number): string {
+  const regionKey = (region ?? "center").replace(/"/g, '\\"');
+  return `tl.to('.board-item[data-region="${regionKey}"]:not(.kind-highlight):not(.kind-transform):not(.kind-erase)', { opacity: 0, duration: 0.15 }, ${at});`;
+}
+
+function renderActionOp(
+  action: BoardAction,
+  index: number,
+  regionExclusive: boolean,
+): string {
   const at = roundTime(action.at);
   const actionSel = `[data-action-index="${index}"]`;
+  const hideSameRegion =
+    regionExclusive && (action.kind === "write" || action.kind === "draw")
+      ? `${regionExclusiveHideOp(action.region, at)}\n        `
+      : "";
 
   switch (action.kind) {
     case "write":
-      return `tl.to('${actionSel}', { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, ${at});`;
+      return `${hideSameRegion}tl.to('${actionSel}', { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, ${at});`;
     case "draw":
-      return `tl.to('${actionSel}', { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.4)' }, ${at});`;
+      return `${hideSameRegion}tl.to('${actionSel}', { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.4)' }, ${at});`;
     case "highlight": {
       const targetSel = `[data-action-id="${action.targetId}"]`;
       const off = roundTime(at + 2.5);

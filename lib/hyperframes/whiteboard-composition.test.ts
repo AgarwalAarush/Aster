@@ -98,6 +98,14 @@ describe("generateWhiteboardHtml", () => {
     expect(html).toContain("tl.set({}, {}, 120);");
   });
 
+  it("emits region-exclusive hide ops when architecture is region-exclusive", () => {
+    const html = generateWhiteboardHtml(makeLesson(), "Why?", {
+      architecture: "region-exclusive",
+    });
+    expect(html).toContain('data-region="center"');
+    expect(html).toContain("data-region=");
+  });
+
   it("emits a transformTarget call for transform actions", () => {
     const html = generateWhiteboardHtml(makeLesson(), "Why?");
     expect(html).toContain("transformTarget(");
