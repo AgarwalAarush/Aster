@@ -13,7 +13,7 @@ export type CaptureTimelineFramesOptions = {
   htmlPath: string;
   timestampsSec: readonly number[];
   outDir: string;
-  /** Screenshot selector; default full #root composition */
+  /** When set, screenshot this element; default is full viewport (more reliable with GSAP). */
   selector?: string;
   viewport?: { width: number; height: number };
 };
@@ -35,7 +35,7 @@ export async function captureTimelineFrames(
   const outDir = resolve(options.outDir);
   await mkdir(outDir, { recursive: true });
 
-  const selector = options.selector ?? "#root";
+  const selector = options.selector;
   const viewport = options.viewport ?? { width: 1920, height: 1080 };
   const fileUrl = pathToFileURL(htmlPath).href;
 
@@ -68,11 +68,15 @@ export async function captureTimelineFrames(
 
       const label = frameLabel(timestampSec);
       const absolutePath = join(outDir, `${label}.png`);
-      const element = await page.$(selector);
-      if (element) {
-        await element.screenshot({ path: absolutePath });
+      if (selector) {
+        const element = await page.$(selector);
+        if (element) {
+          await element.screenshot({ path: absolutePath });
+        } else {
+          await page.screenshot({ path: absolutePath });
+        }
       } else {
-        await page.screenshot({ path: absolutePath, fullPage: false });
+        await page.screenshot({ path: absolutePath });
       }
 
       results.push({ timestampSec, absolutePath, label });
