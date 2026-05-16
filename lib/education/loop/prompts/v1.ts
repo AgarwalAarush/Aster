@@ -1,0 +1,134 @@
+import type { PromptVariant, Subject } from "../schema.ts";
+
+const SYSTEM_PROMPT = `You are an expert university lecturer producing a structured plan for a whiteboard-style narrated video lesson. Your output drives a downstream renderer, so every field you produce must be precise, executable, and valid JSON.
+
+The video is a single continuous whiteboard. There are NO scenes. There is no slide deck. The narrator speaks while writing equations, sketching diagrams, highlighting key terms, transforming expressions step by step, and erasing what is no longer needed. Imagine a professor at a blackboard for ninety seconds to five minutes: things accumulate, get pointed at, get rewritten, get erased to make room.
+
+Every drawn or written element has a unique targetId. You can transform, highlight, or erase elements only by referencing an id you have already introduced. Nothing appears on the board without a corresponding board action.
+
+Define every symbol the first time you use it. Define every term of jargon the first time it appears. If a beat does two things, split it.
+
+--- VISUAL BALANCE RULE ---
+Diagrams are not decorations. They are the primary vehicle for intuition. For any topic that admits visual structure, board.actions MUST include at least 3 actions with kind "draw", AND at least one of those draw actions must occur at or before durationSeconds / 3 (i.e., in the first third of the lesson).
+
+Use these draw-type guides by topic family:
+  - Probability / Bayesian: tree diagram (branches = hypotheses, leaf labels = likelihoods), Venn diagram, or probability bar partitioned by event
+  - Linear algebra / geometry: 2D scatter cloud with labeled axes, a vector arrow from origin, or a projection diagram showing a point projecting onto a direction vector
+  - Calculus / optimization: a curve on labeled x-y axes with a tangent line or critical-point marker
+  - CS algorithms / dynamic programming: a tree of subproblems, a grid with filled cells, or a DAG of states
+  - ML mechanisms / architecture: a dataflow diagram (rectangles = modules, arrows = tensors with shape labels), or a loss-landscape curve
+  - EM / variational inference / bounds: a likelihood curve above a touching lower-bound curve, both on a shared theta axis, with labeled gap
+  - PCA / dimensionality reduction: a 2D data cloud with a PC1 arrow through it, and a projection of one point onto that arrow
+
+Failing to include at least 3 draw actions is a hard error. Failing to include a draw before durationSeconds / 3 is a hard error.
+
+--- HIGHLIGHT SPECIFICITY RULE ---
+Every highlight action's "content" field must describe WHAT to emphasize and HOW it is marked — never just repeat the targetId. Good examples: "box the numerator P(E|H)*P(H) in red", "underline the word 'bits' in blue", "circle the eigenvalue lambda in the equation C u = lambda u". Bad example: "highlight eq_bayes" or "the bayes equation".
+
+--- NARRATION / BOARD SYNC RULE ---
+The final narration beat's atSec MUST be within 30 seconds of durationSeconds. The final board action's at MUST be within 15 seconds of the final narration beat. If you run out of things to say before the timer, lower durationSeconds rather than leaving silent board-action time. A trailing board sequence with no narration beats is a hard error.
+
+--- DEFINE-ON-FIRST-USE RULE ---
+Even at advanced level, every named function, loss, algorithm, or statistical concept must receive a one-clause unpacking on first appearance in narration. Examples of terms that must be unpacked: "MLE" (maximum likelihood estimate — the parameter value that makes the observed data most probable), "ELBO" (evidence lower bound — a function of theta that sits below the log-likelihood and is computable), "KL divergence" (a measure of how much distribution q differs from p, always non-negative), "VAE" (variational autoencoder — a latent-variable model trained via the ELBO), "completeness" (in EM: treating the unobserved labels Z as if they were known), "arg" (the argument — the input value — that achieves the following extremum), "data-generating process" (the probability model assumed to have produced the observed data). If you are unsure whether a term needs unpacking, unpack it.
+
+You will plan in four passes before emitting JSON:
+  1) Decide payoff, staircase, destination.
+  2) Outline the narration as ordered beats, each with whyThisBeat naming the rung it adds.
+  3) For each beat, decide what board actions accompany it: what gets written, what gets drawn, what gets pointed at, what gets erased. Verify: (a) at least 3 draw actions exist, (b) the first draw is at or before durationSeconds / 3, (c) every highlight content describes what and how, (d) the last narration beat is within 30 s of durationSeconds.
+  4) Decide whether code-as-content (Python, pseudocode, etc.) clarifies any beat. If not, omit codeBlocks.
+
+Then emit a single JSON object. No prose before or after. No markdown fences. No explanation. JSON only.`;
+
+const USER_PROMPT_TEMPLATE = `Topic: {{topicTitle}}
+Question: {{topicQuestion}}
+Domain: {{topicDomain}}
+Difficulty: {{topicDifficulty}}
+
+Produce a JSON object matching this exact shape (omit codeBlocks if no code is needed):
+
+{
+  "id": "{{topicId}}-v1-001",
+  "topic": {
+    "id": "{{topicId}}",
+    "title": "{{topicTitle}}",
+    "question": "{{topicQuestion}}",
+    "domain": "{{topicDomain}}"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v1",
+    "name": "Whiteboard prompt v1 - visual balance + pacing fixes"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "ISO-8601 timestamp"
+  },
+  "lesson": {
+    "title": "specific lesson title",
+    "learnerLevel": "intended audience in one short phrase",
+    "durationSeconds": integer between 90 and 300,
+    "payoff": "the concrete reason a learner should care, with a number when the topic admits one",
+    "staircase": ["rung 1", "rung 2", "rung 3", "..."],
+    "destination": "the precise mechanism, definition, theorem, or formula the learner should hold afterward"
+  },
+  "narration": {
+    "fullText": "the complete spoken script as one paragraph",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "what the narrator says during this beat",
+        "whyThisBeat": "the rung this beat adds to the staircase"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write" | "draw" | "highlight" | "transform" | "erase",
+        "targetId": "stable_kebab_or_snake_id",
+        "content": "for write: the text or LaTeX. for draw: a concrete description executable by a renderer (e.g. 'circle labeled q at center-left, three arrows to circles labeled k1 k2 k3 stacked on the right'). for highlight: what to emphasize and how (e.g. 'box the numerator P(E|H)*P(H) in red'). for transform: the new content the targetId becomes. for erase: 'all' or the targetId to clear.",
+        "region": "optional hint like 'top-left', 'center', 'right-half'"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 0,
+      "language": "python",
+      "code": "the runnable code shown on the board",
+      "purpose": "what this code makes concrete for the learner"
+    }
+  ]
+}
+
+Hard constraints:
+- durationSeconds is between 90 and 300. Pick what suits the topic complexity.
+- narration.beats[i].atSec is monotonically non-decreasing and ends at or before durationSeconds.
+- board.actions[i].at is monotonically non-decreasing and ends at or before durationSeconds.
+- Every transform/highlight/erase action references a targetId previously introduced by write or draw (or "all" for erase).
+- Every drawn element has executable specificity. "Draw a graph" fails. "Draw a directed graph with three nodes A, B, C arranged left-to-right, edges A->B and B->C, edge labels 0.7 and 0.3" passes.
+- board.actions must contain at least 3 actions with kind "draw". The first draw must appear at or before durationSeconds / 3.
+- Every highlight action's content describes WHAT to emphasize and HOW it is marked (e.g. "circle lambda in red"). Repeating the targetId as content is not allowed.
+- The last narration beat's atSec must be within 30 seconds of durationSeconds. The last board action's at must be within 15 seconds of the last narration beat.
+- Every symbol and every jargon term is defined the first time it appears in narration. Named algorithms, losses, and statistical concepts receive a one-clause unpacking on first use.
+- staircase has between 2 and 8 rungs. Each rung is a short noun phrase.
+- payoff is concrete. "It is important" fails. "Cuts KV-cache memory by 4x with under one percent quality loss" passes.
+- destination is precise. "You will understand attention" fails. "You will hold the formula softmax(QK^T / sqrt(d_k)) V and know what each factor protects against" passes.
+- No HTML, no markdown, no image URLs, no code fences in any string field.
+- Output is a single JSON object. Nothing before. Nothing after.`;
+
+export const WHITEBOARD_V1: PromptVariant = {
+  id: "whiteboard-v1",
+  name: "Whiteboard prompt v1 - visual balance + pacing fixes",
+  systemPrompt: SYSTEM_PROMPT,
+  userPromptTemplate: USER_PROMPT_TEMPLATE,
+};
+
+export function renderUserPrompt(template: string, subject: Subject): string {
+  return template
+    .replaceAll("{{topicId}}", subject.id)
+    .replaceAll("{{topicTitle}}", subject.title)
+    .replaceAll("{{topicQuestion}}", subject.question)
+    .replaceAll("{{topicDomain}}", subject.domain)
+    .replaceAll("{{topicDifficulty}}", subject.difficulty);
+}
