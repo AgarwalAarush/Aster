@@ -10,6 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run typecheck` — `tsc --noEmit`. TS path alias `@/*` resolves to the repo root.
 - `npm test` — Vitest run. Run a single file: `npx vitest run lib/hyperframes/render.test.ts`. Filter by name: `npx vitest run -t "renders storyboard"`.
 - `npm run qa:education -- <subcommand>` — Education QA CLI. Runs via Node's native TS loader (`--experimental-strip-types`), so all imports inside `lib/education/qa/**` and `lib/education/loop/**` use explicit `.ts` extensions; keep that convention when adding files there. The same applies to the scripts that import those modules (`scripts/education-qa.ts`, `scripts/iterate.ts`, `scripts/bootstrap-champion.ts`, etc.).
+- `npm run qa:video -- <phase> <sweep-id> ...` — Video visual eval loop (`lib/education/video-eval/**`, `scripts/video-eval.ts`). Phases: `prepare`, `ingest-candidates`, `compose`, `capture-frames`, `render-critic`, `ingest-critiques`, `aggregate`, `decide` (optional: `render-mp4`, `capture-mp4-frames`). Timeline screenshots use Playwright (`npx playwright install chromium` once). After `render-critic`, run a Cursor agent on each `qa-runs/<sweep>/visual-critic-prompts/*.critic.txt` with the matching `frames/<subject>/` PNGs attached; save JSON to `critiques/<subject>.raw.txt`.
 
 Required env (see `.env.example`): `OPENAI_API_KEY`, `OPENAI_MODEL` (defaults to `gpt-4.1-mini`), `HYPERFRAMES_RENDER_QUALITY` (defaults to `standard`).
 
