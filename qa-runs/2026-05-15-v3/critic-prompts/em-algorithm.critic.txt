@@ -1,0 +1,330 @@
+You are a senior teaching evaluator and a senior whiteboard-lecture director. You are reviewing a structured plan for a continuous-whiteboard narrated video lesson and scoring it against a fixed rubric. The plan was produced by an LLM under a specific prompt variant; your scoring drives prompt iteration. Be exact, fair, and specific. Reward concrete decisions; penalize hand-waving and unjustified omissions.
+
+You will read:
+  - The subject (topic, question, domain, difficulty, intended learner level)
+  - The candidate lesson plan as JSON
+  - The rubric below
+
+You will score every criterion. You will not skip any. You will not invent criteria. You will use the integer maxes exactly as defined.
+
+You will then return a single JSON object. No prose. No markdown. JSON only.
+
+---
+
+SUBJECT
+  id: em-algorithm
+  domain: classical-ml
+  difficulty: advanced
+  title: Expectation-Maximization
+  question: How does the EM algorithm find local maxima of likelihood for latent-variable models, and why does it always converge?
+
+CANDIDATE LESSON PLAN (JSON)
+{
+  "id": "em-algorithm-v3-001",
+  "topic": {
+    "id": "em-algorithm",
+    "title": "Expectation-Maximization",
+    "question": "How does the EM algorithm find local maxima of likelihood for latent-variable models, and why does it always converge?",
+    "domain": "classical-ml"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v3",
+    "name": "Whiteboard prompt v3 - one beat one idea + sync enforcement"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "EM: Climbing the Likelihood by Alternating Expectation and Maximization",
+    "learnerLevel": "graduate students in ML or statistics",
+    "durationSeconds": 190,
+    "payoff": "EM finds maximum-likelihood parameters for latent-variable models where brute-force enumeration of all hidden-label assignments would require 2^N evaluations per gradient step -- EM reduces this to O(N) per iteration while guaranteeing the log-likelihood never decreases.",
+    "staircase": [
+      "intractable MLE due to latent variables",
+      "log-likelihood blocked by sum-inside-log",
+      "ELBO lower bound via Jensen's inequality",
+      "E-step: tighten the bound at current parameters",
+      "M-step: maximize the bound to raise the likelihood",
+      "monotone convergence guarantee",
+      "practical caveats and remedies"
+    ],
+    "destination": "The learner holds the two-step update -- E-step sets q(Z)=p(Z|X,theta_old) making ELBO touch log p(X|theta_old), M-step maximizes Q(theta,theta_old)=E_q[log p(X,Z|theta)] -- and can sketch the proof that each iteration satisfies log p(X|theta_new) >= log p(X|theta_old), ensuring monotone convergence to a local maximum."
+  },
+  "narration": {
+    "fullText": "Suppose we observe data X but each point secretly belongs to one of K clusters -- those cluster memberships Z are never revealed. We want the MLE -- the maximum likelihood estimate, meaning the parameter value theta that makes the observed data most probable -- but the log-likelihood log p(X|theta) equals log of a sum over all possible Z, and that sum inside the log blocks direct gradient ascent. Here is the key picture: on a theta axis draw the true log-likelihood as a concave curve, and below it a second curve called the ELBO -- the evidence lower bound, a function of theta that sits below the log-likelihood and is computable. These two curves touch at the current theta_old. The ELBO comes from Jensen's inequality: for any distribution q over Z, log p(X|theta) is at least E_q[log p(X,Z|theta)] minus E_q[log q(Z)], a quantity we call the ELBO. The gap between the curves equals the KL divergence -- a measure of how much q differs from the true posterior, always non-negative -- between q(Z) and p(Z|X,theta). In the E-step, we fix theta_old and choose q(Z) equal to the true posterior p(Z|X,theta_old), collapsing the KL gap to zero so the ELBO touches the log-likelihood at theta_old. In the M-step, we fix q and maximize the ELBO over theta; because the ELBO equals Q(theta,theta_old) -- defined as E_q[log p(X,Z|theta)], the expected complete-data log-likelihood -- this maximization is tractable. The convergence proof is now one line: the new theta_new satisfies ELBO(theta_new) >= ELBO(theta_old) by the M-step, and log p(X|theta_new) >= ELBO(theta_new) by Jensen, so log p(X|theta_new) >= log p(X|theta_old). The likelihood is non-decreasing every iteration. For a Gaussian mixture model -- K Gaussians with means mu_k, covariances Sigma_k, and mixing weights pi_k -- the E-step computes soft assignments r_nk equal to p(z_n=k|x_n,theta_old), and the M-step rewrites each mu_k as the responsibility-weighted mean of all data points. One caution: EM converges to a local maximum, not necessarily the global one, so practitioners run multiple random restarts and pick the highest final likelihood.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Suppose we observe data X but each point secretly belongs to one of K clusters -- those cluster memberships Z are never revealed. We want the MLE -- the maximum likelihood estimate, meaning the parameter value theta that makes the observed data most probable.",
+        "whyThisBeat": "intractable MLE due to latent variables"
+      },
+      {
+        "atSec": 22,
+        "text": "The log-likelihood log p(X|theta) equals the log of a sum over all possible Z. That sum inside the log blocks direct gradient ascent -- there is no closed form.",
+        "whyThisBeat": "log-likelihood blocked by sum-inside-log"
+      },
+      {
+        "atSec": 40,
+        "text": "Here is the key picture. On a shared theta axis, draw the true log-likelihood as a concave curve. Below it sits a second curve called the ELBO -- the evidence lower bound, a function of theta that sits below the log-likelihood and is computable. These two curves touch at the current theta_old.",
+        "whyThisBeat": "ELBO lower bound via Jensen's inequality -- visual introduction"
+      },
+      {
+        "atSec": 62,
+        "text": "The ELBO comes from Jensen's inequality: for any distribution q over Z, log p(X|theta) is at least E_q[log p(X,Z|theta)] minus E_q[log q(Z)]. The gap between the curves equals the KL divergence -- a measure of how much q differs from the true posterior, always non-negative.",
+        "whyThisBeat": "ELBO lower bound via Jensen's inequality -- algebraic statement"
+      },
+      {
+        "atSec": 88,
+        "text": "In the E-step, we fix theta_old and choose q(Z) equal to the true posterior p(Z|X,theta_old). This collapses the KL gap to zero, making the ELBO touch the log-likelihood at theta_old.",
+        "whyThisBeat": "E-step: tighten the bound at current parameters"
+      },
+      {
+        "atSec": 108,
+        "text": "In the M-step, we fix q and maximize the ELBO over theta. Because the ELBO equals Q(theta,theta_old) -- the expected complete-data log-likelihood E_q[log p(X,Z|theta)] -- this maximization is tractable and gives us theta_new.",
+        "whyThisBeat": "M-step: maximize the bound to raise the likelihood"
+      },
+      {
+        "atSec": 128,
+        "text": "The convergence proof is one line: the M-step guarantees ELBO(theta_new) >= ELBO(theta_old), and Jensen guarantees log p(X|theta_new) >= ELBO(theta_new), so log p(X|theta_new) >= log p(X|theta_old). The likelihood never decreases.",
+        "whyThisBeat": "monotone convergence guarantee"
+      },
+      {
+        "atSec": 148,
+        "text": "For a Gaussian mixture model, the E-step computes soft assignments r_nk equal to p(z_n=k | x_n, theta_old) for each point n and cluster k. The M-step then rewrites mu_k as the responsibility-weighted mean of all data points.",
+        "whyThisBeat": "concrete GMM instantiation of E and M steps"
+      },
+      {
+        "atSec": 168,
+        "text": "One caution: EM converges to a local maximum, not necessarily the global one. Practitioners run multiple random restarts and keep the solution with the highest final log-likelihood.",
+        "whyThisBeat": "practical caveats and remedies"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title_mle",
+        "content": "MLE for latent-variable models",
+        "region": "top-center"
+      },
+      {
+        "at": 5,
+        "kind": "draw",
+        "targetId": "data_cloud",
+        "content": "A 2D scatter plot with x and y axes unlabeled, showing 15 data points in two loose overlapping clusters -- one group near top-left, one near bottom-right -- with no color coding or labels on the points, illustrating that cluster membership Z is hidden",
+        "region": "left-half"
+      },
+      {
+        "at": 18,
+        "kind": "write",
+        "targetId": "loglik_sum",
+        "content": "log p(X|theta) = log sum_Z p(X,Z|theta)",
+        "region": "top-right"
+      },
+      {
+        "at": 22,
+        "kind": "highlight",
+        "targetId": "loglik_sum",
+        "content": "circle the phrase sum_Z inside the log in red to show it is the obstacle blocking gradient ascent",
+        "region": "top-right"
+      },
+      {
+        "at": 35,
+        "kind": "draw",
+        "targetId": "elbo_diagram",
+        "content": "A shared horizontal theta axis spanning the full width. Above it, a smooth concave curve labeled log p(X|theta) peaking near center-right. Below it and touching the likelihood curve at a point marked theta_old with a vertical dashed line, a second curve labeled ELBO that lies entirely at or below the likelihood. A vertical double-headed arrow between the two curves at a point to the right of theta_old is labeled KL gap.",
+        "region": "center"
+      },
+      {
+        "at": 48,
+        "kind": "write",
+        "targetId": "theta_old_marker",
+        "content": "theta_old",
+        "region": "center"
+      },
+      {
+        "at": 55,
+        "kind": "highlight",
+        "targetId": "elbo_diagram",
+        "content": "underline the word ELBO in blue on the lower curve to define it as the evidence lower bound",
+        "region": "center"
+      },
+      {
+        "at": 62,
+        "kind": "write",
+        "targetId": "elbo_formula",
+        "content": "ELBO(q,theta) = E_q[log p(X,Z|theta)] - E_q[log q(Z)]",
+        "region": "bottom-left"
+      },
+      {
+        "at": 70,
+        "kind": "write",
+        "targetId": "kl_formula",
+        "content": "gap = KL(q(Z) || p(Z|X,theta)) >= 0",
+        "region": "bottom-right"
+      },
+      {
+        "at": 88,
+        "kind": "draw",
+        "targetId": "estep_diagram",
+        "content": "A zoomed inset of the theta_old region from elbo_diagram: the ELBO curve arrow rises to meet the log-likelihood curve exactly at theta_old, with the KL-gap arrow shrunk to zero length and labeled KL=0 after E-step, and a label q(Z)=p(Z|X,theta_old) placed beside the contact point",
+        "region": "right-half"
+      },
+      {
+        "at": 100,
+        "kind": "highlight",
+        "targetId": "estep_diagram",
+        "content": "box the label q(Z)=p(Z|X,theta_old) in green to emphasize this is the E-step update rule",
+        "region": "right-half"
+      },
+      {
+        "at": 108,
+        "kind": "write",
+        "targetId": "q_function",
+        "content": "Q(theta,theta_old) = E_{p(Z|X,theta_old)}[log p(X,Z|theta)]",
+        "region": "bottom-center"
+      },
+      {
+        "at": 118,
+        "kind": "highlight",
+        "targetId": "q_function",
+        "content": "underline log p(X,Z|theta) in orange -- this is the complete-data log-likelihood, tractable because Z is treated as known under the expectation",
+        "region": "bottom-center"
+      },
+      {
+        "at": 128,
+        "kind": "write",
+        "targetId": "convergence_chain",
+        "content": "ELBO(theta_new) >= ELBO(theta_old)   [M-step]; log p(X|theta_new) >= ELBO(theta_new) [Jensen]; => log p(X|theta_new) >= log p(X|theta_old)",
+        "region": "top-right"
+      },
+      {
+        "at": 140,
+        "kind": "highlight",
+        "targetId": "convergence_chain",
+        "content": "box the final line log p(X|theta_new) >= log p(X|theta_old) in red -- this is the monotone convergence guarantee",
+        "region": "top-right"
+      },
+      {
+        "at": 148,
+        "kind": "erase",
+        "targetId": "estep_diagram",
+        "content": "all"
+      },
+      {
+        "at": 150,
+        "kind": "write",
+        "targetId": "gmm_estep",
+        "content": "E-step: r_nk = p(z_n=k | x_n, theta_old)  [soft assignment]",
+        "region": "left-half"
+      },
+      {
+        "at": 158,
+        "kind": "write",
+        "targetId": "gmm_mstep",
+        "content": "M-step: mu_k = (sum_n r_nk x_n) / (sum_n r_nk)",
+        "region": "left-half"
+      },
+      {
+        "at": 168,
+        "kind": "write",
+        "targetId": "caveat",
+        "content": "Caveat: converges to local max -> run K random restarts",
+        "region": "bottom-center"
+      },
+      {
+        "at": 175,
+        "kind": "highlight",
+        "targetId": "caveat",
+        "content": "underline local max in red to flag that EM is not guaranteed to find the global optimum",
+        "region": "bottom-center"
+      },
+      {
+        "at": 182,
+        "kind": "highlight",
+        "targetId": "elbo_diagram",
+        "content": "trace the full likelihood curve with a bold blue stroke to remind the viewer that EM monotonically climbs this surface",
+        "region": "center"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 148,
+      "language": "python",
+      "code": "import numpy as np\n\ndef em_gmm_step(X, mu, sigma, pi):\n    N, K = X.shape[0], len(pi)\n    log_r = np.zeros((N, K))\n    for k in range(K):\n        diff = X - mu[k]\n        log_r[:, k] = (np.log(pi[k]) - 0.5*np.sum(diff**2/sigma[k]**2, axis=1) - np.log(sigma[k]))\n    log_r -= log_r.max(axis=1, keepdims=True)\n    r = np.exp(log_r); r /= r.sum(axis=1, keepdims=True)\n    Nk = r.sum(axis=0)\n    mu_new = (r.T @ X) / Nk[:, None]\n    pi_new = Nk / N\n    return mu_new, pi_new, r",
+      "purpose": "Makes the E-step soft-assignment formula r_nk and the M-step responsibility-weighted mean update concrete and runnable for a spherical GMM"
+    }
+  ]
+}
+
+Rubric (each criterion: id, label, max integer, scoring guidance):
+
+1) payoff-concreteness  (max 8)
+   The lesson.payoff states a concrete reason a learner should care, ideally with a number or specific stake. Vague payoffs ("important", "useful") score 0-2. Generic-but-true payoffs without numbers or stakes score 3-5. Concrete payoffs with numbers or sharp stakes score 6-8.
+
+2) staircase-coherence  (max 10)
+   The staircase rungs build monotonically: each rung is strictly necessary, no gaps, no rungs reach beyond what's needed. Score down for missing prerequisite, redundant rung, or rung that is actually the destination.
+
+3) destination-precision  (max 8)
+   The destination names a precise object (formula, mechanism, theorem, named technique) the learner can hold afterward. "Understand X" scores 0-2. "Hold formula F and know what each factor protects against" scores 7-8.
+
+4) narration-clarity  (max 12)
+   Every symbol is defined the first time it appears in narration. Every term of jargon is defined or unpacked the first time it appears. Sentences are concrete, not hand-wavy. No contradictions. Read through narration.beats in order and penalize each undefined symbol or jargon term.
+
+5) board-specificity  (max 10)
+   Every "draw" action is concrete enough that a renderer could execute it without inventing details. "Draw a graph" scores 0. "Draw three nodes A, B, C left-to-right with arrows A->B and B->C" scores full credit. "write" actions whose content is "the formula" or "the equation" without the actual content also lose points here.
+
+6) board-coherence  (max 10)
+   The action timeline forms a sensible whiteboard story: nothing is highlighted/transformed/erased without first being introduced; transformations preserve identity in a comprehensible way; the canvas state implied at each moment is plausible (not impossibly cluttered).
+
+7) board-visual-balance  (max 8)
+   Mix of action kinds is appropriate to the topic. Topics that admit diagrams (graphs, distributions, geometry, networks, hierarchies) should have multiple draw actions, not just text writes. Topics that are purely formal still need at least one structural diagram. Heavy text-dump with one-or-zero draws on a visual topic scores 0-3.
+
+8) math-notation-correctness  (max 10)
+   All formulas are mathematically correct. Symbol use is consistent (a symbol means the same thing throughout). Numerical examples are arithmetically correct. Catch incorrect derivations, off-by-one errors, dimension mismatches, wrong constants.
+
+9) code-content-decision  (max 6)
+   Did the lesson make the right decision about whether to include code-as-content? If code is present: is it syntactically valid in its declared language? Is it the right granularity for the beat? Is it correct for the concept? If code is absent: would including code have materially clarified the mechanism? Score 6 for correct decision well-executed; 3 for borderline; 0 for clearly wrong (broken code present, or code obviously needed and absent).
+
+10) pacing-and-density  (max 10)
+    Beats are appropriately spaced for difficulty: intro topics get more seconds per beat, advanced topics get denser pacing. No beat is overloaded with multiple distinct ideas. Total beat times respect durationSeconds. Score down for one beat doing five things, or for huge gaps with no narration.
+
+11) redundancy-and-focus  (max 8)
+    No repeated content across beats. Stays on the topic question. Doesn't waste time on tangents or restate what was just said.
+
+After scoring, write 1-3 topThreeIssues (highest-leverage fixes), set wouldRecommendForPipeline (true only if percent >= 75 AND no criterion below half its max), and write a 2-3 sentence summary.
+
+Return JSON matching this shape exactly:
+
+{
+  "candidateId": "<copy from candidate.id>",
+  "subjectId": "<copy from candidate.topic.id>",
+  "promptVariantId": "<copy from candidate.promptVariant.id>",
+  "criteria": [
+    { "id": "payoff-concreteness", "label": "Payoff concreteness", "max": 8, "score": <0-8>, "notes": "<specific reason for score>" },
+    { "id": "staircase-coherence", "label": "Staircase coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "destination-precision", "label": "Destination precision", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "narration-clarity", "label": "Narration clarity", "max": 12, "score": <0-12>, "notes": "..." },
+    { "id": "board-specificity", "label": "Board specificity", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-coherence", "label": "Board coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-visual-balance", "label": "Board visual balance", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "math-notation-correctness", "label": "Math and notation correctness", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "code-content-decision", "label": "Code-content decision", "max": 6, "score": <0-6>, "notes": "..." },
+    { "id": "pacing-and-density", "label": "Pacing and density", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "redundancy-and-focus", "label": "Redundancy and focus", "max": 8, "score": <0-8>, "notes": "..." }
+  ],
+  "totalScore": <sum of all criterion scores>,
+  "maxScore": 100,
+  "percent": <round(totalScore / maxScore * 100)>,
+  "topThreeIssues": ["<most important fix>", "<second>", "<third>"],
+  "wouldRecommendForPipeline": <true|false>,
+  "summary": "<2-3 sentences>"
+}
+
+Return ONLY the JSON object. No commentary. No fences. No preamble.
+
+Return ONLY the JSON object as your response. No commentary, no markdown fences.

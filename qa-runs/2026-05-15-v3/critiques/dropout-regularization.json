@@ -1,0 +1,94 @@
+{
+  "candidateId": "dropout-regularization-v3-001",
+  "subjectId": "dropout-regularization",
+  "promptVariantId": "whiteboard-v3",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 7,
+      "notes": "1-4pp benchmark gain, <5 lines code. Minor: 'standard benchmarks' unnamed."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Clean prerequisite chain. Minor: 'thinned network' implicitly inside the dropout-rule rung."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "Exact training rule + test-time behavior + causal explanation."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 10,
+      "notes": "'Forward pass', 'thinned network', 'inverted dropout', 'ensemble' defined. Minor: 'geometric mean' and 'intractable' undefined for intro audience."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 9,
+      "notes": "Both network draws very specific. Ensemble diagram says 3-node networks without specifying layer structure."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Timeline sound. Minor: scale_reason and inverted_dropout_formula both at center without sub-positioning."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 8,
+      "notes": "Three draws, multiple highlights with different colors. Excellent variety."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 9,
+      "notes": "Inverted dropout formula correct. Minor: p introduced as drop probability without flagging keep-vs-drop convention difference."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 6,
+      "notes": "NumPy snippet at t=58 mirrors narration precisely; correct mask-and-scale logic."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 8,
+      "notes": "9 beats / 180s averages 20s/beat. Beat at t=58 (thinned net + inverted dropout + scaling) is slightly overloaded."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 7,
+      "notes": "Inverted dropout fix-at-train explained twice (t=88 and t=138). Slight pedagogical reinforcement."
+    }
+  ],
+  "totalScore": 90,
+  "maxScore": 100,
+  "percent": 90,
+  "topThreeIssues": [
+    "Beat at t=58 is overloaded for intro learner (thinned network + inverted dropout + 1/(1-p) formula in <30s); split into two beats",
+    "Two terms used without definition for intro audience: 'intractable' (t=138) and 'geometric mean' (t=158); define inline or simplify",
+    "'center' region assigned to both inverted_dropout_formula (t=58) and scale_reason (t=80) without sub-positioning; risk of overlap"
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "High-quality plan covering core dropout, inverted dropout, ensemble interpretation, and test-time behavior. Well-sequenced staircase, precise diagrams, correct code. Main weaknesses: slightly overloaded inverted-dropout intro beat and two undefined terms inappropriate for stated intro level."
+}

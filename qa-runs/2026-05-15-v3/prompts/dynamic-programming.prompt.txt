@@ -1,0 +1,169 @@
+You are an expert university lecturer producing a structured plan for a whiteboard-style narrated video lesson. Your output drives a downstream renderer, so every field you produce must be precise, executable, and valid JSON.
+
+The video is a single continuous whiteboard. There are NO scenes. There is no slide deck. The narrator speaks while writing equations, sketching diagrams, highlighting key terms, transforming expressions step by step, and erasing what is no longer needed. Imagine a professor at a blackboard for ninety seconds to five minutes: things accumulate, get pointed at, get rewritten, get erased to make room.
+
+Every drawn or written element has a unique targetId. You can transform, highlight, or erase elements only by referencing an id you have already introduced. Nothing appears on the board without a corresponding board action.
+
+Define every symbol the first time you use it. Define every term of jargon the first time it appears. If a beat does two things, split it.
+
+--- VISUAL BALANCE RULE ---
+Diagrams are not decorations. They are the primary vehicle for intuition. For any topic that admits visual structure, board.actions MUST include at least 3 actions with kind "draw", AND at least one of those draw actions must occur at or before durationSeconds / 3 (i.e., in the first third of the lesson).
+
+Use these draw-type guides by topic family:
+  - Probability / Bayesian: tree diagram (branches = hypotheses, leaf labels = likelihoods), Venn diagram, or probability bar partitioned by event
+  - Linear algebra / geometry: 2D scatter cloud with labeled axes, a vector arrow from origin, or a projection diagram showing a point projecting onto a direction vector
+  - Calculus / optimization: a curve on labeled x-y axes with a tangent line or critical-point marker
+  - CS algorithms / dynamic programming: a tree of subproblems, a grid with filled cells, or a DAG of states
+  - ML mechanisms / architecture: a dataflow diagram (rectangles = modules, arrows = tensors with shape labels), or a loss-landscape curve
+  - EM / variational inference / bounds: a likelihood curve above a touching lower-bound curve, both on a shared theta axis, with labeled gap
+  - PCA / dimensionality reduction: a 2D data cloud with a PC1 arrow through it, and a projection of one point onto that arrow
+
+Failing to include at least 3 draw actions is a hard error. Failing to include a draw before durationSeconds / 3 is a hard error.
+
+--- HIGHLIGHT SPECIFICITY RULE ---
+Every highlight action's "content" field must describe WHAT to emphasize and HOW it is marked — never just repeat the targetId. Good examples: "box the numerator P(E|H)*P(H) in red", "underline the word 'bits' in blue", "circle the eigenvalue lambda in the equation C u = lambda u". Bad example: "highlight eq_bayes" or "the bayes equation".
+
+--- DEFINE-ON-FIRST-USE RULE ---
+Even at advanced level, every named function, loss, algorithm, or statistical concept must receive a one-clause unpacking on first appearance in narration. Examples of terms that MUST be unpacked on first use:
+  "MLE" (maximum likelihood estimate — the parameter value that makes the observed data most probable)
+  "ELBO" (evidence lower bound — a function of theta that sits below the log-likelihood and is computable)
+  "KL divergence" (a measure of how much distribution q differs from p, always non-negative)
+  "VAE" (variational autoencoder — a latent-variable model trained via the ELBO)
+  "completeness" (in EM: treating the unobserved labels Z as if they were known)
+  "arg" (the argument — the input value — that achieves the following extremum)
+  "data-generating process" (the probability model assumed to have produced the observed data)
+  "forward pass" (one left-to-right evaluation of the network — input through all layers to output)
+  "stationary point" (a point where the gradient is zero — could be a minimum, maximum, or saddle)
+  "mean-centered" (shifted so the mean is zero — each value has the dataset mean subtracted)
+  "Bradley-Terry" (a pairwise-comparison model where the probability that item i beats item j is sigma(score_i - score_j))
+  "argmax" (the input value that produces the largest output — as opposed to the output itself)
+  "L^2(R)" (the space of square-integrable real functions — functions whose squared integral is finite)
+If you are unsure whether a term needs unpacking, unpack it.
+
+You will plan in four passes before emitting JSON:
+  1) Decide payoff, staircase, destination.
+  2) Outline the narration as ordered beats, each with whyThisBeat naming the rung it adds.
+  3) For each beat, decide what board actions accompany it: what gets written, what gets drawn, what gets pointed at, what gets erased. Verify: (a) at least 3 draw actions exist, (b) the first draw is at or before durationSeconds / 3, (c) every highlight content describes what and how, (d) the last narration beat is within 30 s of durationSeconds.
+  4) Decide whether code-as-content (Python, pseudocode, etc.) clarifies any beat. If not, omit codeBlocks.
+
+Then emit a single JSON object. No prose before or after. No markdown fences. No explanation. JSON only.
+
+---
+
+Topic: Dynamic Programming
+Question: Why does dynamic programming work, and how do optimal substructure and overlapping subproblems tell you when to use it?
+Domain: cs-theory
+Difficulty: intermediate
+
+Produce a JSON object matching this exact shape (omit codeBlocks if no code is needed):
+
+{
+  "id": "dynamic-programming-v3-001",
+  "topic": {
+    "id": "dynamic-programming",
+    "title": "Dynamic Programming",
+    "question": "Why does dynamic programming work, and how do optimal substructure and overlapping subproblems tell you when to use it?",
+    "domain": "cs-theory"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v3",
+    "name": "Whiteboard prompt v3 - one beat one idea + sync enforcement"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "ISO-8601 timestamp"
+  },
+  "lesson": {
+    "title": "specific lesson title",
+    "learnerLevel": "intended audience in one short phrase",
+    "durationSeconds": integer between 90 and 300,
+    "payoff": "the concrete reason a learner should care, with a number when the topic admits one",
+    "staircase": ["rung 1", "rung 2", "rung 3", "..."],
+    "destination": "the precise mechanism, definition, theorem, or formula the learner should hold afterward"
+  },
+  "narration": {
+    "fullText": "the complete spoken script as one paragraph",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "what the narrator says during this beat",
+        "whyThisBeat": "the rung this beat adds to the staircase"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write" | "draw" | "highlight" | "transform" | "erase",
+        "targetId": "stable_kebab_or_snake_id",
+        "content": "for write: the text or LaTeX. for draw: a concrete description executable by a renderer (e.g. 'circle labeled q at center-left, three arrows to circles labeled k1 k2 k3 stacked on the right'). for highlight: what to emphasize and how (e.g. 'box the numerator P(E|H)*P(H) in red'). for transform: the new content the targetId becomes. for erase: 'all' or the targetId to clear.",
+        "region": "optional hint like 'top-left', 'center', 'right-half'"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 0,
+      "language": "python",
+      "code": "the runnable code shown on the board",
+      "purpose": "what this code makes concrete for the learner"
+    }
+  ]
+}
+
+Hard constraints:
+- durationSeconds is between 90 and 300. Pick what suits the topic complexity.
+- narration.beats[i].atSec is monotonically non-decreasing and ends at or before durationSeconds.
+- board.actions[i].at is monotonically non-decreasing and ends at or before durationSeconds.
+- Every transform/highlight/erase action references a targetId previously introduced by write or draw (or "all" for erase).
+- Every drawn element has executable specificity. "Draw a graph" fails. "Draw a directed graph with three nodes A, B, C arranged left-to-right, edges A->B and B->C, edge labels 0.7 and 0.3" passes.
+- board.actions must contain at least 3 actions with kind "draw". The first draw must appear at or before durationSeconds / 3.
+- Every highlight action's content describes WHAT to emphasize and HOW it is marked (e.g. "circle lambda in red"). Repeating the targetId as content is not allowed.
+- Every symbol and every jargon term is defined the first time it appears in narration. Named algorithms, losses, and statistical concepts receive a one-clause unpacking on first use. Terms commonly missed: "forward pass", "data-generating process", "completeness", "stationary point", "mean-centered", "Bradley-Terry", "argmax", "L^2(R)".
+- staircase has between 2 and 8 rungs. Each rung is a short noun phrase.
+- payoff MUST contain a number, a quantified change, or a sharp falsifiable stake. Listing application names alone is NOT enough. BAD: "EM is the engine behind GMMs, HMMs, and variational inference." GOOD: "EM can fit a 10-component mixture in seconds that a brute-force search over all labellings would take 2^N steps to evaluate." BAD: "important for understanding deep learning." GOOD: "Cuts KV-cache memory by 4x with under one percent quality loss."
+- destination is precise. "You will understand attention" fails. "You will hold the formula softmax(QK^T / sqrt(d_k)) V and know what each factor protects against" passes.
+- No HTML, no markdown, no image URLs, no code fences in any string field.
+- Output is a single JSON object. Nothing before. Nothing after.
+
+MANDATORY PRE-EMIT SYNC CHECK — perform this silently and revise before emitting JSON:
+  (a) Compute lastBeatAt = the atSec of the last element in narration.beats.
+  (b) Compute lastActionAt = the at of the last element in board.actions.
+  (c) Check: durationSeconds - lastBeatAt <= 30. If this is violated, EITHER add a closing narration beat that runs to near durationSeconds, OR lower durationSeconds to lastBeatAt + 10. Do NOT leave the gap.
+  (d) Check: lastActionAt - lastBeatAt <= 15. If this is violated, EITHER move the trailing board actions earlier so they coincide with existing beats, OR add a narration beat that covers the trailing actions, OR remove the trailing actions entirely. Do NOT leave board actions running more than 15 seconds past the last narration beat.
+  (e) After any revision, re-verify (c) and (d). Lessons that violate either constraint will be REJECTED automatically by the pipeline.
+
+BAD example (REJECTED):
+  durationSeconds=240, lastBeatAt=175, lastActionAt=228
+  Violation (c): 240 - 175 = 65 seconds of silence — too large.
+  Violation (d): 228 - 175 = 53 seconds of unnarrated board actions — too large.
+
+GOOD example (ACCEPTED):
+  durationSeconds=240, lastBeatAt=215, lastActionAt=225
+  Check (c): 240 - 215 = 25 seconds — within 30. OK.
+  Check (d): 225 - 215 = 10 seconds — within 15. OK.
+
+MANDATORY PRE-EMIT BEAT-DENSITY CHECK — perform this silently after the sync check and revise before emitting JSON:
+  A "distinct conceptual move" is any one of: introducing a new defined term, computing a new arithmetic value, deriving a new equation, or stating a new conclusion. Each narration beat MUST contain at most TWO distinct conceptual moves. If a beat contains three or more, split it into two beats with an intermediate atSec value.
+
+  BAD beat (REJECTED — four moves):
+    { "atSec": 175, "text": "Plug in numbers: 0.99*0.001=0.00099. P(E)=0.01098. Posterior=9%. The rare prior crushed the high likelihood." }
+    Move 1: arithmetic 0.99*0.001=0.00099
+    Move 2: normalizer value P(E)=0.01098
+    Move 3: posterior result 9%
+    Move 4: conceptual conclusion about rare prior
+
+  GOOD replacement (ACCEPTED — two beats, each with two moves):
+    { "atSec": 175, "text": "Plug in: 0.99*0.001=0.00099 and 0.01*0.999=0.00999, summing to P(E)=0.01098." }
+    Move 1: numerator arithmetic
+    Move 2: normalizer P(E) value
+    { "atSec": 200, "text": "Posterior is 0.00099/0.01098 = 9%. Despite a 99%-accurate test, the rare prior crushes the result." }
+    Move 1: posterior result
+    Move 2: conceptual conclusion
+
+  If splitting beats means lowering durationSeconds (because you have no more conceptual moves to fill the time), lower it. A 240s lesson with 8 beats can become a 200s lesson with 8 beats — that is correct. Shorter and well-paced beats every time over padded beats.
+
+  After splitting, re-run the sync check (c) and (d) above to ensure the new last beat is still within 30 s of durationSeconds.
+
+Your final response must be exactly the JSON object. No commentary, no markdown fences, no preamble, no closing remarks. Just the JSON.

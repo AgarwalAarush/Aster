@@ -1,0 +1,300 @@
+You are a senior teaching evaluator and a senior whiteboard-lecture director. You are reviewing a structured plan for a continuous-whiteboard narrated video lesson and scoring it against a fixed rubric. The plan was produced by an LLM under a specific prompt variant; your scoring drives prompt iteration. Be exact, fair, and specific. Reward concrete decisions; penalize hand-waving and unjustified omissions.
+
+You will read:
+  - The subject (topic, question, domain, difficulty, intended learner level)
+  - The candidate lesson plan as JSON
+  - The rubric below
+
+You will score every criterion. You will not skip any. You will not invent criteria. You will use the integer maxes exactly as defined.
+
+You will then return a single JSON object. No prose. No markdown. JSON only.
+
+---
+
+SUBJECT
+  id: dropout-regularization
+  domain: ml-dl
+  difficulty: intro
+  title: Dropout Regularization
+  question: Why does randomly zeroing activations during training regularize a neural network, and what is happening at test time?
+
+CANDIDATE LESSON PLAN (JSON)
+{
+  "id": "dropout-regularization-v3-001",
+  "topic": {
+    "id": "dropout-regularization",
+    "title": "Dropout Regularization",
+    "question": "Why does randomly zeroing activations during training regularize a neural network, and what is happening at test time?",
+    "domain": "ml-dl"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v3",
+    "name": "Whiteboard prompt v3 - one beat one idea + sync enforcement"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Dropout: Regularizing Networks by Randomly Silencing Neurons",
+    "learnerLevel": "early deep learning practitioners who know what a neural network is",
+    "durationSeconds": 180,
+    "payoff": "Dropout reduces test error by 1 to 4 percentage points on standard benchmarks, and adding it to existing training code takes fewer than five lines -- making it one of the highest-value regularizers per line of code in deep learning",
+    "staircase": [
+      "the overfitting problem dropout is designed to fix",
+      "the dropout training rule: zero activations randomly with probability p",
+      "inverted dropout: scaling survivors by 1 divided by 1 minus p",
+      "the ensemble interpretation: training samples exponentially many thinned networks",
+      "the test-time rule: all neurons active, no extra scaling needed with inverted dropout"
+    ],
+    "destination": "The learner holds the inverted dropout training rule -- zero each activation independently with probability p, then multiply survivors by 1/(1-p) -- and understands that at test time all activations are kept at full strength, because the per-neuron scaling already corrected for the missing units during training"
+  },
+  "narration": {
+    "fullText": "A network that memorizes training data rather than learning general patterns is said to overfit -- it performs well on training examples but fails on new ones. Dropout is a regularization technique -- a method that constrains the network during training to reduce overfitting. In each forward pass -- one left-to-right evaluation from input through all layers to output -- we independently zero out each hidden activation with a fixed probability p, typically 0.5. The neurons that survive are called the thinned network for that pass. To keep the expected magnitude of each activation unchanged, we use inverted dropout: we multiply each surviving activation by 1 divided by 1 minus p. This rescaling compensates for the missing units on the same pass rather than at test time. Here is why this regularizes: each forward pass samples a different thinned sub-network, and with n neurons there are 2 to the n possible sub-networks. Training with dropout is like training an exponentially large ensemble of networks that share weights. Ensembles -- collections of models that vote together -- generalize better than any single model. At test time we want the average prediction of all 2 to the n sub-networks, but evaluating them all is intractable. Instead, we keep all neurons active and use the full network with no dropout and no rescaling -- because inverted dropout already corrected the scale during training. The result is an approximate geometric mean of all thinned-network outputs, obtained in a single forward pass at zero extra cost.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "A network that memorizes training data rather than learning general patterns is said to overfit -- it performs well on training examples but fails on new ones.",
+        "whyThisBeat": "establishes the overfitting problem that dropout is designed to fix"
+      },
+      {
+        "atSec": 18,
+        "text": "Dropout is a regularization technique -- a method that constrains the network during training to reduce overfitting.",
+        "whyThisBeat": "names and defines dropout and its category"
+      },
+      {
+        "atSec": 32,
+        "text": "In each forward pass -- one left-to-right evaluation from input through all layers to output -- we independently zero out each hidden activation with a fixed probability p, typically 0.5.",
+        "whyThisBeat": "introduces the dropout training rule and defines forward pass and the parameter p"
+      },
+      {
+        "atSec": 58,
+        "text": "The neurons that survive are called the thinned network for that pass. To keep the expected magnitude of each activation unchanged, we use inverted dropout: we multiply each surviving activation by 1 divided by 1 minus p.",
+        "whyThisBeat": "introduces inverted dropout scaling and explains its purpose"
+      },
+      {
+        "atSec": 88,
+        "text": "This rescaling compensates for the missing units on the same pass rather than at test time.",
+        "whyThisBeat": "clarifies that inverted dropout fixes the magnitude at train time, not test time"
+      },
+      {
+        "atSec": 100,
+        "text": "Here is why this regularizes: each forward pass samples a different thinned sub-network, and with n neurons there are 2 to the n possible sub-networks.",
+        "whyThisBeat": "introduces the ensemble interpretation and the exponential count of sub-networks"
+      },
+      {
+        "atSec": 118,
+        "text": "Training with dropout is like training an exponentially large ensemble of networks that share weights. Ensembles -- collections of models that vote together -- generalize better than any single model.",
+        "whyThisBeat": "names the ensemble analogy and defines ensemble"
+      },
+      {
+        "atSec": 138,
+        "text": "At test time we want the average prediction of all 2 to the n sub-networks, but evaluating them all is intractable. Instead, we keep all neurons active and use the full network with no dropout and no rescaling.",
+        "whyThisBeat": "introduces the test-time rule and explains why no rescaling is needed"
+      },
+      {
+        "atSec": 158,
+        "text": "The result is an approximate geometric mean of all thinned-network outputs, obtained in a single forward pass at zero extra cost.",
+        "whyThisBeat": "states the final payoff: cheap approximate ensemble averaging at test time"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title_label",
+        "content": "Dropout Regularization",
+        "region": "top-center"
+      },
+      {
+        "at": 5,
+        "kind": "write",
+        "targetId": "overfit_label",
+        "content": "Problem: Overfitting",
+        "region": "top-left"
+      },
+      {
+        "at": 8,
+        "kind": "draw",
+        "targetId": "full_network_diagram",
+        "content": "A feedforward network with 4 layers: input layer (3 circles, labeled x1 x2 x3), two hidden layers (4 circles each, labeled h1 through h4 per layer), and output layer (1 circle labeled y-hat). Directed edges connect every node in each layer to every node in the next layer. Edges are thin grey arrows, nodes are open circles. Label the diagram Full network (training start) below it.",
+        "region": "left-half"
+      },
+      {
+        "at": 18,
+        "kind": "write",
+        "targetId": "definition_dropout",
+        "content": "Dropout: regularization technique -- zero activations randomly each forward pass",
+        "region": "top-right"
+      },
+      {
+        "at": 32,
+        "kind": "write",
+        "targetId": "dropout_rule",
+        "content": "Each activation zeroed independently with probability p (e.g. p = 0.5)",
+        "region": "right-half"
+      },
+      {
+        "at": 40,
+        "kind": "draw",
+        "targetId": "thinned_network_diagram",
+        "content": "The same 4-layer network as full_network_diagram but with 2 of the 4 nodes in each hidden layer shown as filled dark circles (zeroed out) and the remaining nodes as open circles (active). Draw a red X over each filled circle. Edges from zeroed nodes are dashed and lighter. Label it Thinned network (one forward pass) below it.",
+        "region": "right-half"
+      },
+      {
+        "at": 58,
+        "kind": "write",
+        "targetId": "inverted_dropout_formula",
+        "content": "Inverted dropout: surviving activation <- activation * 1/(1-p)",
+        "region": "center"
+      },
+      {
+        "at": 65,
+        "kind": "highlight",
+        "targetId": "inverted_dropout_formula",
+        "content": "box the scaling factor 1/(1-p) in red to emphasize it is the correction multiplier",
+        "region": "center"
+      },
+      {
+        "at": 80,
+        "kind": "write",
+        "targetId": "scale_reason",
+        "content": "Keeps E[activation] constant => no correction needed at test time",
+        "region": "center"
+      },
+      {
+        "at": 100,
+        "kind": "write",
+        "targetId": "ensemble_count",
+        "content": "n neurons => 2^n possible sub-networks",
+        "region": "top-right"
+      },
+      {
+        "at": 108,
+        "kind": "draw",
+        "targetId": "ensemble_diagram",
+        "content": "Three small 3-node networks arranged in a row, each with different nodes crossed out with an X to represent three different thinned sub-networks sampled from one parent network. Below each, a small output box labeled prediction 1, prediction 2, prediction 3. A large brace below all three points to a single box labeled ensemble vote. Label the whole diagram Exponentially many shared-weight sub-networks.",
+        "region": "bottom-center"
+      },
+      {
+        "at": 118,
+        "kind": "highlight",
+        "targetId": "ensemble_count",
+        "content": "underline 2^n in blue to stress the exponential number of implicit sub-networks",
+        "region": "top-right"
+      },
+      {
+        "at": 138,
+        "kind": "erase",
+        "targetId": "thinned_network_diagram",
+        "content": "all"
+      },
+      {
+        "at": 140,
+        "kind": "write",
+        "targetId": "test_time_rule",
+        "content": "Test time: all neurons active, no dropout, no rescaling",
+        "region": "right-half"
+      },
+      {
+        "at": 148,
+        "kind": "highlight",
+        "targetId": "test_time_rule",
+        "content": "draw a green check mark next to no rescaling to emphasize inverted dropout already handled this during training",
+        "region": "right-half"
+      },
+      {
+        "at": 158,
+        "kind": "write",
+        "targetId": "summary_label",
+        "content": "Result: approximate geometric mean of all sub-networks -- one forward pass, zero extra cost",
+        "region": "bottom-right"
+      },
+      {
+        "at": 168,
+        "kind": "highlight",
+        "targetId": "summary_label",
+        "content": "underline zero extra cost in orange to stress the computational efficiency at test time",
+        "region": "bottom-right"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 58,
+      "language": "python",
+      "code": "import numpy as np\n\ndef dropout_forward(x, p_drop, training=True):\n    if training:\n        mask = (np.random.rand(*x.shape) > p_drop).astype(float)\n        return x * mask / (1.0 - p_drop)\n    else:\n        return x",
+      "purpose": "makes the inverted dropout formula concrete -- shows the mask, the zeroing, and the 1/(1-p) scale factor, and contrasts with the identity operation at test time"
+    }
+  ]
+}
+
+Rubric (each criterion: id, label, max integer, scoring guidance):
+
+1) payoff-concreteness  (max 8)
+   The lesson.payoff states a concrete reason a learner should care, ideally with a number or specific stake. Vague payoffs ("important", "useful") score 0-2. Generic-but-true payoffs without numbers or stakes score 3-5. Concrete payoffs with numbers or sharp stakes score 6-8.
+
+2) staircase-coherence  (max 10)
+   The staircase rungs build monotonically: each rung is strictly necessary, no gaps, no rungs reach beyond what's needed. Score down for missing prerequisite, redundant rung, or rung that is actually the destination.
+
+3) destination-precision  (max 8)
+   The destination names a precise object (formula, mechanism, theorem, named technique) the learner can hold afterward. "Understand X" scores 0-2. "Hold formula F and know what each factor protects against" scores 7-8.
+
+4) narration-clarity  (max 12)
+   Every symbol is defined the first time it appears in narration. Every term of jargon is defined or unpacked the first time it appears. Sentences are concrete, not hand-wavy. No contradictions. Read through narration.beats in order and penalize each undefined symbol or jargon term.
+
+5) board-specificity  (max 10)
+   Every "draw" action is concrete enough that a renderer could execute it without inventing details. "Draw a graph" scores 0. "Draw three nodes A, B, C left-to-right with arrows A->B and B->C" scores full credit. "write" actions whose content is "the formula" or "the equation" without the actual content also lose points here.
+
+6) board-coherence  (max 10)
+   The action timeline forms a sensible whiteboard story: nothing is highlighted/transformed/erased without first being introduced; transformations preserve identity in a comprehensible way; the canvas state implied at each moment is plausible (not impossibly cluttered).
+
+7) board-visual-balance  (max 8)
+   Mix of action kinds is appropriate to the topic. Topics that admit diagrams (graphs, distributions, geometry, networks, hierarchies) should have multiple draw actions, not just text writes. Topics that are purely formal still need at least one structural diagram. Heavy text-dump with one-or-zero draws on a visual topic scores 0-3.
+
+8) math-notation-correctness  (max 10)
+   All formulas are mathematically correct. Symbol use is consistent (a symbol means the same thing throughout). Numerical examples are arithmetically correct. Catch incorrect derivations, off-by-one errors, dimension mismatches, wrong constants.
+
+9) code-content-decision  (max 6)
+   Did the lesson make the right decision about whether to include code-as-content? If code is present: is it syntactically valid in its declared language? Is it the right granularity for the beat? Is it correct for the concept? If code is absent: would including code have materially clarified the mechanism? Score 6 for correct decision well-executed; 3 for borderline; 0 for clearly wrong (broken code present, or code obviously needed and absent).
+
+10) pacing-and-density  (max 10)
+    Beats are appropriately spaced for difficulty: intro topics get more seconds per beat, advanced topics get denser pacing. No beat is overloaded with multiple distinct ideas. Total beat times respect durationSeconds. Score down for one beat doing five things, or for huge gaps with no narration.
+
+11) redundancy-and-focus  (max 8)
+    No repeated content across beats. Stays on the topic question. Doesn't waste time on tangents or restate what was just said.
+
+After scoring, write 1-3 topThreeIssues (highest-leverage fixes), set wouldRecommendForPipeline (true only if percent >= 75 AND no criterion below half its max), and write a 2-3 sentence summary.
+
+Return JSON matching this shape exactly:
+
+{
+  "candidateId": "<copy from candidate.id>",
+  "subjectId": "<copy from candidate.topic.id>",
+  "promptVariantId": "<copy from candidate.promptVariant.id>",
+  "criteria": [
+    { "id": "payoff-concreteness", "label": "Payoff concreteness", "max": 8, "score": <0-8>, "notes": "<specific reason for score>" },
+    { "id": "staircase-coherence", "label": "Staircase coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "destination-precision", "label": "Destination precision", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "narration-clarity", "label": "Narration clarity", "max": 12, "score": <0-12>, "notes": "..." },
+    { "id": "board-specificity", "label": "Board specificity", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-coherence", "label": "Board coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-visual-balance", "label": "Board visual balance", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "math-notation-correctness", "label": "Math and notation correctness", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "code-content-decision", "label": "Code-content decision", "max": 6, "score": <0-6>, "notes": "..." },
+    { "id": "pacing-and-density", "label": "Pacing and density", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "redundancy-and-focus", "label": "Redundancy and focus", "max": 8, "score": <0-8>, "notes": "..." }
+  ],
+  "totalScore": <sum of all criterion scores>,
+  "maxScore": 100,
+  "percent": <round(totalScore / maxScore * 100)>,
+  "topThreeIssues": ["<most important fix>", "<second>", "<third>"],
+  "wouldRecommendForPipeline": <true|false>,
+  "summary": "<2-3 sentences>"
+}
+
+Return ONLY the JSON object. No commentary. No fences. No preamble.
+
+Return ONLY the JSON object as your response. No commentary, no markdown fences.

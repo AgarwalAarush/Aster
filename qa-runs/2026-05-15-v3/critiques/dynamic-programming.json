@@ -1,0 +1,94 @@
+{
+  "candidateId": "dynamic-programming-v3-001",
+  "subjectId": "dynamic-programming",
+  "promptVariantId": "whiteboard-v3",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 8,
+      "notes": "Names fib(40), exact call counts (>1B vs exactly 40), speedup ratio (25-million-fold)."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Six-rung chain logical. Minor: bottom-up table rung slightly out of order vs two-question test."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "Both conditions named precisely; correctness guarantee + complexity outcome stated."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 11,
+      "notes": "All terms defined on first use including overlapping subproblems, memoization, optimal substructure, principle of optimality. Minor: 'principle of optimality' described in passing."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 9,
+      "notes": "Tree, DAG, table all specific. Minor: dp_table draws cells dp[0]-dp[7] but only fills values through dp[5]; renderer must invent dp[6]/dp[7]."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 8,
+      "notes": "Mostly sound. dp_table drawn at 90s during memoization-complexity beat -- slightly ahead of narration concept."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 8,
+      "notes": "Three distinct draws. Topic is inherently visual; all three expected diagram types present."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 9,
+      "notes": "Recurrence correct, complexity claims correct, shortest-path arithmetic correct (5 vs 6). Spoken-vs-written notation consistent within each medium."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 6,
+      "notes": "Three strategies side by side at correct beat (72s); valid Python; correct algorithms."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 8,
+      "notes": "9 beats / 210s averages 23s/beat. Beat at 98s is slightly dense (defines optimal substructure with full definition spanning 27s)."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 7,
+      "notes": "Closing beat repeats complexity contrast as bookend. The 25-million-fold payoff stat doesn't appear in narration -- minor missed reinforcement."
+    }
+  ],
+  "totalScore": 91,
+  "maxScore": 100,
+  "percent": 91,
+  "topThreeIssues": [
+    "dp_table draws cells dp[0]-dp[7] but only fills values through dp[5]; either fill all cells or truncate to dp[0]-dp[5]",
+    "dp_table drawn at 90s during memoization-complexity beat before narration introduces what a DP table is; board action runs 8-15s ahead of narration concept",
+    "'Principle of optimality' named at beat 7 (150s) but never formally defined in narration; either define explicitly or drop the name"
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "Strong plan with concrete payoff, well-structured staircase, highly specific board actions. Primary weaknesses are minor audio-visual sync gap (dp_table ahead of narration) and underspecified table cells. Math and code correct; pacing appropriate."
+}

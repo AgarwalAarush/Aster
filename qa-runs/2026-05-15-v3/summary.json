@@ -1,0 +1,216 @@
+{
+  "sweepId": "2026-05-15-v3",
+  "promptVariantIds": [
+    "whiteboard-v3"
+  ],
+  "subjectCount": 5,
+  "recommendedCount": 5,
+  "mean": 90.8,
+  "median": 91,
+  "min": 89,
+  "max": 93,
+  "perSubject": [
+    {
+      "subjectId": "bayes-rule",
+      "domain": "probability-stats",
+      "difficulty": "intro",
+      "percent": 93,
+      "totalScore": 93,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Selective erase at t=182 leaves four numeric write targets in center-right and top-right cluttering during proportionality close",
+        "Venn diagram at t=55 in center never erased; competes spatially with tree in left-half and joint-factoring in center-right",
+        "'Mutually exclusive' introduced at law-of-total-probability beat without definition for intro audience"
+      ]
+    },
+    {
+      "subjectId": "dynamic-programming",
+      "domain": "cs-theory",
+      "difficulty": "intermediate",
+      "percent": 91,
+      "totalScore": 91,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "dp_table draws cells dp[0]-dp[7] but only fills values through dp[5]; either fill all cells or truncate to dp[0]-dp[5]",
+        "dp_table drawn at 90s during memoization-complexity beat before narration introduces what a DP table is; board action runs 8-15s ahead of narration concept",
+        "'Principle of optimality' named at beat 7 (150s) but never formally defined in narration; either define explicitly or drop the name"
+      ]
+    },
+    {
+      "subjectId": "em-algorithm",
+      "domain": "classical-ml",
+      "difficulty": "advanced",
+      "percent": 91,
+      "totalScore": 91,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Board clutter at t=182: highlighting elbo_diagram in center after gmm_estep/gmm_mstep written there (t=150, t=158) -- erase GMM equations first or move closing highlight to unoccupied region",
+        "GMM beat density: t=148 introduces E-step soft-assignment AND M-step responsibility-weighted mean in single 20s beat -- split into two beats",
+        "ELBO staircase rung conflation: covers both geometric intuition and algebraic derivation; separate into two rungs"
+      ]
+    },
+    {
+      "subjectId": "dropout-regularization",
+      "domain": "ml-dl",
+      "difficulty": "intro",
+      "percent": 90,
+      "totalScore": 90,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Beat at t=58 is overloaded for intro learner (thinned network + inverted dropout + 1/(1-p) formula in <30s); split into two beats",
+        "Two terms used without definition for intro audience: 'intractable' (t=138) and 'geometric mean' (t=158); define inline or simplify",
+        "'center' region assigned to both inverted_dropout_formula (t=58) and scale_reason (t=80) without sub-positioning; risk of overlap"
+      ]
+    },
+    {
+      "subjectId": "eigenvectors-pca",
+      "domain": "pure-math",
+      "difficulty": "intermediate",
+      "percent": 89,
+      "totalScore": 89,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Board clutter from never erasing data_cloud before drawing centered_cloud in same region, plus late erase of gradient_eq after narration ends -- explicit erase of data_cloud at t=19 and earlier gradient_eq erase would help",
+        "Staircase is missing micro-rung between covariance matrix and quadratic form: u^T x_i projection is not surfaced explicitly",
+        "28-second closing segment (t=232-260) has board-only actions with no narration -- ending feels padded; add closing narration beat tying eigenvector equation back to original question"
+      ]
+    }
+  ],
+  "perCriterion": [
+    {
+      "id": "board-coherence",
+      "meanScore": 8.2,
+      "maxScore": 10,
+      "meanPercent": 82,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    },
+    {
+      "id": "pacing-and-density",
+      "meanScore": 8.2,
+      "maxScore": 10,
+      "meanPercent": 82,
+      "lowestSubjectId": "dropout-regularization",
+      "lowestScore": 8
+    },
+    {
+      "id": "redundancy-and-focus",
+      "meanScore": 7,
+      "maxScore": 8,
+      "meanPercent": 87.5,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 7
+    },
+    {
+      "id": "narration-clarity",
+      "meanScore": 10.6,
+      "maxScore": 12,
+      "meanPercent": 88.3,
+      "lowestSubjectId": "dropout-regularization",
+      "lowestScore": 10
+    },
+    {
+      "id": "staircase-coherence",
+      "meanScore": 9,
+      "maxScore": 10,
+      "meanPercent": 90,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 9
+    },
+    {
+      "id": "board-specificity",
+      "meanScore": 9,
+      "maxScore": 10,
+      "meanPercent": 90,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 9
+    },
+    {
+      "id": "math-notation-correctness",
+      "meanScore": 9.2,
+      "maxScore": 10,
+      "meanPercent": 92,
+      "lowestSubjectId": "dropout-regularization",
+      "lowestScore": 9
+    },
+    {
+      "id": "payoff-concreteness",
+      "meanScore": 7.6,
+      "maxScore": 8,
+      "meanPercent": 95,
+      "lowestSubjectId": "dropout-regularization",
+      "lowestScore": 7
+    },
+    {
+      "id": "destination-precision",
+      "meanScore": 8,
+      "maxScore": 8,
+      "meanPercent": 100,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    },
+    {
+      "id": "board-visual-balance",
+      "meanScore": 8,
+      "maxScore": 8,
+      "meanPercent": 100,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    },
+    {
+      "id": "code-content-decision",
+      "meanScore": 6,
+      "maxScore": 6,
+      "meanPercent": 100,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 6
+    }
+  ],
+  "commonIssues": [
+    {
+      "issue": "selective erase at t=182 leaves four numeric write targets in center-right and top-right cluttering during proportionality close",
+      "count": 1
+    },
+    {
+      "issue": "venn diagram at t=55 in center never erased; competes spatially with tree in left-half and joint-factoring in center-right",
+      "count": 1
+    },
+    {
+      "issue": "'mutually exclusive' introduced at law-of-total-probability beat without definition for intro audience",
+      "count": 1
+    },
+    {
+      "issue": "beat at t=58 is overloaded for intro learner (thinned network + inverted dropout + 1/(1-p) formula in <30s); split into two beats",
+      "count": 1
+    },
+    {
+      "issue": "two terms used without definition for intro audience: 'intractable' (t=138) and 'geometric mean' (t=158); define inline or simplify",
+      "count": 1
+    },
+    {
+      "issue": "'center' region assigned to both inverted_dropout_formula (t=58) and scale_reason (t=80) without sub-positioning; risk of overlap",
+      "count": 1
+    },
+    {
+      "issue": "dp_table draws cells dp[0]-dp[7] but only fills values through dp[5]; either fill all cells or truncate to dp[0]-dp[5]",
+      "count": 1
+    },
+    {
+      "issue": "dp_table drawn at 90s during memoization-complexity beat before narration introduces what a dp table is; board action runs 8-15s ahead of narration concept",
+      "count": 1
+    },
+    {
+      "issue": "'principle of optimality' named at beat 7 (150s) but never formally defined in narration; either define explicitly or drop the name",
+      "count": 1
+    },
+    {
+      "issue": "board clutter from never erasing data_cloud before drawing centered_cloud in same region, plus late erase of gradient_eq after narration ends -- explicit erase of data_cloud at t=19 and earlier gradient_eq erase would help",
+      "count": 1
+    }
+  ]
+}

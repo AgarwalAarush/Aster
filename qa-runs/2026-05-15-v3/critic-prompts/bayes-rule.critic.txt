@@ -1,0 +1,350 @@
+You are a senior teaching evaluator and a senior whiteboard-lecture director. You are reviewing a structured plan for a continuous-whiteboard narrated video lesson and scoring it against a fixed rubric. The plan was produced by an LLM under a specific prompt variant; your scoring drives prompt iteration. Be exact, fair, and specific. Reward concrete decisions; penalize hand-waving and unjustified omissions.
+
+You will read:
+  - The subject (topic, question, domain, difficulty, intended learner level)
+  - The candidate lesson plan as JSON
+  - The rubric below
+
+You will score every criterion. You will not skip any. You will not invent criteria. You will use the integer maxes exactly as defined.
+
+You will then return a single JSON object. No prose. No markdown. JSON only.
+
+---
+
+SUBJECT
+  id: bayes-rule
+  domain: probability-stats
+  difficulty: intro
+  title: Bayes' Rule
+  question: How does Bayes' rule update beliefs given evidence, and why is the posterior proportional to likelihood times prior?
+
+CANDIDATE LESSON PLAN (JSON)
+{
+  "id": "bayes-rule-v3-001",
+  "topic": {
+    "id": "bayes-rule",
+    "title": "Bayes' Rule",
+    "question": "How does Bayes' rule update beliefs given evidence, and why is the posterior proportional to likelihood times prior?",
+    "domain": "probability-stats"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v3",
+    "name": "Whiteboard prompt v3 - one beat one idea + sync enforcement"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Bayes' Rule: Updating Beliefs with Evidence",
+    "learnerLevel": "intro probability students",
+    "durationSeconds": 210,
+    "payoff": "A 99%-accurate disease test still has a 91% false-positive rate when the disease is rare -- Bayes' rule is the only tool that reveals this, turning a misleading number into a correct 9% posterior.",
+    "staircase": [
+      "conditional probability and joint probability",
+      "symmetry of the joint: two ways to factor P(H and E)",
+      "isolating the posterior by dividing both sides by P(E)",
+      "computing P(E) as total evidence via the law of total probability",
+      "numeric worked example with a rare disease",
+      "conceptual insight: low prior crushes high likelihood"
+    ],
+    "destination": "You will hold P(H|E) = P(E|H)*P(H) / [P(E|H)*P(H) + P(E|not-H)*P(not-H)] and understand that the denominator is the normalizing constant that makes the posterior a valid probability, forcing it to be proportional to likelihood times prior."
+  },
+  "narration": {
+    "fullText": "Imagine you test positive for a rare disease. Should you panic? Bayes' rule -- a formula for updating a belief after seeing evidence -- will give you the real answer. Start with two events: H, the hypothesis that you have the disease, and E, the evidence that the test is positive. The conditional probability P(H|E) -- read as the probability of H given E -- is what we want: the chance you are sick given a positive test. To find it, notice that the joint probability P(H and E), meaning both events happen together, can be factored two ways: as P(E|H) times P(H), or equally as P(H|E) times P(E). Setting these equal gives us P(H|E) times P(E) equals P(E|H) times P(H). Divide both sides by P(E) and you have Bayes' rule: P(H|E) equals P(E|H) times P(H) over P(E). The numerator is the likelihood -- P(E|H), the probability the test is positive if you are sick -- multiplied by the prior -- P(H), your baseline belief before the test. The denominator P(E) is the total probability of a positive test regardless of disease status, computed by the law of total probability -- a rule that sums over all mutually exclusive ways an event can occur: P(E) equals P(E|H) times P(H) plus P(E|not-H) times P(not-H). Now plug in numbers. The prior P(H) is 0.001. The likelihood P(E|H) is 0.99. The false-positive rate P(E|not-H) is 0.01. First compute the numerator: 0.99 times 0.001 equals 0.00099. Then the other term: 0.01 times 0.999 equals 0.00999. So P(E) equals 0.00099 plus 0.00999 equals 0.01098. Divide: 0.00099 over 0.01098 equals about 0.09 -- a 9% posterior probability. Despite the test being 99% accurate, the rare prior crushes the likelihood: only about 1 in 11 positive tests reflects a true case. This is why the posterior is proportional to likelihood times prior -- P(E) is just a constant that normalizes the product to sum to one across all hypotheses.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Imagine you test positive for a rare disease. Should you panic? Bayes' rule -- a formula for updating a belief after seeing evidence -- will give you the real answer.",
+        "whyThisBeat": "motivation: sets the falsifiable stake and introduces the term Bayes rule"
+      },
+      {
+        "atSec": 15,
+        "text": "Start with two events: H, the hypothesis that you have the disease, and E, the evidence that the test is positive.",
+        "whyThisBeat": "conditional probability and joint probability: names the two events"
+      },
+      {
+        "atSec": 28,
+        "text": "The conditional probability P(H|E) -- the probability of H given E -- is what we want: the chance you are sick given a positive test.",
+        "whyThisBeat": "conditional probability and joint probability: defines conditional probability notation"
+      },
+      {
+        "atSec": 42,
+        "text": "The joint probability P(H and E) -- meaning both events happen together -- can be factored two ways: as P(E|H) times P(H), or equally as P(H|E) times P(E).",
+        "whyThisBeat": "symmetry of the joint: introduces two-way factoring of the joint probability"
+      },
+      {
+        "atSec": 62,
+        "text": "Setting these equal gives P(H|E) times P(E) equals P(E|H) times P(H). Divide both sides by P(E) and you have Bayes' rule: P(H|E) equals P(E|H) times P(H) over P(E).",
+        "whyThisBeat": "isolating the posterior: derives Bayes rule by algebraic manipulation"
+      },
+      {
+        "atSec": 85,
+        "text": "The numerator is the likelihood -- P(E|H), the probability the test is positive if you are sick -- multiplied by the prior -- P(H), your baseline belief before seeing any evidence.",
+        "whyThisBeat": "isolating the posterior: names and defines likelihood and prior"
+      },
+      {
+        "atSec": 105,
+        "text": "The denominator P(E) is the total probability of a positive test, computed by the law of total probability -- a rule that sums over all mutually exclusive ways an event can occur. P(E) equals P(E|H) times P(H) plus P(E|not-H) times P(not-H).",
+        "whyThisBeat": "computing P(E) as total evidence: introduces the law of total probability and the full denominator formula"
+      },
+      {
+        "atSec": 130,
+        "text": "Now plug in numbers. The prior P(H) is 0.001. The likelihood P(E|H) is 0.99. The false-positive rate P(E|not-H) is 0.01.",
+        "whyThisBeat": "numeric worked example: states the three input values"
+      },
+      {
+        "atSec": 148,
+        "text": "Compute the numerator: 0.99 times 0.001 equals 0.00099. The other term: 0.01 times 0.999 equals 0.00999. So P(E) equals 0.00099 plus 0.00999, which is 0.01098.",
+        "whyThisBeat": "numeric worked example: computes numerator and normalizing constant"
+      },
+      {
+        "atSec": 170,
+        "text": "Divide: 0.00099 over 0.01098 is about 0.09 -- a 9% posterior probability.",
+        "whyThisBeat": "numeric worked example: states the posterior result"
+      },
+      {
+        "atSec": 182,
+        "text": "Despite a 99%-accurate test, the rare prior crushes the likelihood -- only about 1 in 11 positive tests reflects a true case.",
+        "whyThisBeat": "conceptual insight: explains why low prior dominates"
+      },
+      {
+        "atSec": 195,
+        "text": "This is why the posterior is proportional to likelihood times prior: P(E) is just a normalizing constant that makes the posterior a valid probability summing to one across all hypotheses.",
+        "whyThisBeat": "conceptual insight: explains proportionality and the role of the denominator"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title_label",
+        "content": "Bayes' Rule: Updating Beliefs",
+        "region": "top-center"
+      },
+      {
+        "at": 10,
+        "kind": "draw",
+        "targetId": "prob_tree",
+        "content": "A probability tree rooted at a node labeled Population on the left; two branches go right: top branch labeled H disease with probability 0.001, bottom branch labeled not-H no disease with probability 0.999; from H, two child branches: E given H labeled 0.99 positive and not-E given H labeled 0.01 negative; from not-H, two child branches: E given not-H labeled 0.01 positive and not-E given not-H labeled 0.99 negative",
+        "region": "left-half"
+      },
+      {
+        "at": 15,
+        "kind": "write",
+        "targetId": "event_labels",
+        "content": "H = disease present    E = test positive",
+        "region": "top-left"
+      },
+      {
+        "at": 28,
+        "kind": "write",
+        "targetId": "posterior_goal",
+        "content": "Want: P(H|E)",
+        "region": "top-right"
+      },
+      {
+        "at": 42,
+        "kind": "write",
+        "targetId": "joint_factoring",
+        "content": "P(H,E) = P(E|H) P(H) = P(H|E) P(E)",
+        "region": "center-right"
+      },
+      {
+        "at": 55,
+        "kind": "draw",
+        "targetId": "venn_diagram",
+        "content": "Two overlapping circles on a rectangular background; left circle labeled H disease, right circle labeled E positive test; the overlapping lens region is shaded gray and labeled H and E; outside both circles is labeled neither",
+        "region": "center"
+      },
+      {
+        "at": 62,
+        "kind": "highlight",
+        "targetId": "joint_factoring",
+        "content": "underline the equality P(E|H) P(H) = P(H|E) P(E) in blue to show the two-way factoring",
+        "region": "center-right"
+      },
+      {
+        "at": 68,
+        "kind": "write",
+        "targetId": "bayes_rule",
+        "content": "P(H|E) = P(E|H) P(H) / P(E)",
+        "region": "top-right"
+      },
+      {
+        "at": 75,
+        "kind": "highlight",
+        "targetId": "bayes_rule",
+        "content": "box the numerator P(E|H) P(H) in red",
+        "region": "top-right"
+      },
+      {
+        "at": 85,
+        "kind": "write",
+        "targetId": "term_labels",
+        "content": "Likelihood: P(E|H)    Prior: P(H)",
+        "region": "right-half"
+      },
+      {
+        "at": 105,
+        "kind": "write",
+        "targetId": "total_prob_formula",
+        "content": "P(E) = P(E|H) P(H) + P(E|not-H) P(not-H)",
+        "region": "bottom-right"
+      },
+      {
+        "at": 115,
+        "kind": "highlight",
+        "targetId": "total_prob_formula",
+        "content": "underline P(E|not-H) P(not-H) in orange to mark the false-positive contribution",
+        "region": "bottom-right"
+      },
+      {
+        "at": 130,
+        "kind": "draw",
+        "targetId": "prob_bar",
+        "content": "A horizontal bar spanning the full width, partitioned into two segments: a small left segment width proportional to 0.001 labeled P(H)=0.001 shaded dark blue, and a wide right segment width proportional to 0.999 labeled P(not-H)=0.999 shaded light gray; below the bar inside the dark-blue segment a thin sub-bar labeled P(E|H)=0.99 and inside the gray segment a thin sub-bar labeled P(E|not-H)=0.01",
+        "region": "bottom-center"
+      },
+      {
+        "at": 138,
+        "kind": "write",
+        "targetId": "numeric_inputs",
+        "content": "P(H)=0.001   P(E|H)=0.99   P(E|not-H)=0.01",
+        "region": "center-right"
+      },
+      {
+        "at": 148,
+        "kind": "write",
+        "targetId": "numeric_numerator",
+        "content": "Numerator: 0.99 x 0.001 = 0.00099",
+        "region": "center-right"
+      },
+      {
+        "at": 155,
+        "kind": "write",
+        "targetId": "numeric_denom_term2",
+        "content": "0.01 x 0.999 = 0.00999",
+        "region": "center-right"
+      },
+      {
+        "at": 160,
+        "kind": "write",
+        "targetId": "numeric_pe",
+        "content": "P(E) = 0.00099 + 0.00999 = 0.01098",
+        "region": "center-right"
+      },
+      {
+        "at": 170,
+        "kind": "write",
+        "targetId": "numeric_posterior",
+        "content": "P(H|E) = 0.00099 / 0.01098 = 0.09 = 9%",
+        "region": "top-right"
+      },
+      {
+        "at": 175,
+        "kind": "highlight",
+        "targetId": "numeric_posterior",
+        "content": "circle the result 9% in red to emphasize the counterintuitive answer",
+        "region": "top-right"
+      },
+      {
+        "at": 182,
+        "kind": "erase",
+        "targetId": "numeric_inputs",
+        "content": "all"
+      },
+      {
+        "at": 185,
+        "kind": "write",
+        "targetId": "proportionality",
+        "content": "Posterior proportional to Likelihood x Prior  (P(E) is just normalization)",
+        "region": "bottom-center"
+      },
+      {
+        "at": 195,
+        "kind": "highlight",
+        "targetId": "proportionality",
+        "content": "box the phrase Likelihood x Prior in green to anchor the proportionality insight",
+        "region": "bottom-center"
+      },
+      {
+        "at": 205,
+        "kind": "highlight",
+        "targetId": "bayes_rule",
+        "content": "underline the denominator P(E) in orange to label it as the normalizing constant",
+        "region": "top-right"
+      }
+    ]
+  }
+}
+
+Rubric (each criterion: id, label, max integer, scoring guidance):
+
+1) payoff-concreteness  (max 8)
+   The lesson.payoff states a concrete reason a learner should care, ideally with a number or specific stake. Vague payoffs ("important", "useful") score 0-2. Generic-but-true payoffs without numbers or stakes score 3-5. Concrete payoffs with numbers or sharp stakes score 6-8.
+
+2) staircase-coherence  (max 10)
+   The staircase rungs build monotonically: each rung is strictly necessary, no gaps, no rungs reach beyond what's needed. Score down for missing prerequisite, redundant rung, or rung that is actually the destination.
+
+3) destination-precision  (max 8)
+   The destination names a precise object (formula, mechanism, theorem, named technique) the learner can hold afterward. "Understand X" scores 0-2. "Hold formula F and know what each factor protects against" scores 7-8.
+
+4) narration-clarity  (max 12)
+   Every symbol is defined the first time it appears in narration. Every term of jargon is defined or unpacked the first time it appears. Sentences are concrete, not hand-wavy. No contradictions. Read through narration.beats in order and penalize each undefined symbol or jargon term.
+
+5) board-specificity  (max 10)
+   Every "draw" action is concrete enough that a renderer could execute it without inventing details. "Draw a graph" scores 0. "Draw three nodes A, B, C left-to-right with arrows A->B and B->C" scores full credit. "write" actions whose content is "the formula" or "the equation" without the actual content also lose points here.
+
+6) board-coherence  (max 10)
+   The action timeline forms a sensible whiteboard story: nothing is highlighted/transformed/erased without first being introduced; transformations preserve identity in a comprehensible way; the canvas state implied at each moment is plausible (not impossibly cluttered).
+
+7) board-visual-balance  (max 8)
+   Mix of action kinds is appropriate to the topic. Topics that admit diagrams (graphs, distributions, geometry, networks, hierarchies) should have multiple draw actions, not just text writes. Topics that are purely formal still need at least one structural diagram. Heavy text-dump with one-or-zero draws on a visual topic scores 0-3.
+
+8) math-notation-correctness  (max 10)
+   All formulas are mathematically correct. Symbol use is consistent (a symbol means the same thing throughout). Numerical examples are arithmetically correct. Catch incorrect derivations, off-by-one errors, dimension mismatches, wrong constants.
+
+9) code-content-decision  (max 6)
+   Did the lesson make the right decision about whether to include code-as-content? If code is present: is it syntactically valid in its declared language? Is it the right granularity for the beat? Is it correct for the concept? If code is absent: would including code have materially clarified the mechanism? Score 6 for correct decision well-executed; 3 for borderline; 0 for clearly wrong (broken code present, or code obviously needed and absent).
+
+10) pacing-and-density  (max 10)
+    Beats are appropriately spaced for difficulty: intro topics get more seconds per beat, advanced topics get denser pacing. No beat is overloaded with multiple distinct ideas. Total beat times respect durationSeconds. Score down for one beat doing five things, or for huge gaps with no narration.
+
+11) redundancy-and-focus  (max 8)
+    No repeated content across beats. Stays on the topic question. Doesn't waste time on tangents or restate what was just said.
+
+After scoring, write 1-3 topThreeIssues (highest-leverage fixes), set wouldRecommendForPipeline (true only if percent >= 75 AND no criterion below half its max), and write a 2-3 sentence summary.
+
+Return JSON matching this shape exactly:
+
+{
+  "candidateId": "<copy from candidate.id>",
+  "subjectId": "<copy from candidate.topic.id>",
+  "promptVariantId": "<copy from candidate.promptVariant.id>",
+  "criteria": [
+    { "id": "payoff-concreteness", "label": "Payoff concreteness", "max": 8, "score": <0-8>, "notes": "<specific reason for score>" },
+    { "id": "staircase-coherence", "label": "Staircase coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "destination-precision", "label": "Destination precision", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "narration-clarity", "label": "Narration clarity", "max": 12, "score": <0-12>, "notes": "..." },
+    { "id": "board-specificity", "label": "Board specificity", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-coherence", "label": "Board coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-visual-balance", "label": "Board visual balance", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "math-notation-correctness", "label": "Math and notation correctness", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "code-content-decision", "label": "Code-content decision", "max": 6, "score": <0-6>, "notes": "..." },
+    { "id": "pacing-and-density", "label": "Pacing and density", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "redundancy-and-focus", "label": "Redundancy and focus", "max": 8, "score": <0-8>, "notes": "..." }
+  ],
+  "totalScore": <sum of all criterion scores>,
+  "maxScore": 100,
+  "percent": <round(totalScore / maxScore * 100)>,
+  "topThreeIssues": ["<most important fix>", "<second>", "<third>"],
+  "wouldRecommendForPipeline": <true|false>,
+  "summary": "<2-3 sentences>"
+}
+
+Return ONLY the JSON object. No commentary. No fences. No preamble.
+
+Return ONLY the JSON object as your response. No commentary, no markdown fences.

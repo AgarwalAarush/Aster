@@ -1,0 +1,38 @@
+Sweep: 2026-05-15-v3
+Prompt variant(s): whiteboard-v3
+Subjects critiqued: 5
+Mean: 90.8%   Median: 91%   Min: 89%   Max: 93%
+Recommended for pipeline: 5 / 5
+
+Per subject (sorted by percent, descending):
+  93 %  probability-stats   intro         bayes-rule [REC]
+  91 %  cs-theory           intermediate  dynamic-programming [REC]
+  91 %  classical-ml        advanced      em-algorithm [REC]
+  90 %  ml-dl               intro         dropout-regularization [REC]
+  89 %  pure-math           intermediate  eigenvectors-pca [REC]
+
+Per criterion (sorted by mean percent, ascending — worst first):
+  pct%  mean/max  criterion-id                       lowest-subject
+  82    8.2/10    board-coherence                   bayes-rule (8)
+  82    8.2/10    pacing-and-density                dropout-regularization (8)
+  87.5  7/8       redundancy-and-focus              bayes-rule (7)
+  88.3  10.6/12   narration-clarity                 dropout-regularization (10)
+  90    9/10      staircase-coherence               bayes-rule (9)
+  90    9/10      board-specificity                 bayes-rule (9)
+  92    9.2/10    math-notation-correctness         dropout-regularization (9)
+  95    7.6/8     payoff-concreteness               dropout-regularization (7)
+  100   8/8       destination-precision             bayes-rule (8)
+  100   8/8       board-visual-balance              bayes-rule (8)
+  100   6/6       code-content-decision             bayes-rule (6)
+
+Most common issues raised across subjects:
+  x1  selective erase at t=182 leaves four numeric write targets in center-right and top-right cluttering during proportionality close
+  x1  venn diagram at t=55 in center never erased; competes spatially with tree in left-half and joint-factoring in center-right
+  x1  'mutually exclusive' introduced at law-of-total-probability beat without definition for intro audience
+  x1  beat at t=58 is overloaded for intro learner (thinned network + inverted dropout + 1/(1-p) formula in <30s); split into two beats
+  x1  two terms used without definition for intro audience: 'intractable' (t=138) and 'geometric mean' (t=158); define inline or simplify
+  x1  'center' region assigned to both inverted_dropout_formula (t=58) and scale_reason (t=80) without sub-positioning; risk of overlap
+  x1  dp_table draws cells dp[0]-dp[7] but only fills values through dp[5]; either fill all cells or truncate to dp[0]-dp[5]
+  x1  dp_table drawn at 90s during memoization-complexity beat before narration introduces what a dp table is; board action runs 8-15s ahead of n…
+  x1  'principle of optimality' named at beat 7 (150s) but never formally defined in narration; either define explicitly or drop the name
+  x1  board clutter from never erasing data_cloud before drawing centered_cloud in same region, plus late erase of gradient_eq after narration en…

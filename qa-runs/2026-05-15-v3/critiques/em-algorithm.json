@@ -1,0 +1,94 @@
+{
+  "candidateId": "em-algorithm-v3-001",
+  "subjectId": "em-algorithm",
+  "promptVariantId": "whiteboard-v3",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 8,
+      "notes": "Names sum-inside-log block, 2^N brute-force vs O(N) per iteration, monotone-convergence guarantee."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Seven rungs build cleanly. Minor: ELBO rung blends visual and algebraic intro into one label."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "Exact E-step rule + Q definition + one-line proof chain."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 11,
+      "notes": "All symbols defined inline. Minor: ELBO first introduced in payoff without full definition (defined later in narration)."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 9,
+      "notes": "All draws executable: scatter, ELBO diagram, E-step inset all specified. Minor: convergence-chain layout (stacked vs side-by-side) unclear."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 8,
+      "notes": "Highlights follow writes. Minor: at t=182 elbo_diagram highlight in center where gmm_estep/gmm_mstep written at t=150/158 -- potential clutter."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 8,
+      "notes": "Three distinct draws plus revisited annotations across many beats. Strong visual continuity."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 9,
+      "notes": "ELBO, KL, convergence chain, GMM E/M-step all correct. Code uses log-sum-exp correctly. Minor: code variable named 'sigma' (std dev) vs equation showing sigma^2 -- ambiguity."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 6,
+      "notes": "Code at right beat (148s); valid Python with log-sum-exp; matches narration precisely."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 8,
+      "notes": "9 beats / 190s averages 21s/beat. Beat at t=148 introduces both E-step and M-step formulas in one 20s beat -- slightly dense."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 7,
+      "notes": "Stays tightly on topic. Final highlight at t=182 'reminds the viewer' -- minor redundancy."
+    }
+  ],
+  "totalScore": 91,
+  "maxScore": 100,
+  "percent": 91,
+  "topThreeIssues": [
+    "Board clutter at t=182: highlighting elbo_diagram in center after gmm_estep/gmm_mstep written there (t=150, t=158) -- erase GMM equations first or move closing highlight to unoccupied region",
+    "GMM beat density: t=148 introduces E-step soft-assignment AND M-step responsibility-weighted mean in single 20s beat -- split into two beats",
+    "ELBO staircase rung conflation: covers both geometric intuition and algebraic derivation; separate into two rungs"
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "Strong plan threading EM from intractability motivation through ELBO construction, E/M-step mechanics, one-line convergence proof, and concrete GMM instantiation with runnable code. Math correct, board specific, destination precise. Main weaknesses: closing canvas-state conflict and slightly dense GMM beat."
+}

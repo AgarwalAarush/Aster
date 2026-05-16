@@ -1,0 +1,17 @@
+New sweep:     2026-05-15-v3 (whiteboard-v3)
+  mean=90.8%  min=89%  max=93%
+Champion:      2026-05-15-v2 (whiteboard-v2)
+  mean=91.2%  min=90%
+Mean delta:    -0.4pp
+Min delta:     -1.0pp
+Per-subject regressions (>3pp drop vs champion on a shared subject): 0
+
+Decision: REJECT
+Reason:   mean delta -0.4pp is below the +0.5pp acceptance bar
+
+Threshold check (mean>=90 & all-criteria-mean>=85 & all-subjects>=82):
+  mean>=90:           PASS  (90.8%)
+  per-criterion>=85:  FAIL  (worst: board-coherence 82%)
+  per-subject>=82:    PASS  (worst: eigenvectors-pca 89%)
+
+THRESHOLD NOT MET — continue iterating.
