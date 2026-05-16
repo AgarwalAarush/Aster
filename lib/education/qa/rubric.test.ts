@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { gradeScriptCandidate } from "./rubric";
 import { gqaStrongCandidate, gqaWeakCandidate } from "./fixtures/gqa";
+import { flashAttentionStrongCandidate, vaeLossStrongCandidate } from "./fixtures/ml";
 
 describe("gradeScriptCandidate", () => {
   it("scores a strong GQA script materially higher than the shallow generated baseline", () => {
@@ -28,5 +29,21 @@ describe("gradeScriptCandidate", () => {
 
     expect(result.recommendations.join(" ")).toContain("MHA");
     expect(result.recommendations.join(" ")).toContain("KV cache");
+  });
+
+  it("uses VAE-specific criteria for VAE loss scripts", () => {
+    const result = gradeScriptCandidate(vaeLossStrongCandidate);
+
+    expect(result.percent).toBeGreaterThanOrEqual(85);
+    expect(result.criteria.map((criterion) => criterion.id)).toContain("vae-elbo");
+    expect(result.criteria.map((criterion) => criterion.id)).not.toContain("gqa-mha-gqa-mqa");
+  });
+
+  it("uses FlashAttention-specific criteria for FlashAttention scripts", () => {
+    const result = gradeScriptCandidate(flashAttentionStrongCandidate);
+
+    expect(result.percent).toBeGreaterThanOrEqual(85);
+    expect(result.criteria.map((criterion) => criterion.id)).toContain("flash-online-softmax");
+    expect(result.criteria.map((criterion) => criterion.id)).not.toContain("gqa-mha-gqa-mqa");
   });
 });

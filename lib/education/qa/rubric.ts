@@ -26,7 +26,8 @@ type KeywordCriterion = {
   recommendation: string;
 };
 
-const KEYWORD_CRITERIA: KeywordCriterion[] = [
+const TOPIC_CRITERIA: Record<string, KeywordCriterion[]> = {
+  gqa: [
   {
     id: "prerequisite-setup",
     label: "Sets up transformer attention prerequisites",
@@ -62,15 +63,91 @@ const KEYWORD_CRITERIA: KeywordCriterion[] = [
     requiredTerms: ["diagram", "animation", "memory bar", "equation"],
     recommendation: "Add concrete visual direction for diagrams, equation transforms, and memory bars.",
   },
-];
+  ],
+  "vae-loss": [
+    {
+      id: "vae-encoder-decoder",
+      label: "Explains encoder, decoder, and latent distribution",
+      max: 14,
+      requiredTerms: ["encoder", "decoder", "q(z|x)", "p(x|z)"],
+      recommendation: "Explain the encoder q(z|x), decoder p(x|z), and how samples flow through them.",
+    },
+    {
+      id: "vae-reconstruction",
+      label: "Explains reconstruction likelihood",
+      max: 12,
+      requiredTerms: ["reconstruction", "negative log likelihood", "explain x"],
+      recommendation: "Name the reconstruction term as likelihood or negative log likelihood, not just pixel error.",
+    },
+    {
+      id: "vae-kl-prior",
+      label: "Explains KL pressure against the prior",
+      max: 14,
+      requiredTerms: ["kl", "p(z)", "prior", "sampleable"],
+      recommendation: "Explain KL(q(z|x) || p(z)) as pressure toward a sampleable prior.",
+    },
+    {
+      id: "vae-elbo",
+      label: "Connects the terms to the ELBO",
+      max: 14,
+      requiredTerms: ["elbo", "lower bound", "negative elbo"],
+      recommendation: "Connect reconstruction plus KL to maximizing the ELBO or minimizing negative ELBO.",
+    },
+    {
+      id: "vae-beta-tradeoff",
+      label: "Names beta-VAE trade-off pressure",
+      max: 12,
+      requiredTerms: ["beta", "tradeoff", "regular", "reconstruction"],
+      recommendation: "Explain beta-VAE as a knob between reconstruction detail and latent regularity.",
+    },
+  ],
+  "flash-attention": [
+    {
+      id: "flash-score-matrix",
+      label: "Explains the materialized attention matrix bottleneck",
+      max: 14,
+      requiredTerms: ["n by n", "qk", "67 million", "134 mb"],
+      recommendation: "Quantify the materialized N by N score matrix, ideally with the 8192-token example.",
+    },
+    {
+      id: "flash-memory-hierarchy",
+      label: "Explains HBM versus SRAM",
+      max: 14,
+      requiredTerms: ["hbm", "sram", "memory", "traffic"],
+      recommendation: "Explain why HBM traffic, not only arithmetic, is the bottleneck.",
+    },
+    {
+      id: "flash-tiling",
+      label: "Explains tiling through SRAM",
+      max: 14,
+      requiredTerms: ["tile", "q", "k", "v", "sram"],
+      recommendation: "Explain Q/K/V tiling and that score tiles are consumed without writing the full matrix.",
+    },
+    {
+      id: "flash-online-softmax",
+      label: "Explains online softmax state",
+      max: 14,
+      requiredTerms: ["online softmax", "running max", "running sum", "output"],
+      recommendation: "Explain online softmax with running max, normalization sum, and output accumulator.",
+    },
+    {
+      id: "flash-exact-tradeoff",
+      label: "Names exactness and trade-offs",
+      max: 12,
+      requiredTerms: ["exact", "not sparse", "tradeoff", "recomputation"],
+      recommendation: "Clarify FlashAttention is exact attention with kernel complexity or recomputation trade-offs.",
+    },
+  ],
+};
 
 export function gradeScriptCandidate(value: unknown): GradeResult {
   const candidate = parseScriptCandidate(value);
   const text = candidateSearchText(candidate);
+  const topicCriteria = TOPIC_CRITERIA[candidate.topic.id] ?? [];
   const criteria = [
     gradeDuration(candidate),
     gradeStructure(candidate),
-    ...KEYWORD_CRITERIA.map((criterion) => gradeKeywordCriterion(text, criterion)),
+    ...topicCriteria.map((criterion) => gradeKeywordCriterion(text, criterion)),
   ];
   const score = criteria.reduce((sum, criterion) => sum + criterion.score, 0);
   const maxScore = criteria.reduce((sum, criterion) => sum + criterion.max, 0);

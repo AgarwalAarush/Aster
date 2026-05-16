@@ -17,5 +17,10 @@ describe("buildScriptQaPrompt", () => {
     expect(prompt).toContain("KV cache");
     expect(prompt).toContain("math");
     expect(prompt).toContain("visualPlan");
+    expect(prompt).toContain("payoff");
+    expect(prompt).toContain("staircase");
+    expect(prompt).toContain("destination");
+    expect(prompt).toContain("whyThisBeat");
+    expect(prompt).toContain("one idea, one visual");
   });
 });

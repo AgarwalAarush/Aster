@@ -83,6 +83,22 @@ describe("parseScriptCandidate", () => {
     ).toThrow();
   });
 
+  it("accepts concrete diagram descriptions from agent-generated visual plans", () => {
+    const candidate = parseScriptCandidate({
+      ...completeCandidate,
+      visualPlan: [
+        {
+          sceneTitle: "Score matrix bottleneck",
+          diagram:
+            "Q times K transpose producing a large N by N score grid with memory readouts and tile boundaries.",
+          animation: "The grid expands as N increases, then tile boundaries snap into place.",
+        },
+      ],
+    });
+
+    expect(candidate.visualPlan[0]?.diagram).toContain("N by N score grid");
+  });
+
   it("rejects candidates without prompt provenance", () => {
     const withoutPrompt: Partial<typeof completeCandidate> = { ...completeCandidate };
     delete withoutPrompt.promptVariant;

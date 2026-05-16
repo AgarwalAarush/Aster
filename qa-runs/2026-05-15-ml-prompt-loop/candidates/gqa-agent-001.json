@@ -1,0 +1,76 @@
+{
+  "id": "gqa-agent-001",
+  "topic": {
+    "id": "gqa",
+    "title": "Grouped Query Attention",
+    "question": "What is grouped query attention and why do LLMs use it?"
+  },
+  "promptVariant": {
+    "id": "staircase-beats-v1",
+    "name": "Staircase beats v1",
+    "prompt": "starter prompt from user"
+  },
+  "metadata": {
+    "runner": "in-cursor-agent",
+    "model": "cursor-subagent",
+    "createdAt": "2026-05-16T02:30:00.000Z"
+  },
+  "lesson": {
+    "title": "Grouped Query Attention: Sharing Memory Without Sharing Every Thought",
+    "learnerLevel": "Intermediate: familiar with transformers, new to attention variants",
+    "targetDurationSeconds": 165,
+    "learningObjective": "Explain how grouped query attention reduces KV cache memory and decoding bandwidth by letting multiple query heads share fewer key-value heads, while preserving more quality than multi-query attention."
+  },
+  "script": {
+    "fullNarration": "Payoff: grouped query attention lets large language models generate faster and use less memory by shrinking the key-value cache without collapsing all attention heads into one shared memory stream. Staircase: start with standard multi-head attention, reveal why autoregressive decoding stores keys and values, show the extreme compression of multi-query attention, then place grouped query attention between full independence and full sharing. Destination: understand the grouping ratio h_q divided by h_kv, including a concrete 12 query head and 4 KV head example where every 3 query heads share one key-value head. A transformer does not look at a sentence with one pair of eyes. In multi-head attention, it looks with many heads at once. Each head forms its own queries, keys, and values. The query asks, what am I looking for? The keys say, what does each previous token offer? The values carry the information to copy forward. In classic multi-head attention, every query head has its own matching key head and value head. If the model has 12 attention heads, it keeps 12 sets of queries, 12 sets of keys, and 12 sets of values. This is expressive, because each head can learn a different attention pattern. But during generation, it creates a memory problem. When an LLM generates one token at a time, it does not recompute the keys and values for every previous token from scratch. It stores them in the KV cache. That cache is a running memory of all earlier tokens: keys and values for every layer, every token, and every KV head. As the context gets longer, the cache grows linearly. Multi-query attention attacks this bottleneck aggressively. It keeps many query heads, but uses only one shared key head and one shared value head. Now all query heads ask different questions, but they consult the same shared memory map. This makes decoding much cheaper, because the KV cache is tiny compared with full multi-head attention. But the compression can be too strong. If every query head must share exactly the same keys and values, the model may lose some of the diversity that made multi-head attention powerful. Multi-query attention is fast and memory efficient, but it can cost quality, especially at larger scales or harder tasks. Grouped query attention is the compromise. Instead of giving every query head its own keys and values, and instead of forcing all query heads to share one set, it splits query heads into groups. Each group shares one key head and one value head. So the model keeps several memory maps, but fewer than the number of query heads. The key number is the grouping ratio: h_q divided by h_kv. Here, h_q is the number of query heads, and h_kv is the number of key-value heads. If h_q is 12 and h_kv is 4, then the ratio is 3. That means every 3 query heads share one KV head. In the 12 query head and 4 KV head example, query heads 1 through 3 use KV head A, heads 4 through 6 use KV head B, heads 7 through 9 use KV head C, and heads 10 through 12 use KV head D. The queries stay numerous, but the cached keys and values are only one third as large as full multi-head attention. The tradeoff is a slider. Full multi-head attention gives each query head its own KV head: highest flexibility, largest cache. Multi-query attention gives all query heads one shared KV head: smallest cache, strongest sharing. Grouped query attention sits between them: less memory and bandwidth than MHA, usually better quality than MQA. That is why modern LLMs use grouped query attention. It reduces the expensive part of generation: carrying and reading the KV cache for long contexts. The result is not a new kind of attention score. It is a better allocation of attention resources: many ways to ask, fewer memories to store, and enough groups to keep the model smart.",
+    "sections": [
+      {
+        "kind": "motivation",
+        "title": "The Payoff",
+        "narration": "Payoff: grouped query attention lets large language models generate faster and use less memory by shrinking the key-value cache without collapsing all attention heads into one shared memory stream. Staircase: start with standard multi-head attention, reveal why autoregressive decoding stores keys and values, show the extreme compression of multi-query attention, then place grouped query attention between full independence and full sharing.",
+        "visual": "Three labeled cards appear: Payoff, Staircase, Destination. Behind them, a memory bar shrinks from large to medium while a speed gauge rises.",
+        "estimatedSeconds": 18
+      },
+      {
+        "kind": "background",
+        "title": "Many Heads, Many Views",
+        "narration": "A transformer does not look at a sentence with one pair of eyes. In multi-head attention, it looks with many heads at once. Each head forms its own queries, keys, and values.",
+        "visual": "A token emits several colored query beams toward previous tokens. Each color is a different attention head, with Q, K, and V labels.",
+        "estimatedSeconds": 20
+      },
+      {
+        "kind": "mechanism",
+        "title": "Grouped Query Attention",
+        "narration": "Grouped query attention is the compromise. Instead of giving every query head its own keys and values, and instead of forcing all query heads to share one set, it splits query heads into groups. Each group shares one key head and one value head.",
+        "visual": "Twelve query heads are divided into four colored brackets. Each bracket connects to one K head and one V head.",
+        "estimatedSeconds": 20
+      },
+      {
+        "kind": "math",
+        "title": "The Grouping Ratio",
+        "narration": "The key number is the grouping ratio: h_q divided by h_kv. If h_q is 12 and h_kv is 4, then the ratio is 3. That means every 3 query heads share one KV head.",
+        "visual": "Formula appears: grouping ratio = h_q / h_kv = 12 / 4 = 3. Then four groups of three query heads snap into place.",
+        "estimatedSeconds": 18
+      },
+      {
+        "kind": "tradeoff",
+        "title": "The Slider",
+        "narration": "The tradeoff is a slider. Full multi-head attention gives each query head its own KV head: highest flexibility, largest cache. Multi-query attention gives all query heads one shared KV head: smallest cache, strongest sharing. Grouped query attention sits between them.",
+        "visual": "A horizontal slider has three stops: MHA with 12 KV heads, GQA with 4 KV heads, MQA with 1 KV head.",
+        "estimatedSeconds": 22
+      }
+    ]
+  },
+  "visualPlan": [
+    {
+      "sceneTitle": "Grouping Ratio Example",
+      "diagram": "Formula h_q / h_kv = 12 / 4 = 3 beside group mapping Q1-Q3, Q4-Q6, Q7-Q9, Q10-Q12.",
+      "animation": "Numbers drop into the formula; the result 3 pulses; query heads snap into groups of three."
+    },
+    {
+      "sceneTitle": "Tradeoff Slider",
+      "diagram": "Slider comparing MHA, GQA, and MQA across flexibility, cache size, and decoding bandwidth.",
+      "animation": "Slider moves from MHA to MQA, then settles on GQA; cache and quality indicators balance in the middle."
+    }
+  ]
+}

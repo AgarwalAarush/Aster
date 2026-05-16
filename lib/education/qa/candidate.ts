@@ -15,12 +15,13 @@ const scriptSectionSchema = z.object({
   title: z.string().trim().min(3).max(120),
   narration: z.string().trim().min(40).max(1200),
   visual: z.string().trim().min(12).max(500),
+  whyThisBeat: z.string().trim().min(12).max(300).optional(),
   estimatedSeconds: z.number().int().min(10).max(60),
 });
 
 const visualPlanItemSchema = z.object({
   sceneTitle: z.string().trim().min(3).max(120),
-  diagram: z.string().trim().min(3).max(80),
+  diagram: z.string().trim().min(3).max(180),
   animation: z.string().trim().min(12).max(500),
 });
 
@@ -47,6 +48,9 @@ export const scriptCandidateSchema = z.object({
     learnerLevel: z.string().trim().min(3).max(120),
     targetDurationSeconds: z.number().int().min(90).max(240),
     learningObjective: z.string().trim().min(20).max(400),
+    payoff: z.string().trim().min(12).max(400).optional(),
+    staircase: z.array(z.string().trim().min(3).max(160)).min(1).max(12).optional(),
+    destination: z.string().trim().min(12).max(400).optional(),
   }),
   script: z.object({
     fullNarration: z.string().trim().min(120).max(10000),

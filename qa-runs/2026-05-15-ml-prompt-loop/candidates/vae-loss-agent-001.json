@@ -1,0 +1,76 @@
+{
+  "id": "vae-loss-agent-001",
+  "topic": {
+    "id": "vae-loss",
+    "title": "Variational Autoencoder Loss",
+    "question": "Why does VAE loss combine reconstruction loss and KL divergence?"
+  },
+  "promptVariant": {
+    "id": "staircase-beats-v1",
+    "name": "Staircase beats v1",
+    "prompt": "starter prompt from user"
+  },
+  "metadata": {
+    "runner": "in-cursor-agent",
+    "model": "cursor-subagent",
+    "createdAt": "2026-05-16T02:30:00.000Z"
+  },
+  "lesson": {
+    "title": "Why VAE Loss Has Two Terms",
+    "learnerLevel": "intermediate machine learning learner",
+    "targetDurationSeconds": 156,
+    "learningObjective": "Explain why a variational autoencoder optimizes both reconstruction accuracy and KL divergence, and how that objective connects to the ELBO, sampling, and beta-VAE tradeoffs."
+  },
+  "script": {
+    "fullNarration": "Payoff: by the end, VAE loss will feel less like two arbitrary penalties and more like one negotiated objective: make believable reconstructions while shaping a usable latent space. Staircase: first we ask what an autoencoder wants, then why randomness breaks the simple version, then how reconstruction and KL each solve one half of the problem, then how ELBO and beta-VAE make the tradeoff explicit. Destination: the VAE loss is usually written as negative ELBO, L(x) = -E_{z~q_phi(z|x)}[log p_theta(x|z)] + KL(q_phi(z|x) || p(z)), optionally L_beta = recon + beta KL. A regular autoencoder compresses an input into a code and expands it back. A VAE changes the promise: the encoder does not output one point, it outputs a distribution q_phi(z|x), often a diagonal Gaussian with mean mu(x) and variance sigma^2(x). The decoder receives a latent z and predicts the data distribution p_theta(x|z). If the decoded sample cannot explain the original input, the model pays reconstruction loss. But reconstruction alone lets every input claim a private island in latent space. Then sampling z from a simple prior p(z), usually N(0,I), may land in empty or nonsensical territory. The KL term, KL(q_phi(z|x) || p(z)), measures how much the encoder's distribution deviates from the prior. Together the terms form the evidence lower bound, or ELBO: log p_theta(x) >= E_q[log p_theta(x|z)] - KL(q_phi(z|x)||p(z)). During training, we still need gradients through samples. The reparameterization trick writes z = mu + sigma * epsilon, where epsilon is drawn from N(0,I). Beta-VAE exposes the pressure knob: L_beta = reconstruction + beta * KL. If beta is small, reconstructions sharpen but the latent space may become tangled. If beta is large, latent factors may become more regular or disentangled, but reconstructions can blur or lose details.",
+    "sections": [
+      {
+        "kind": "motivation",
+        "title": "The Two-Term Mystery",
+        "narration": "Payoff: VAE loss is not two arbitrary penalties; it is a bargain between copying an input and making a latent space we can sample from. Destination: understand L(x) = -E_{z~q_phi(z|x)}[log p_theta(x|z)] + KL(q_phi(z|x)||p(z)).",
+        "visual": "Title card with two forces pulling on a latent point: reconstruct x on the left and match prior p(z) on the right.",
+        "estimatedSeconds": 18
+      },
+      {
+        "kind": "background",
+        "title": "From Code To Distribution",
+        "narration": "A regular autoencoder maps x to one code and decodes it back. A variational autoencoder maps x to a distribution q_phi(z|x), usually N(mu_phi(x), diag(sigma_phi^2(x))).",
+        "visual": "Input image flows into an encoder box that outputs two sliders labeled mu and sigma, forming a bell curve q(z|x).",
+        "estimatedSeconds": 20
+      },
+      {
+        "kind": "mechanism",
+        "title": "Reconstruction Keeps Meaning",
+        "narration": "The reconstruction term asks: if z came from q_phi(z|x), can the decoder explain the original x? In likelihood form, the reward is E_q[log p_theta(x|z)], so the loss is its negative.",
+        "visual": "Decoder output appears beside the original input. Pixel differences glow red, then compress into a meter labeled reconstruction loss.",
+        "estimatedSeconds": 22
+      },
+      {
+        "kind": "math",
+        "title": "KL Shapes The Latent Space",
+        "narration": "The prior p(z) is usually a simple standard normal, N(0,I). The KL divergence KL(q_phi(z|x) || p(z)) measures how expensive it is for the encoder's distribution to drift away from that prior.",
+        "visual": "A central prior bell curve is shown. Several q(z|x) curves try to move away; elastic bands pull them back toward N(0,I).",
+        "estimatedSeconds": 24
+      },
+      {
+        "kind": "tradeoff",
+        "title": "Beta-VAE Turns The Knob",
+        "narration": "Beta-VAE makes the balance visible: L_beta = reconstruction loss + beta times KL. With beta below 1, the model tends to spend more capacity on detailed reconstructions. With beta above 1, it puts stronger pressure on the latent space.",
+        "visual": "A knob labeled beta turns from low to high. Low beta shows sharp reconstructions and messy latent clusters; high beta shows smoother clusters and softer reconstructions.",
+        "estimatedSeconds": 27
+      }
+    ]
+  },
+  "visualPlan": [
+    {
+      "sceneTitle": "Two Forces Of VAE Loss",
+      "diagram": "Split-screen force diagram: reconstruction pulls decoded output toward x; KL pulls q(z|x) toward p(z). Equation centered below: loss = recon + KL.",
+      "animation": "Start with only reconstruction force, then add KL force, then settle into a balanced latent point."
+    },
+    {
+      "sceneTitle": "ELBO As A Lower Bound",
+      "diagram": "Stacked math visual: log p(x) on top, ELBO below, decomposed into expected log likelihood minus KL.",
+      "animation": "The ELBO bar rises when reconstruction improves and drops when KL grows too large, showing the bound being optimized."
+    }
+  ]
+}

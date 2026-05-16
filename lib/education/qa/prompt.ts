@@ -9,7 +9,15 @@ export function buildScriptQaPrompt({
   question,
   targetDurationSeconds = 150,
 }: BuildScriptQaPromptOptions): string {
-  return `Create a script-first technical education candidate for QA review.
+  return `Create a script-plus-storyboard for a narrated technical video. This is not a blog post.
+
+Before writing beats, decide and state:
+- payoff: the concrete reason the viewer should care, with a number when the topic admits one.
+- staircase: the minimum prerequisite sequence that gets the viewer to the concept.
+- destination: the precise mechanism, definition, or theorem the viewer should hold afterward.
+
+Write beats, not sections. Each beat is one idea, one visual, and one short stretch of narration.
+If a beat does two things, split it. Each beat must include whyThisBeat: the rung it adds to the staircase.
 
 Topic: ${topicTitle}
 Question: ${question}
@@ -38,7 +46,10 @@ Return only JSON with this structure:
     "title": "specific lesson title",
     "learnerLevel": "specific audience",
     "targetDurationSeconds": ${targetDurationSeconds},
-    "learningObjective": "what the learner should understand"
+    "learningObjective": "what the learner should understand",
+    "payoff": "optional payoff sentence",
+    "staircase": ["optional prerequisite rung list"],
+    "destination": "optional precise destination sentence"
   },
   "script": {
     "fullNarration": "complete spoken script, not bullet points",
@@ -48,6 +59,7 @@ Return only JSON with this structure:
         "title": "section title",
         "narration": "spoken narration for this section",
         "visual": "concrete diagram or animation direction",
+        "whyThisBeat": "one line explaining what this beat accomplishes in the staircase",
         "estimatedSeconds": 20
       }
     ]

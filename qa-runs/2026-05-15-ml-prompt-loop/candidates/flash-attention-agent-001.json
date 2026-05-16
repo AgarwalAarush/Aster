@@ -1,0 +1,76 @@
+{
+  "id": "flash-attention-agent-001",
+  "topic": {
+    "id": "flash-attention",
+    "title": "FlashAttention",
+    "question": "How does FlashAttention make attention faster and more memory efficient?"
+  },
+  "promptVariant": {
+    "id": "staircase-beats-v1",
+    "name": "Staircase beats v1",
+    "prompt": "starter prompt from user"
+  },
+  "metadata": {
+    "runner": "in-cursor-agent",
+    "model": "cursor-subagent",
+    "createdAt": "2026-05-16T02:30:00.000Z"
+  },
+  "lesson": {
+    "title": "FlashAttention: Faster Exact Attention by Moving Less Data",
+    "learnerLevel": "Intermediate machine learning engineer",
+    "targetDurationSeconds": 160,
+    "learningObjective": "Explain why standard attention is memory-bandwidth limited, how FlashAttention uses tiling and online softmax to compute exact attention with less HBM traffic, and what parts of attention it does not change."
+  },
+  "script": {
+    "fullNarration": "Payoff: FlashAttention makes attention faster mostly by reducing memory traffic, not by changing the math. Staircase: first we expose the NxN memory problem, then separate SRAM from HBM, then show tiling, then online softmax, then exactness and limits. Destination: by the end, FlashAttention should feel like the same attention algorithm reorganized around the memory hierarchy. In a transformer, attention starts with Q, K, and V. Standard attention forms S equals Q K transpose, an N by N matrix of scores, applies softmax row by row, then multiplies by V. The painful part is that S can be huge. For a sequence of 8192 tokens, S has over 67 million entries per head. In fp16, that is about 134 megabytes just for scores, before gradients, masks, dropout, or multiple heads. GPUs are fast at math, but data movement is often the bottleneck. High bandwidth memory, or HBM, is large but relatively far away. On-chip SRAM is much smaller, but far faster. Standard attention repeatedly writes and reads the NxN score matrix through HBM. FlashAttention asks an IO-aware question: can we compute the same output while keeping small blocks in SRAM and never writing the full score matrix out? Instead of loading all keys and values against all queries at once, FlashAttention loads blocks of Q, K, and V. A query tile meets a key tile, produces a small score block in SRAM, updates the softmax statistics and output accumulator, then moves on. The tricky part is softmax. Softmax needs a row maximum and a row sum across all keys, so it seems to require seeing the whole row of scores. FlashAttention uses an online softmax: as each tile arrives, it updates the running maximum, rescales the old partial sum and output, adds the new tile contribution, and preserves numerical stability. FlashAttention is exact attention, up to normal floating point roundoff. It is not sparse attention, not low-rank attention, and not a learned approximation. Every query still interacts with every key. Finally, FlashAttention does not make attention linear in sequence length. The number of dot products is still O(N squared). It changes how exact attention is executed: tile the inputs, stream the softmax, avoid materializing NxN scores, and move less data through HBM.",
+    "sections": [
+      {
+        "kind": "motivation",
+        "title": "The Payoff",
+        "narration": "Payoff: FlashAttention makes attention faster mostly by reducing memory traffic, not by changing the math. Staircase: first the NxN bottleneck, then SRAM versus HBM, then tiling, then online softmax, then exactness and limits.",
+        "visual": "Three labeled cards appear: Payoff, Staircase, Destination. Behind them, a transformer block glows around the attention layer.",
+        "estimatedSeconds": 16
+      },
+      {
+        "kind": "background",
+        "title": "The NxN Score Wall",
+        "narration": "Standard attention forms scores S equals Q K transpose. If the sequence length is N, S is N by N for each head. At 8192 tokens, that is over 67 million scores.",
+        "visual": "Q and K matrices multiply into a huge square score matrix labeled N by N. A counter grows from 1M to 67M entries.",
+        "estimatedSeconds": 25
+      },
+      {
+        "kind": "mechanism",
+        "title": "Memory, Not Just Math",
+        "narration": "Modern GPUs can perform enormous numbers of matrix operations, but moving data can dominate runtime. HBM is large, measured in gigabytes, but it is off chip. SRAM is on chip and much faster, but tiny by comparison.",
+        "visual": "A GPU diagram shows large distant HBM and small nearby SRAM. Thick arrows carry the score matrix back and forth to HBM, then turn red.",
+        "estimatedSeconds": 25
+      },
+      {
+        "kind": "math",
+        "title": "Online Softmax",
+        "narration": "Softmax is the hard part because each row needs a maximum and a denominator across all keys. FlashAttention uses online softmax. For each row, it keeps a running max, a running normalization sum, and a running output.",
+        "visual": "A row of scores arrives in chunks. Running variables m, l, and O update after each chunk.",
+        "estimatedSeconds": 30
+      },
+      {
+        "kind": "tradeoff",
+        "title": "Exact, IO-Aware Attention",
+        "narration": "FlashAttention is exact attention, up to normal floating point roundoff. It is not sparse attention, not low-rank attention, and not a learned approximation. Every query still interacts with every key.",
+        "visual": "Two checkmarks appear: same formula and all query-key pairs. Two arrows label the change: schedule and memory movement.",
+        "estimatedSeconds": 31
+      }
+    ]
+  },
+  "visualPlan": [
+    {
+      "sceneTitle": "Materialized Score Matrix",
+      "diagram": "Q times K transpose producing a large N by N score grid.",
+      "animation": "The grid expands rapidly as N increases; a memory label reaches 134 MB for 8192 fp16 scores per head."
+    },
+    {
+      "sceneTitle": "FlashAttention Tiling",
+      "diagram": "Blocks of Q, K, and V entering SRAM and producing an output block.",
+      "animation": "Tiles stream through SRAM; temporary score tiles appear briefly and disappear without touching HBM."
+    }
+  ]
+}
