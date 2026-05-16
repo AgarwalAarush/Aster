@@ -1,0 +1,216 @@
+{
+  "sweepId": "2026-05-15-v2",
+  "promptVariantIds": [
+    "whiteboard-v2"
+  ],
+  "subjectCount": 5,
+  "recommendedCount": 5,
+  "mean": 91.2,
+  "median": 91,
+  "min": 90,
+  "max": 93,
+  "perSubject": [
+    {
+      "subjectId": "dropout-regularization",
+      "domain": "ml-dl",
+      "difficulty": "intro",
+      "percent": 93,
+      "totalScore": 93,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Math direction error: narration says 'expected input is p times larger' at test time -- correct direction is 1/p times larger (training activations are p times smaller)",
+        "Canvas clutter: net_full from t=0 is never erased; test-time section overlays new equations on a busy canvas",
+        "Ensemble tree grandchildren described as 'smaller unit subsets' without naming the actual subsets -- specify h1/h3/h2/h4 explicitly"
+      ]
+    },
+    {
+      "subjectId": "eigenvectors-pca",
+      "domain": "pure-math",
+      "difficulty": "intermediate",
+      "percent": 92,
+      "totalScore": 92,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Beat at t=175 overloaded: introduces orthogonality requirement, appeals to C symmetry, closes ranking logic in one beat -- split into two",
+        "E[xx^T]=C asserted without justification; for stated audience this step needs an explicit narrated note about centered data and (1/n)X^TX",
+        "n in covariance definition never named as sample size -- one-clause aside fixes it"
+      ]
+    },
+    {
+      "subjectId": "dynamic-programming",
+      "domain": "cs-theory",
+      "difficulty": "intermediate",
+      "percent": 91,
+      "totalScore": 91,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Payoff statistic is factually wrong: naive fib(50) makes ~2x10^10 calls (~20 billion), not '>2 trillion' -- propagates into payoff, narration, and board write at t=35",
+        "memo_table and tabulation_sweep both assigned region bottom-center, creating layout collision -- shift one to bottom-right",
+        "fib5_tree erased at t=260 with 10s remaining -- primary visual anchor removed during closing summary"
+      ]
+    },
+    {
+      "subjectId": "bayes-rule",
+      "domain": "probability-stats",
+      "difficulty": "intro",
+      "percent": 90,
+      "totalScore": 90,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Probability tree drawn at 5s with all numeric values populated before narration introduces those numbers at 145s -- creates a 2-minute forward reference; either defer numeric labels or use placeholders early",
+        "Payoff says 'less than 9%' but actual posterior is 9.016% -- slightly above 9% -- correct framing or change worked example",
+        "Beat at 175s packs normalizer computation, posterior result, and rare-prior insight into one beat -- split into two for the surprise conclusion to land"
+      ]
+    },
+    {
+      "subjectId": "em-algorithm",
+      "domain": "classical-ml",
+      "difficulty": "advanced",
+      "percent": 90,
+      "totalScore": 90,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Beat at t=70 overloaded: tightness condition + E-step + responsibilities + Q-function in one 50s beat -- split tightness/E-step from Q-function",
+        "Two likelihood-surface diagrams (likelihood_lowerbound_curve and em_iteration_diagram) are separate static snapshots -- merge into one evolving canvas to strengthen the iterative-ascent visual narrative",
+        "Convergence beat (t=210) and summary beat (t=248) restate the sandwich inequality and local-max conclusion redundantly -- differentiate by foregrounding initialization sensitivity in summary"
+      ]
+    }
+  ],
+  "perCriterion": [
+    {
+      "id": "pacing-and-density",
+      "meanScore": 8.4,
+      "maxScore": 10,
+      "meanPercent": 84,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    },
+    {
+      "id": "narration-clarity",
+      "meanScore": 10.2,
+      "maxScore": 12,
+      "meanPercent": 85,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 10
+    },
+    {
+      "id": "board-coherence",
+      "meanScore": 8.6,
+      "maxScore": 10,
+      "meanPercent": 86,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    },
+    {
+      "id": "redundancy-and-focus",
+      "meanScore": 7,
+      "maxScore": 8,
+      "meanPercent": 87.5,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 7
+    },
+    {
+      "id": "staircase-coherence",
+      "meanScore": 9,
+      "maxScore": 10,
+      "meanPercent": 90,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 9
+    },
+    {
+      "id": "math-notation-correctness",
+      "meanScore": 9,
+      "maxScore": 10,
+      "meanPercent": 90,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 9
+    },
+    {
+      "id": "board-specificity",
+      "meanScore": 9.2,
+      "maxScore": 10,
+      "meanPercent": 92,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 9
+    },
+    {
+      "id": "board-visual-balance",
+      "meanScore": 7.8,
+      "maxScore": 8,
+      "meanPercent": 97.5,
+      "lowestSubjectId": "em-algorithm",
+      "lowestScore": 7
+    },
+    {
+      "id": "payoff-concreteness",
+      "meanScore": 8,
+      "maxScore": 8,
+      "meanPercent": 100,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    },
+    {
+      "id": "destination-precision",
+      "meanScore": 8,
+      "maxScore": 8,
+      "meanPercent": 100,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    },
+    {
+      "id": "code-content-decision",
+      "meanScore": 6,
+      "maxScore": 6,
+      "meanPercent": 100,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 6
+    }
+  ],
+  "commonIssues": [
+    {
+      "issue": "probability tree drawn at 5s with all numeric values populated before narration introduces those numbers at 145s -- creates a 2-minute forward reference; either defer numeric labels or use placeholders early",
+      "count": 1
+    },
+    {
+      "issue": "payoff says 'less than 9%' but actual posterior is 9.016% -- slightly above 9% -- correct framing or change worked example",
+      "count": 1
+    },
+    {
+      "issue": "beat at 175s packs normalizer computation, posterior result, and rare-prior insight into one beat -- split into two for the surprise conclusion to land",
+      "count": 1
+    },
+    {
+      "issue": "math direction error: narration says 'expected input is p times larger' at test time -- correct direction is 1/p times larger (training activations are p times smaller)",
+      "count": 1
+    },
+    {
+      "issue": "canvas clutter: net_full from t=0 is never erased; test-time section overlays new equations on a busy canvas",
+      "count": 1
+    },
+    {
+      "issue": "ensemble tree grandchildren described as 'smaller unit subsets' without naming the actual subsets -- specify h1/h3/h2/h4 explicitly",
+      "count": 1
+    },
+    {
+      "issue": "payoff statistic is factually wrong: naive fib(50) makes ~2x10^10 calls (~20 billion), not '>2 trillion' -- propagates into payoff, narration, and board write at t=35",
+      "count": 1
+    },
+    {
+      "issue": "memo_table and tabulation_sweep both assigned region bottom-center, creating layout collision -- shift one to bottom-right",
+      "count": 1
+    },
+    {
+      "issue": "fib5_tree erased at t=260 with 10s remaining -- primary visual anchor removed during closing summary",
+      "count": 1
+    },
+    {
+      "issue": "beat at t=175 overloaded: introduces orthogonality requirement, appeals to c symmetry, closes ranking logic in one beat -- split into two",
+      "count": 1
+    }
+  ]
+}

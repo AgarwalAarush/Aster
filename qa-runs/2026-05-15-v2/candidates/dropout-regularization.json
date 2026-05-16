@@ -1,0 +1,204 @@
+{
+  "id": "dropout-regularization-v2-001",
+  "topic": {
+    "id": "dropout-regularization",
+    "title": "Dropout Regularization",
+    "question": "Why does randomly zeroing activations during training regularize a neural network, and what is happening at test time?",
+    "domain": "ml-dl"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v2",
+    "name": "Whiteboard prompt v2 - payoff numbers + sync enforcement"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Dropout: Why Zeroing Neurons Regularizes Neural Networks",
+    "learnerLevel": "introductory deep learning practitioners",
+    "durationSeconds": 210,
+    "payoff": "Adding a single Dropout layer with p=0.5 routinely cuts test error by 1 to 4 percentage points on standard image benchmarks, preventing a failure mode that L2 regularization alone cannot fix.",
+    "staircase": [
+      "overfitting in deep networks",
+      "the dropout mechanism -- Bernoulli mask per forward pass",
+      "why masking prevents co-adaptation",
+      "the ensemble interpretation across 2^N sub-networks",
+      "test-time weight scaling to match expected activations"
+    ],
+    "destination": "The learner holds the rule: during training each unit is kept with probability p and zeroed otherwise; at test time no units are dropped but all outgoing weights are multiplied by p, so the expected pre-activation matches training, preventing units from co-adapting and implicitly averaging over an exponential ensemble of sub-networks."
+  },
+  "narration": {
+    "fullText": "Consider a fully-connected network trained on image classification. With enough parameters, the network can memorize the training set -- that is overfitting, meaning the network's training loss is low but its generalization error on unseen data is high. One root cause is co-adaptation: a unit learns to fix the mistakes of a specific upstream unit rather than detecting a genuinely useful feature. Dropout is a regularization technique that combats this by randomly zeroing a subset of activations on every forward pass -- meaning every single left-to-right evaluation of the network from input to output. Here is what that looks like. Take a three-layer network with four hidden units in each layer. On each forward pass we draw a Bernoulli mask -- a binary random vector where each entry is independently one with probability p, called the keep probability, and zero otherwise. We multiply the activation vector h element-wise by this mask: h_dropped equals mask times h. Units that are zeroed cannot participate in this pass at all. Because any unit might be absent on any pass, every unit is forced to be independently useful; it cannot rely on a partner unit always being present, which is the co-adaptation it would otherwise develop. There is a beautiful secondary interpretation. With N binary masks for N units, dropout implicitly trains an ensemble of up to 2 to the N different sub-networks -- each sharing weights but having a different subset of units active. An ensemble -- a collection of models whose predictions are averaged -- is a classical way to reduce variance and improve generalization. Now, test time. During inference we want a single deterministic network. We turn dropout off: all units are active. But now the expected input to a downstream unit is p times larger than it was during training, because during training units were zeroed with probability one minus p. To fix this mismatch we scale every weight by p: W at test time equals p times W from training. Equivalently, many frameworks use inverted dropout, dividing activations by p during training so that test-time weights need no adjustment at all. The net result: a network trained with dropout p equals 0.5 behaves at test time as an average over exponentially many sub-networks, each sharing parameters, and this implicit regularization routinely cuts generalization error by one to four percentage points with almost no extra computation.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Consider a fully-connected network trained on image classification. With enough parameters, the network can memorize the training set -- that is overfitting, meaning training loss is low but generalization error on unseen data is high.",
+        "whyThisBeat": "overfitting in deep networks"
+      },
+      {
+        "atSec": 22,
+        "text": "One root cause is co-adaptation: a unit learns to fix the mistakes of a specific upstream unit rather than detecting a genuinely useful feature.",
+        "whyThisBeat": "overfitting in deep networks -- naming the specific failure mode"
+      },
+      {
+        "atSec": 38,
+        "text": "Dropout is a regularization technique -- a method that reduces overfitting -- that combats this by randomly zeroing a subset of activations on every forward pass, meaning every single left-to-right evaluation of the network from input to output.",
+        "whyThisBeat": "the dropout mechanism -- Bernoulli mask per forward pass"
+      },
+      {
+        "atSec": 58,
+        "text": "On each forward pass we draw a Bernoulli mask -- a binary random vector where each entry is independently one with probability p, called the keep probability, and zero otherwise. We multiply the activation vector h element-wise by this mask: h-dropped equals mask times h.",
+        "whyThisBeat": "the dropout mechanism -- Bernoulli mask per forward pass"
+      },
+      {
+        "atSec": 82,
+        "text": "Units that are zeroed cannot participate in this pass at all. Because any unit might be absent on any pass, every unit is forced to be independently useful; it cannot rely on a partner unit always being present. That breaks co-adaptation.",
+        "whyThisBeat": "why masking prevents co-adaptation"
+      },
+      {
+        "atSec": 105,
+        "text": "There is a beautiful secondary interpretation. With N binary masks for N units, dropout implicitly trains an ensemble of up to 2 to the N different sub-networks, each sharing weights but having a different active subset. An ensemble -- a collection of models whose predictions are averaged -- is a classical way to reduce variance and improve generalization.",
+        "whyThisBeat": "the ensemble interpretation across 2^N sub-networks"
+      },
+      {
+        "atSec": 135,
+        "text": "Now, test time. During inference we turn dropout off: all units are active. But the expected input to a downstream unit is now p times larger than it was during training, because during training each unit was zeroed with probability one minus p.",
+        "whyThisBeat": "test-time weight scaling to match expected activations"
+      },
+      {
+        "atSec": 158,
+        "text": "To fix this mismatch we scale every weight by p: W at test time equals p times W from training. Equivalently, many frameworks use inverted dropout -- dividing activations by p during training so test-time weights need no adjustment at all.",
+        "whyThisBeat": "test-time weight scaling to match expected activations"
+      },
+      {
+        "atSec": 180,
+        "text": "The net result: a network trained with dropout p equals 0.5 behaves at test time as an average over exponentially many sub-networks sharing parameters, cutting generalization error by one to four percentage points with almost no extra computation.",
+        "whyThisBeat": "closing synthesis tying all rungs together"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "draw",
+        "targetId": "net_full",
+        "content": "Three-column network diagram: input column on the left with three circles labeled x1, x2, x3; hidden layer in the center with four circles labeled h1, h2, h3, h4; output circle on the right labeled y. Directed edges connect every input to every hidden unit and every hidden unit to the output. Arrows run left to right.",
+        "region": "center"
+      },
+      {
+        "at": 18,
+        "kind": "write",
+        "targetId": "label_overfit",
+        "content": "Overfitting: low train loss, high test error",
+        "region": "top-left"
+      },
+      {
+        "at": 30,
+        "kind": "draw",
+        "targetId": "net_dropped",
+        "content": "Same three-column network diagram as net_full but with h2 and h4 crossed out with a red X, and all edges connected to h2 and h4 drawn as dashed red lines to indicate they are zeroed on this forward pass.",
+        "region": "center"
+      },
+      {
+        "at": 42,
+        "kind": "highlight",
+        "targetId": "net_dropped",
+        "content": "circle the two surviving hidden units h1 and h3 in blue to emphasize they must carry the full signal alone on this pass",
+        "region": "center"
+      },
+      {
+        "at": 58,
+        "kind": "write",
+        "targetId": "eq_mask",
+        "content": "mask ~ Bernoulli(p),   h_dropped = mask * h",
+        "region": "top-right"
+      },
+      {
+        "at": 72,
+        "kind": "highlight",
+        "targetId": "eq_mask",
+        "content": "underline the symbol p and write 'keep prob' in blue beneath it to define the keep probability",
+        "region": "top-right"
+      },
+      {
+        "at": 88,
+        "kind": "write",
+        "targetId": "label_coadapt",
+        "content": "Co-adaptation broken: each unit must be independently useful",
+        "region": "bottom-left"
+      },
+      {
+        "at": 105,
+        "kind": "draw",
+        "targetId": "ensemble_tree",
+        "content": "A binary tree with root node labeled 'full net'. Root splits into two children: left child labeled 'h1 h3 active', right child labeled 'h2 h4 active'. Each child splits again into two grandchildren showing further sub-network subsets, grandchildren labeled with smaller unit subsets. A brace beneath all leaves is labeled '2^N sub-networks'.",
+        "region": "bottom-right"
+      },
+      {
+        "at": 120,
+        "kind": "highlight",
+        "targetId": "ensemble_tree",
+        "content": "box the brace label '2^N sub-networks' in orange to emphasize the exponential count of implicit models",
+        "region": "bottom-right"
+      },
+      {
+        "at": 135,
+        "kind": "erase",
+        "targetId": "net_dropped",
+        "content": "all"
+      },
+      {
+        "at": 140,
+        "kind": "write",
+        "targetId": "eq_test",
+        "content": "Test time: all units active, no mask",
+        "region": "center-left"
+      },
+      {
+        "at": 155,
+        "kind": "write",
+        "targetId": "eq_scale",
+        "content": "W_test = p * W_train",
+        "region": "center"
+      },
+      {
+        "at": 165,
+        "kind": "highlight",
+        "targetId": "eq_scale",
+        "content": "draw a red box around the factor p in the equation W_test = p * W_train to mark it as the key scaling correction",
+        "region": "center"
+      },
+      {
+        "at": 175,
+        "kind": "write",
+        "targetId": "label_inverted",
+        "content": "Inverted dropout (PyTorch default): divide by p during training, no scaling needed at test",
+        "region": "bottom-center"
+      },
+      {
+        "at": 190,
+        "kind": "highlight",
+        "targetId": "label_inverted",
+        "content": "underline the phrase 'no scaling needed at test' in green to contrast with the manual scaling approach",
+        "region": "bottom-center"
+      },
+      {
+        "at": 200,
+        "kind": "write",
+        "targetId": "label_result",
+        "content": "Result: 1-4 pp lower test error, almost free",
+        "region": "top-center"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 158,
+      "language": "python",
+      "code": "import torch\nimport torch.nn as nn\n\ndropout = nn.Dropout(p=0.5)\n\nx = torch.ones(4)\n\ndropout.train()\nprint(dropout(x))\n\ndropout.eval()\nprint(dropout(x))",
+      "purpose": "Shows that PyTorch uses inverted dropout -- activations are divided by p during training so the expected value is preserved, and eval mode simply passes values through unchanged, confirming no manual weight scaling is needed at test time."
+    }
+  ]
+}

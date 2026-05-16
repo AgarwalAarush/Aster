@@ -1,0 +1,38 @@
+Sweep: 2026-05-15-v2
+Prompt variant(s): whiteboard-v2
+Subjects critiqued: 5
+Mean: 91.2%   Median: 91%   Min: 90%   Max: 93%
+Recommended for pipeline: 5 / 5
+
+Per subject (sorted by percent, descending):
+  93 %  ml-dl               intro         dropout-regularization [REC]
+  92 %  pure-math           intermediate  eigenvectors-pca [REC]
+  91 %  cs-theory           intermediate  dynamic-programming [REC]
+  90 %  probability-stats   intro         bayes-rule [REC]
+  90 %  classical-ml        advanced      em-algorithm [REC]
+
+Per criterion (sorted by mean percent, ascending — worst first):
+  pct%  mean/max  criterion-id                       lowest-subject
+  84    8.4/10    pacing-and-density                bayes-rule (8)
+  85    10.2/12   narration-clarity                 bayes-rule (10)
+  86    8.6/10    board-coherence                   bayes-rule (8)
+  87.5  7/8       redundancy-and-focus              bayes-rule (7)
+  90    9/10      staircase-coherence               bayes-rule (9)
+  90    9/10      math-notation-correctness         bayes-rule (9)
+  92    9.2/10    board-specificity                 bayes-rule (9)
+  97.5  7.8/8     board-visual-balance              em-algorithm (7)
+  100   8/8       payoff-concreteness               bayes-rule (8)
+  100   8/8       destination-precision             bayes-rule (8)
+  100   6/6       code-content-decision             bayes-rule (6)
+
+Most common issues raised across subjects:
+  x1  probability tree drawn at 5s with all numeric values populated before narration introduces those numbers at 145s -- creates a 2-minute forw…
+  x1  payoff says 'less than 9%' but actual posterior is 9.016% -- slightly above 9% -- correct framing or change worked example
+  x1  beat at 175s packs normalizer computation, posterior result, and rare-prior insight into one beat -- split into two for the surprise conclu…
+  x1  math direction error: narration says 'expected input is p times larger' at test time -- correct direction is 1/p times larger (training act…
+  x1  canvas clutter: net_full from t=0 is never erased; test-time section overlays new equations on a busy canvas
+  x1  ensemble tree grandchildren described as 'smaller unit subsets' without naming the actual subsets -- specify h1/h3/h2/h4 explicitly
+  x1  payoff statistic is factually wrong: naive fib(50) makes ~2x10^10 calls (~20 billion), not '>2 trillion' -- propagates into payoff, narrati…
+  x1  memo_table and tabulation_sweep both assigned region bottom-center, creating layout collision -- shift one to bottom-right
+  x1  fib5_tree erased at t=260 with 10s remaining -- primary visual anchor removed during closing summary
+  x1  beat at t=175 overloaded: introduces orthogonality requirement, appeals to c symmetry, closes ranking logic in one beat -- split into two

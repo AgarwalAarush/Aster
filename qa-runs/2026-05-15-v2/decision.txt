@@ -1,0 +1,17 @@
+New sweep:     2026-05-15-v2 (whiteboard-v2)
+  mean=91.2%  min=90%  max=93%
+Champion:      2026-05-15-v1 (whiteboard-v1)
+  mean=88.6%  min=87%
+Mean delta:    +2.6pp
+Min delta:     +3.0pp
+Per-subject regressions (>3pp drop vs champion on a shared subject): 0
+
+Decision: ACCEPT
+Reason:   mean improved by >=0.5pp and no subject regressed by >3pp
+
+Threshold check (mean>=90 & all-criteria-mean>=85 & all-subjects>=82):
+  mean>=90:           PASS  (91.2%)
+  per-criterion>=85:  FAIL  (worst: pacing-and-density 84%)
+  per-subject>=82:    PASS  (worst: em-algorithm 90%)
+
+THRESHOLD NOT MET — continue iterating.

@@ -1,0 +1,218 @@
+{
+  "id": "eigenvectors-pca-v2-001",
+  "topic": {
+    "id": "eigenvectors-pca",
+    "title": "Eigenvectors and PCA",
+    "question": "Why are PCA's principal components the eigenvectors of the data covariance matrix, ranked by eigenvalue?",
+    "domain": "pure-math"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v2",
+    "name": "Whiteboard prompt v2 - payoff numbers + sync enforcement"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Why PCA Finds Eigenvectors: The Variance-Maximization Proof",
+    "learnerLevel": "undergraduates who know matrix multiplication and basic statistics",
+    "durationSeconds": 270,
+    "payoff": "PCA lets you compress a 1000-dimensional dataset down to 10 dimensions while retaining over 90% of the variance -- but only because the principal components are eigenvectors; any other directions would capture strictly less variance, provably.",
+    "staircase": [
+      "what the covariance matrix encodes",
+      "the variance of a projection onto a unit vector",
+      "setting up the constrained optimization",
+      "Lagrange multipliers turn the constraint into an eigenvalue equation",
+      "eigenvalue magnitude equals the captured variance",
+      "ranking by eigenvalue ranks by variance retained"
+    ],
+    "destination": "You will hold the derivation Var(u^T x) = u^T C u, the Lagrangian L = u^T C u - lambda(u^T u - 1), and the resulting eigenvector equation C u = lambda u, and you will know that the eigenvalue lambda equals the variance captured along u, so sorting eigenvectors by descending lambda maximizes retained variance at each successive component."
+  },
+  "narration": {
+    "fullText": "Suppose you have a cloud of data points in high-dimensional space and you want to find a single direction -- a unit vector u -- that captures as much spread as possible. That is the core problem PCA solves. Here is the data cloud: each dot is one centered observation, meaning we have already subtracted the sample mean so the cloud is centered at the origin. Mean-centered means each feature has had the dataset mean subtracted, so the centroid sits at zero. The covariance matrix C -- defined as the average outer product (1 over n) times X-transpose times X -- encodes how much each pair of features co-varies. Its diagonal entries are the individual feature variances; off-diagonal entries measure linear dependence between features. Now, when we project every data point onto a unit vector u, each projected value is the scalar u-transpose times x. The variance of those projected scalars -- how spread out the shadow of the cloud is along u -- works out to u-transpose C u. Let me derive that: Var of u^T x equals the expected value of (u^T x)^2, which equals u^T times E[x x^T] times u, which is exactly u^T C u. So our goal is to choose u to maximize u^T C u subject to u having unit length, that is u^T u equals 1. This is a constrained optimization problem. We handle it with a Lagrange multiplier -- a scalar lambda we introduce to fold the constraint into the objective. The Lagrangian is L equals u^T C u minus lambda times (u^T u minus 1). Taking the gradient with respect to u and setting it to zero gives 2 C u minus 2 lambda u equals zero, which simplifies to C u equals lambda u. That is the eigenvector equation: u is an eigenvector of C with eigenvalue lambda. Critically, the variance captured along this u equals u^T C u, and since C u equals lambda u, that equals u^T times lambda u, which equals lambda times u^T u, which equals lambda. So the eigenvalue lambda literally is the variance in the direction u. To capture the maximum variance first, we pick the eigenvector with the largest eigenvalue. The second principal component must be orthogonal to the first -- and the covariance matrix is symmetric, so its eigenvectors are automatically orthogonal -- so we just take the next largest eigenvalue. Rank all eigenvectors by descending eigenvalue and you have the principal components in order, each one the provably best new direction given the ones already chosen.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Suppose you have a cloud of data points in high-dimensional space and you want to find a single direction -- a unit vector u -- that captures as much spread as possible. That is the core problem PCA solves.",
+        "whyThisBeat": "state the goal: find the direction of maximum variance"
+      },
+      {
+        "atSec": 18,
+        "text": "Here is the data cloud: each dot is one centered observation. Mean-centered means each feature has had the dataset mean subtracted, so the centroid sits at the origin.",
+        "whyThisBeat": "introduce the 2D data cloud and define mean-centered"
+      },
+      {
+        "atSec": 34,
+        "text": "The covariance matrix C -- defined as (1 over n) times X-transpose times X -- encodes how much each pair of features co-varies. Diagonal entries are individual variances; off-diagonal entries measure linear dependence between features.",
+        "whyThisBeat": "what the covariance matrix encodes"
+      },
+      {
+        "atSec": 58,
+        "text": "When we project every data point onto a unit vector u, the variance of the projected scalars works out to u-transpose C u. Here is why: the variance equals E of (u^T x)^2, which equals u^T times E[x x^T] times u, which is u^T C u.",
+        "whyThisBeat": "variance of a projection equals u^T C u"
+      },
+      {
+        "atSec": 85,
+        "text": "So our goal is to maximize u^T C u subject to u having unit length: u^T u equals 1. This is a constrained optimization. We handle it with a Lagrange multiplier -- a scalar lambda introduced to fold the constraint into the objective.",
+        "whyThisBeat": "set up the constrained optimization and introduce Lagrange multiplier"
+      },
+      {
+        "atSec": 112,
+        "text": "The Lagrangian is L equals u^T C u minus lambda times (u^T u minus 1). Taking the gradient with respect to u and setting it to zero gives C u equals lambda u.",
+        "whyThisBeat": "Lagrange multipliers turn the constraint into an eigenvalue equation"
+      },
+      {
+        "atSec": 140,
+        "text": "That is the eigenvector equation. Now notice: the variance captured along u equals u^T C u. Since C u equals lambda u, that equals u^T lambda u equals lambda. The eigenvalue lambda literally equals the variance along u.",
+        "whyThisBeat": "eigenvalue magnitude equals the captured variance"
+      },
+      {
+        "atSec": 175,
+        "text": "To maximize variance first, pick the eigenvector with the largest eigenvalue. For the second component, we need a direction orthogonal to the first -- and because C is symmetric, its eigenvectors are automatically orthogonal. So we take the eigenvector with the next largest eigenvalue.",
+        "whyThisBeat": "ranking by eigenvalue ranks by variance retained"
+      },
+      {
+        "atSec": 215,
+        "text": "Rank all eigenvectors by descending eigenvalue and you have the principal components in order -- each one the provably best new direction given the ones already chosen. That is why PCA's components are eigenvectors of the covariance matrix, ordered by eigenvalue.",
+        "whyThisBeat": "close with the complete answer to the driving question"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title",
+        "content": "PCA: Why Eigenvectors?",
+        "region": "top-center"
+      },
+      {
+        "at": 18,
+        "kind": "draw",
+        "targetId": "data_cloud",
+        "content": "2D scatter cloud of roughly 30 dots arranged in an elongated ellipse tilted at 45 degrees, with a horizontal axis labeled x_1 and a vertical axis labeled x_2, centered at the origin; the cloud stretches more along the 45-degree direction than perpendicular to it",
+        "region": "left-half"
+      },
+      {
+        "at": 34,
+        "kind": "write",
+        "targetId": "cov_def",
+        "content": "C = (1/n) X^T X",
+        "region": "top-right"
+      },
+      {
+        "at": 40,
+        "kind": "draw",
+        "targetId": "cov_matrix_diagram",
+        "content": "2x2 grid of cells representing a covariance matrix: top-left cell labeled Var(x_1), bottom-right labeled Var(x_2), off-diagonal cells labeled Cov(x_1,x_2), with a brace on the left labeled C",
+        "region": "right-half"
+      },
+      {
+        "at": 58,
+        "kind": "draw",
+        "targetId": "projection_diagram",
+        "content": "a unit vector arrow labeled u drawn from the origin at 45 degrees into the data cloud, with a dashed perpendicular line dropping from one dot to the arrow shaft, and the foot of the perpendicular labeled u^T x (the projected scalar)",
+        "region": "left-half"
+      },
+      {
+        "at": 72,
+        "kind": "write",
+        "targetId": "var_formula",
+        "content": "Var(u^T x) = E[(u^T x)^2] = u^T E[x x^T] u = u^T C u",
+        "region": "center-right"
+      },
+      {
+        "at": 85,
+        "kind": "write",
+        "targetId": "opt_problem",
+        "content": "max  u^T C u     s.t.  u^T u = 1",
+        "region": "center"
+      },
+      {
+        "at": 100,
+        "kind": "highlight",
+        "targetId": "opt_problem",
+        "content": "box the constraint u^T u = 1 in blue to mark it as the condition that will become the Lagrange term",
+        "region": "center"
+      },
+      {
+        "at": 112,
+        "kind": "write",
+        "targetId": "lagrangian",
+        "content": "L = u^T C u - lambda (u^T u - 1)",
+        "region": "center-right"
+      },
+      {
+        "at": 125,
+        "kind": "write",
+        "targetId": "gradient_eq",
+        "content": "dL/du = 0  =>  2Cu - 2lambda u = 0  =>  Cu = lambda u",
+        "region": "center-right"
+      },
+      {
+        "at": 140,
+        "kind": "highlight",
+        "targetId": "gradient_eq",
+        "content": "circle C u = lambda u in red to identify it as the eigenvector equation",
+        "region": "center-right"
+      },
+      {
+        "at": 148,
+        "kind": "write",
+        "targetId": "variance_eq",
+        "content": "Var along u = u^T C u = u^T (lambda u) = lambda",
+        "region": "bottom-center"
+      },
+      {
+        "at": 160,
+        "kind": "highlight",
+        "targetId": "variance_eq",
+        "content": "underline the final equality = lambda in green to show the eigenvalue is the captured variance",
+        "region": "bottom-center"
+      },
+      {
+        "at": 175,
+        "kind": "erase",
+        "targetId": "cov_matrix_diagram",
+        "content": "all"
+      },
+      {
+        "at": 178,
+        "kind": "write",
+        "targetId": "ranking_rule",
+        "content": "PC1: eigenvector with largest lambda_1   =>   max variance; PC2: eigenvector with next lambda_2, orthogonal to PC1",
+        "region": "right-half"
+      },
+      {
+        "at": 195,
+        "kind": "draw",
+        "targetId": "eigenvalue_bar",
+        "content": "a horizontal bar chart with two bars: the left bar is tall and labeled lambda_1 = Var(PC1), the right bar is shorter and labeled lambda_2 = Var(PC2), with a vertical axis labeled Variance Captured and a title Eigenvalue Spectrum",
+        "region": "right-half"
+      },
+      {
+        "at": 215,
+        "kind": "highlight",
+        "targetId": "ranking_rule",
+        "content": "draw a downward arrow beside lambda_1 > lambda_2 in orange to indicate the descending sort order that defines the PC ranking",
+        "region": "right-half"
+      },
+      {
+        "at": 250,
+        "kind": "write",
+        "targetId": "summary",
+        "content": "Principal components = eigenvectors of C, ordered by eigenvalue (= variance captured)",
+        "region": "bottom-center"
+      },
+      {
+        "at": 260,
+        "kind": "highlight",
+        "targetId": "summary",
+        "content": "box the entire summary line in bold red as the take-home theorem",
+        "region": "bottom-center"
+      }
+    ]
+  }
+}

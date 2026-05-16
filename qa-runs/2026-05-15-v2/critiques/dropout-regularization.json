@@ -1,0 +1,94 @@
+{
+  "candidateId": "dropout-regularization-v2-001",
+  "subjectId": "dropout-regularization",
+  "promptVariantId": "whiteboard-v2",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 8,
+      "notes": "Specific Dropout layer with p=0.5, 1-4 percentage points, named benchmarks, named alternative L2."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Five rungs build logically. Minor: ensemble interpretation rung is optional but legitimate."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "Names p, zeroing, weight scaling, expected pre-activation match, co-adaptation, ensemble framing."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 11,
+      "notes": "Most jargon defined inline. Minor: 'element-wise' not defined for intro audience."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 9,
+      "notes": "Net diagrams highly specific. Ensemble tree grandchildren described loosely."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Timeline logical. Net_full from t=0 never erased -- canvas density risk in test-time section."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 8,
+      "notes": "Three distinct draws plus highlights and writes. Excellent variety."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 9,
+      "notes": "Core formulas correct. Narration phrasing 'expected input is p times larger than during training' has the wrong scalar direction (should be 1/p larger)."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 6,
+      "notes": "PyTorch snippet syntactically valid, demonstrates train/eval toggle directly."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 9,
+      "notes": "Nine beats over 210s, ~23s/beat. No beat overloaded. Minor: beat at 105 covers two ideas."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 7,
+      "notes": "Tight focus. Mild bookending of the 1-4pp number."
+    }
+  ],
+  "totalScore": 93,
+  "maxScore": 100,
+  "percent": 93,
+  "topThreeIssues": [
+    "Math direction error: narration says 'expected input is p times larger' at test time -- correct direction is 1/p times larger (training activations are p times smaller)",
+    "Canvas clutter: net_full from t=0 is never erased; test-time section overlays new equations on a busy canvas",
+    "Ensemble tree grandchildren described as 'smaller unit subsets' without naming the actual subsets -- specify h1/h3/h2/h4 explicitly"
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "93/100 across all criteria: payoff numerically concrete, staircase tight, destination symbolically precise, board specific. Single most important fix is a directional error in test-time scaling narration that could teach the wrong mental model."
+}

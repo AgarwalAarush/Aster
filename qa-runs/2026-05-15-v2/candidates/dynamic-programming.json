@@ -1,0 +1,222 @@
+{
+  "id": "dynamic-programming-v2-001",
+  "topic": {
+    "id": "dynamic-programming",
+    "title": "Dynamic Programming",
+    "question": "Why does dynamic programming work, and how do optimal substructure and overlapping subproblems tell you when to use it?",
+    "domain": "cs-theory"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v2",
+    "name": "Whiteboard prompt v2 - payoff numbers + sync enforcement"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Dynamic Programming: Optimal Substructure and Overlapping Subproblems",
+    "learnerLevel": "intermediate CS students who know recursion and Big-O notation",
+    "durationSeconds": 270,
+    "payoff": "Naive recursion for Fibonacci recomputes the same value exponentially -- fib(50) makes over 2 trillion calls. Memoization collapses that to exactly 50 unique calls, a speedup of roughly 10^11 on a single function.",
+    "staircase": [
+      "the exponential blowup of naive recursion",
+      "the concept of overlapping subproblems -- recomputed subsets",
+      "the concept of optimal substructure -- optimal solution is built from optimal sub-solutions",
+      "memoization as caching to eliminate redundant calls",
+      "bottom-up tabulation as the iterative alternative",
+      "recognizing when both conditions hold to know DP applies"
+    ],
+    "destination": "You will hold the two-condition test for DP applicability -- optimal substructure (an optimal solution to the problem contains optimal solutions to its sub-problems) and overlapping subproblems (the recursion tree revisits the same sub-problems exponentially) -- and know that memoization exploits both to reduce exponential time to polynomial time by storing and reusing each sub-problem result exactly once."
+  },
+  "narration": {
+    "fullText": "Suppose you want to compute the 50th Fibonacci number. The naive recursive definition says fib of n equals fib of n minus 1 plus fib of n minus 2. Let me draw the recursion tree for fib of 5 to show what happens. Notice that fib of 3 appears twice, fib of 2 appears three times, fib of 1 even more. Each duplicated node spawns its own full subtree, so the total number of calls grows exponentially -- roughly 2 to the n. For fib of 50 that is over 2 trillion calls. This explosion has a name: overlapping subproblems, meaning the same sub-problem -- the same input to the same recursive call -- gets recomputed again and again independently. Dynamic programming, or DP for short, is the strategy of recognizing this pattern and refusing to recompute. The first key condition is overlapping subproblems. Now let me write the second. Look again at fib of 5. Its value is fib of 4 plus fib of 3. If someone told you the correct optimal answers for those two sub-sizes, you could combine them immediately to get the correct answer for size 5. This is optimal substructure: an optimal solution to the original problem is built directly from optimal solutions to strictly smaller sub-problems, with no need to look back. Together these two conditions are the diagnostic for when DP applies. When both hold, here is the fix: memoization -- storing -- the result of each sub-problem the first time we solve it, then looking it up instead of recomputing it every subsequent time. I will add a memo table on the board. Each cell stores fib of k once it is computed. The recursion now hits each cell at most once, so the total work drops from exponential -- order 2 to the n -- to linear -- order n. Alternatively, you can fill the table bottom-up without any recursion at all: start from fib of 0 and fib of 1 and march forward, each new cell reading the previous two. This bottom-up sweep is called tabulation. Both memoization and tabulation are valid DP implementations; they differ only in whether the sub-problems are solved on demand or in a predetermined order. To recognize a DP opportunity, ask two questions: first, can I express the answer to a larger problem as a function of answers to strictly smaller sub-problems -- that is optimal substructure? Second, does the recursion tree revisit the same inputs -- that is overlapping subproblems? If both answers are yes, DP is the right tool and can reduce an exponential algorithm to polynomial time.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Suppose you want to compute the 50th Fibonacci number. The naive recursive definition says fib of n equals fib of n minus 1 plus fib of n minus 2.",
+        "whyThisBeat": "sets up the concrete example and the naive recursive recurrence"
+      },
+      {
+        "atSec": 15,
+        "text": "Let me draw the recursion tree for fib of 5 to show what happens. Notice that fib of 3 appears twice, fib of 2 appears three times, fib of 1 even more.",
+        "whyThisBeat": "introduces visual evidence of repeated sub-problem computation"
+      },
+      {
+        "atSec": 35,
+        "text": "Each duplicated node spawns its own full subtree, so the total number of calls grows exponentially -- roughly 2 to the n. For fib of 50 that is over 2 trillion calls.",
+        "whyThisBeat": "quantifies the exponential blowup -- the payoff number"
+      },
+      {
+        "atSec": 55,
+        "text": "This explosion has a name: overlapping subproblems, meaning the same sub-problem -- the same input to the same recursive call -- gets recomputed again and again independently. Dynamic programming, or DP for short, is the strategy of recognizing this pattern and refusing to recompute.",
+        "whyThisBeat": "defines the first DP condition: overlapping subproblems"
+      },
+      {
+        "atSec": 80,
+        "text": "Now the second condition. Look again at fib of 5. Its value is fib of 4 plus fib of 3. If you knew the correct answers for those two sub-sizes, you could combine them immediately to get the correct answer for size 5.",
+        "whyThisBeat": "motivates optimal substructure with the same example"
+      },
+      {
+        "atSec": 100,
+        "text": "This is optimal substructure: an optimal solution to the original problem is built directly from optimal solutions to strictly smaller sub-problems, with no need to look back. Together these two conditions -- overlapping subproblems and optimal substructure -- are the diagnostic for when DP applies.",
+        "whyThisBeat": "defines optimal substructure and states the two-condition test"
+      },
+      {
+        "atSec": 125,
+        "text": "When both hold, here is the fix: memoization -- storing the result of each sub-problem the first time we solve it, then looking it up instead of recomputing it every subsequent time.",
+        "whyThisBeat": "introduces memoization as the caching mechanism"
+      },
+      {
+        "atSec": 145,
+        "text": "I will add a memo table on the board. Each cell stores fib of k once it is computed. The recursion now hits each cell at most once, so total work drops from exponential -- order 2 to the n -- to linear -- order n.",
+        "whyThisBeat": "shows the memo grid and states the complexity reduction"
+      },
+      {
+        "atSec": 175,
+        "text": "Alternatively, you can fill the table bottom-up without any recursion at all: start from fib of 0 and fib of 1 and march forward. This is called tabulation.",
+        "whyThisBeat": "introduces bottom-up tabulation as the iterative DP alternative"
+      },
+      {
+        "atSec": 200,
+        "text": "Both memoization and tabulation are valid DP implementations; they differ only in whether sub-problems are solved on demand or in a predetermined order.",
+        "whyThisBeat": "contrasts the two implementations to consolidate understanding"
+      },
+      {
+        "atSec": 220,
+        "text": "To recognize a DP opportunity, ask two questions: can I express a larger answer as a function of strictly smaller sub-problem answers -- optimal substructure? And does the recursion revisit the same inputs -- overlapping subproblems? If both are yes, DP applies and collapses exponential time to polynomial.",
+        "whyThisBeat": "delivers the two-condition diagnostic the learner takes away"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "recurrence",
+        "content": "fib(n) = fib(n-1) + fib(n-2),  fib(0)=0, fib(1)=1",
+        "region": "top-left"
+      },
+      {
+        "at": 15,
+        "kind": "draw",
+        "targetId": "fib5_tree",
+        "content": "Recursion tree rooted at node labeled fib(5) at top-center. fib(5) has two children: fib(4) on the left and fib(3) on the right. fib(4) has children fib(3) and fib(2). fib(3) on the left of fib(4) has children fib(2) and fib(1). fib(3) on the right of fib(5) has children fib(2) and fib(1). Each fib(2) node has children fib(1) and fib(0). Nodes for fib(3) are circled in orange; nodes for fib(2) are circled in blue to show repetition. Leaf nodes fib(1) and fib(0) are labeled with their values 1 and 0.",
+        "region": "center"
+      },
+      {
+        "at": 35,
+        "kind": "write",
+        "targetId": "complexity_naive",
+        "content": "Calls ~ 2^n   (fib(50): >2 trillion calls)",
+        "region": "top-right"
+      },
+      {
+        "at": 55,
+        "kind": "write",
+        "targetId": "label_overlapping",
+        "content": "Overlapping Subproblems: same (n, input) pair recomputed independently",
+        "region": "bottom-left"
+      },
+      {
+        "at": 56,
+        "kind": "highlight",
+        "targetId": "fib5_tree",
+        "content": "circle both fib(3) nodes in bold orange and both fib(2) nodes in bold blue to emphasize they are identical sub-problems solved multiple times",
+        "region": "center"
+      },
+      {
+        "at": 80,
+        "kind": "highlight",
+        "targetId": "recurrence",
+        "content": "underline fib(n-1) and fib(n-2) in green to show the two strictly smaller sub-problems feeding the parent",
+        "region": "top-left"
+      },
+      {
+        "at": 100,
+        "kind": "write",
+        "targetId": "label_optimal_sub",
+        "content": "Optimal Substructure: opt solution to fib(n) = opt solutions to fib(n-1) + fib(n-2)",
+        "region": "bottom-right"
+      },
+      {
+        "at": 125,
+        "kind": "write",
+        "targetId": "label_memo",
+        "content": "Memoization: cache[k] = fib(k) on first compute; return cache[k] on later calls",
+        "region": "top-right"
+      },
+      {
+        "at": 145,
+        "kind": "draw",
+        "targetId": "memo_table",
+        "content": "A horizontal row of 6 cells labeled k=0 through k=5 drawn below the tree. Each cell is a rectangle. First two cells show values 0 and 1. Remaining cells show a right-pointing arrow indicating they are filled left to right. Arrows between adjacent cells labeled + to show each cell sums the previous two.",
+        "region": "bottom-center"
+      },
+      {
+        "at": 146,
+        "kind": "write",
+        "targetId": "complexity_dp",
+        "content": "Calls: O(n)  (each cell filled exactly once)",
+        "region": "top-right"
+      },
+      {
+        "at": 155,
+        "kind": "highlight",
+        "targetId": "complexity_naive",
+        "content": "draw a red strikethrough over '2^n' to contrast with the new linear cost",
+        "region": "top-right"
+      },
+      {
+        "at": 175,
+        "kind": "draw",
+        "targetId": "tabulation_sweep",
+        "content": "A second horizontal row of 6 cells identical in layout to memo_table, labeled 'Tabulation bottom-up'. An arrow sweeps left to right across all cells, labeled 'no recursion -- fill in order', to distinguish it from top-down memoization.",
+        "region": "bottom-center"
+      },
+      {
+        "at": 200,
+        "kind": "write",
+        "targetId": "two_impls",
+        "content": "Top-down (memoization): solve on demand   |   Bottom-up (tabulation): predetermined order",
+        "region": "center-bottom"
+      },
+      {
+        "at": 220,
+        "kind": "write",
+        "targetId": "dp_checklist",
+        "content": "DP checklist: (1) Optimal substructure?  (2) Overlapping subproblems?  -> Yes to both => DP reduces exponential to polynomial",
+        "region": "top-center"
+      },
+      {
+        "at": 245,
+        "kind": "highlight",
+        "targetId": "dp_checklist",
+        "content": "box both checklist conditions in a red rectangle to cement them as the take-away diagnostic",
+        "region": "top-center"
+      },
+      {
+        "at": 260,
+        "kind": "erase",
+        "targetId": "fib5_tree",
+        "content": "all"
+      },
+      {
+        "at": 261,
+        "kind": "highlight",
+        "targetId": "complexity_dp",
+        "content": "underline O(n) in green to reinforce the final complexity result",
+        "region": "top-right"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 125,
+      "language": "python",
+      "code": "from functools import lru_cache\n\n@lru_cache(maxsize=None)\ndef fib(n):\n    if n <= 1:\n        return n\n    return fib(n - 1) + fib(n - 2)\n\nprint(fib(50))",
+      "purpose": "shows that memoization via lru_cache collapses exponential calls to linear with a one-line decorator, making the concept immediately executable"
+    }
+  ]
+}
