@@ -28,8 +28,8 @@ Calls OpenAI Chat Completions with `response_format: json_object` and a hard-cod
 
 The composition is fully self-contained HTML: `composition.ts` lays out scenes, `theme.ts` emits the CSS (1920×1080, dark monochrome liquid-glass), `svg-primitives.ts` switches on `diagram.type` to emit per-scene SVG markup, and `timeline.ts` emits a GSAP `<script>` that drives the animation via `data-start` / `data-duration` attributes. Hyperframes consumes that structure — keep `data-composition-id="aster-lesson"` and the `data-start`/`data-duration` attributes on scenes intact when changing markup.
 
-**Education QA harness** (`lib/education/qa/**`, `scripts/education-qa.ts`):
-Separate offline tool, not part of the request pipeline. `archive` validates a script candidate JSON via Zod (`candidate.ts`) and writes it to a directory; `grade` reads a directory of candidates and scores them against topic-aware criteria in `rubric.ts`. Fixture data lives in `lib/education/qa/fixtures/`, and tracked eval sweeps live under `qa-runs/`.
+**Agentic eval loop for the script prompt** (`lib/education/qa/**`, `scripts/education-qa.ts`):
+Offline A/B harness for the *script-writing prompt*, separate from the live `/api/videos` storyboard prompt. The cycle: `prompt.ts:buildScriptQaPrompt` emits a prompt template tagged with a `promptVariant.id`; an external runner (`in-cursor-agent` | `manual` | `fixture`) produces a candidate JSON conforming to `candidate.ts`; `cli.ts archive` Zod-validates it into `qa-runs/<date>-<slug>/candidates/`; `cli.ts grade --dir <…>` flattens each candidate's text via `candidateSearchText` and scores it with `rubric.ts`. The grader applies two universal criteria — `gradeDuration` (≥120s) and `gradeStructure` (≥5 of 6 section `kind`s: motivation/background/mechanism/math/tradeoff/recap) — then routes to `TOPIC_CRITERIA[candidate.topic.id]` for keyword-substring scoring. Unknown topic ids silently score only the universal criteria. Adding a topic = new entry in `TOPIC_CRITERIA` + a golden in `lib/education/qa/fixtures/` to anchor rubric tests. Tracked sweeps live under `qa-runs/<date>-<slug>/{candidates,reports}/`.
 
 ## Conventions
 
