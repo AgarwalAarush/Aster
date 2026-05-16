@@ -38,6 +38,8 @@ const boardActionSchema = z.object({
   targetId: z.string().trim().min(1).max(80).regex(/^[A-Za-z0-9][A-Za-z0-9_-]*$/),
   content: z.string().trim().min(1).max(1200),
   region: z.string().trim().min(1).max(80).optional(),
+  templateId: z.string().trim().min(1).max(80).optional(),
+  templateParams: z.record(z.string(), z.unknown()).optional(),
 });
 
 const narrationBeatSchema = z.object({
@@ -161,6 +163,80 @@ export function validateBoardCoherence(lesson: LectureLesson): string[] {
     issues.push(
       `board actions extend ${lastActionAt - lastBeatAt}s past the final narration beat (last beat at ${lastBeatAt}s, last action at ${lastActionAt}s)`,
     );
+  }
+
+  return issues;
+}
+
+function normalizeRegionKey(region?: string): string {
+  return (region ?? "center").toLowerCase();
+}
+
+/**
+ * Warns when multiple write/draw items are simultaneously visible in the same region
+ * without an erase clearing that region between them.
+ */
+export function validateRegionOccupancy(lesson: LectureLesson): string[] {
+  const issues: string[] = [];
+  const visibleByTarget = new Map<string, { region: string; index: number }>();
+  const occupiedRegions = new Map<string, string>();
+
+  for (const [index, action] of lesson.board.actions.entries()) {
+    if (action.at > lesson.lesson.durationSeconds) {
+      continue;
+    }
+
+    if (action.kind === "erase") {
+      if (action.targetId === "all") {
+        visibleByTarget.clear();
+        occupiedRegions.clear();
+        continue;
+      }
+      const removed = visibleByTarget.get(action.targetId);
+      visibleByTarget.delete(action.targetId);
+      if (removed) {
+        const stillInRegion = [...visibleByTarget.values()].some((v) => v.region === removed.region);
+        if (!stillInRegion) {
+          occupiedRegions.delete(removed.region);
+        }
+      }
+      continue;
+    }
+
+    if (action.kind !== "write" && action.kind !== "draw") {
+      continue;
+    }
+
+    const region = normalizeRegionKey(action.region);
+    const priorTarget = occupiedRegions.get(region);
+    if (priorTarget && priorTarget !== action.targetId) {
+      issues.push(
+        `board.actions[${index}] kind=${action.kind} reuses region=${region} while targetId=${priorTarget} is still visible (add erase or transform before reusing region)`,
+      );
+    }
+
+    const duplicateTarget = visibleByTarget.get(action.targetId);
+    if (duplicateTarget) {
+      issues.push(
+        `board.actions[${index}] reintroduces targetId=${action.targetId} while still visible from board.actions[${duplicateTarget.index}]`,
+      );
+    }
+
+    visibleByTarget.set(action.targetId, { region, index });
+    occupiedRegions.set(region, action.targetId);
+  }
+
+  const targetIds = new Set<string>();
+  for (const action of lesson.board.actions) {
+    if (action.kind !== "write" && action.kind !== "draw") {
+      continue;
+    }
+    if (targetIds.has(action.targetId)) {
+      issues.push(
+        `duplicate targetId=${action.targetId} on write/draw actions (ambiguous highlight/transform)`,
+      );
+    }
+    targetIds.add(action.targetId);
   }
 
   return issues;

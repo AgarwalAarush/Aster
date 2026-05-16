@@ -1,4 +1,9 @@
-import { parseLectureLessonSafe, validateBoardCoherence, type LectureLesson } from "./schema.ts";
+import {
+  parseLectureLessonSafe,
+  validateBoardCoherence,
+  validateRegionOccupancy,
+  type LectureLesson,
+} from "./schema.ts";
 import { parseCritiqueReportSafe, type CritiqueReport } from "./critique.ts";
 
 export type ParseSuccess = {
@@ -114,7 +119,7 @@ export function parseLessonResponse(raw: string): ParseResult {
   return {
     ok: true,
     lesson: result.data,
-    warnings: validateBoardCoherence(result.data),
+    warnings: [...validateBoardCoherence(result.data), ...validateRegionOccupancy(result.data)],
   };
 }
 
