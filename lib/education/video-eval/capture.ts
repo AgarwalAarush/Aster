@@ -44,29 +44,23 @@ export async function captureTimelineFrames(
 
   try {
     const page = await browser.newPage({ viewport });
-    await page.goto(fileUrl, { waitUntil: "networkidle" });
+    // Use "load" not "networkidle" — file:// + CDN scripts often never reach networkidle.
+    await page.goto(fileUrl, { waitUntil: "load", timeout: 60_000 });
 
+    const compositionIdLiteral = JSON.stringify(COMPOSITION_ID);
     await page.waitForFunction(
-      () => {
-        const timelines = (window as unknown as { __timelines?: Record<string, { time: (t: number) => void }> })
-          .__timelines;
-        return timelines && timelines["aster-lesson"];
-      },
-      { timeout: 15000 },
+      `() => { const tl = window.__timelines && window.__timelines[${compositionIdLiteral}]; return !!tl; }`,
+      undefined,
+      { timeout: 30_000 },
     );
 
     for (const timestampSec of options.timestampsSec) {
       await page.evaluate(
-        ({ compositionId, t }) => {
-          const timelines = (window as unknown as {
-            __timelines?: Record<string, { time: (n: number) => void }>;
-          }).__timelines;
-          const tl = timelines?.[compositionId];
-          if (!tl) {
-            throw new Error(`Timeline not found: ${compositionId}`);
-          }
+        `({ compositionId, t }) => {
+          const tl = window.__timelines && window.__timelines[compositionId];
+          if (!tl) throw new Error("Timeline not found: " + compositionId);
           tl.time(t);
-        },
+        }`,
         { compositionId: COMPOSITION_ID, t: timestampSec },
       );
 
