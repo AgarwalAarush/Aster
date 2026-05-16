@@ -1,0 +1,94 @@
+{
+  "candidateId": "dropout-regularization-v1-001",
+  "subjectId": "dropout-regularization",
+  "promptVariantId": "whiteboard-v1",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 7,
+      "notes": "Payoff includes a concrete number ('1-2% on benchmark tasks') and names two specific mechanisms (ensembling, co-adaptation) as the conceptual stakes. Loses 1 point because '1-2% for free' is slightly informal and the benchmark reference is unspecified, but it is meaningfully more concrete than a generic payoff."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Six rungs build cleanly: overfitting context -> dropout mechanism -> co-adaptation explanation -> ensemble interpretation -> test-time rescaling -> hyperparameter. Each rung is a genuine prerequisite for the next. Minor issue: 'the keep-probability hyperparameter' could be folded into rung 2 since p is introduced there, making rung 6 feel slightly redundant rather than a distinct concept, but it is defensible as a dedicated wrap-up rung."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "Destination is precise and mechanistic: names the forward-pass zeroing with probability p_drop, names co-adaptation and the 2^N ensemble interpretation, and gives the exact test-time correction formula (multiply by keep probability 1 minus p_drop). A learner can hold all three components afterward."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 10,
+      "notes": "Almost all jargon is defined inline: 'regularization technique, a method that reduces this gap'; 'co-adaptation -- meaning neuron A learns to always rely on neuron B'; 'ensemble -- a collection of models averaged together'. Symbols p and 1-p defined on first use. Minor issues: 'forward pass' is used at beat 0 without definition (intro learners may not know it); 'variance' appears in the ensemble beat without unpacking. Two small lapses on an otherwise clean narration."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 9,
+      "notes": "Draw actions are highly specific: the network_diagram action names layer count, neuron count, labels (x1 x2 x3, h1-h5, y1 y2), and connectivity (every input to every hidden, every hidden to every output). The dropout_mask action names exactly which neurons are crossed (h2, h4) and describes dashed gray arrows. The ensemble_diagram describes a 2x2 grid with varying masks and a label. The co-adaptation diagram describes two circles with a labeled double-headed arrow and an X. Equations in write actions include actual content. One minor deduction: 'ensemble_diagram' could specify which neurons are crossed in each sub-network sketch for full renderer determinism."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Timeline is coherent: network_diagram is drawn before dropout_mask is applied to it; dropout_mask exists before highlight circles it; coadapt elements are erased before ensemble elements appear in the same region; ensemble_diagram is erased before hyperparam_label uses that space. Highlight at t=55 refers to dropout_mask which was drawn at t=40 -- valid. One minor concern: the ensemble_diagram is in bottom-center but is erased at t=205 right as the hyperparameter label goes to bottom-center (t=207), creating a tight transition, though not an incoherence."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 8,
+      "notes": "Three draw actions (network_diagram, dropout_mask, coadapt_diagram, ensemble_diagram), two highlight actions, and multiple targeted writes. Excellent variety for a network-diagram topic. Draws are spread across multiple phases of the lesson and regions of the board. No text dump; every major conceptual phase has a corresponding visual."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 7,
+      "notes": "Core math is correct: keep prob p, drop prob 1-p, expected training activation p*a, test-time scale by p. However there is a consistency issue: the narration says 'multiply every weight or activation by p -- the keep probability -- at test time' which describes the classic dropout scaling (not inverted/Monte Carlo dropout), and this is consistent with the board equations. But the narration at beat 5 says 'Higher p means less dropout, less regularization' which is correct. One real error: the rescale_eq on the board reads 'Test-time output = p * a' but the mismatch_eq reads 'E[activation during training] = p * a', implying test-time output equals training expectation -- this is correct logically but conflates two equations in a potentially confusing way. Additionally, the narration does not clarify whether rescaling happens to weights or activations (inverted dropout vs. standard), which is a minor but non-trivial ambiguity. No arithmetic errors in numerical examples."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 5,
+      "notes": "Correct decision to omit code for an intro conceptual lesson focused on the mechanism. A one-line PyTorch nn.Dropout(p=0.5) example could have materially illustrated that the API handles rescaling automatically (a common source of confusion), but omitting it is defensible at intro level. Score 5 rather than 6 because the rescaling ambiguity (weights vs. activations, inverted vs. standard) is exactly where a code snippet would have resolved confusion cost-free."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 9,
+      "notes": "Six beats over 240 seconds, ranging from 30 to 50 seconds each. Beat 1 (0-30s) sets context, beat 2 (30-70s) is 40s for the mechanism, beat 3 (70-110s) is 40s for co-adaptation, beat 4 (110-155s) is 45s for ensembling, beat 5 (155-205s) is 50s for test-time rescaling (the most complex beat), beat 6 (205-240s) is 35s for hyperparameter wrap-up. Density is appropriate for intro level. No single beat is overloaded. Beat 5 is the densest (mismatch concept plus rescaling formula) but 50 seconds handles it. Last beat ends at 240s matching durationSeconds exactly."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 7,
+      "notes": "Stays tightly on the question. The summary beat (205s) does restate the three key mechanisms ('break co-adaptation, approximate ensembling, test-time rescaling') which mirrors the destination sentence -- minor redundancy but serves as a useful closing anchor rather than wasted content. No off-topic tangents. One small redundancy: the keep-probability definition (p=0.5 typical) appears in both beat 2 narration and the beat 6 hyperparameter section, though beat 6 adds the input-layer distinction (p=0.8) which partially justifies the repeat."
+    }
+  ],
+  "totalScore": 88,
+  "maxScore": 100,
+  "percent": 88,
+  "topThreeIssues": [
+    "Math/notation ambiguity around test-time rescaling: the lesson does not distinguish inverted dropout (scale at train time by 1/p, no scaling at test) from standard dropout (scale at test time by p), and conflates 'multiply weights' vs 'multiply activations' -- a one-line code snippet or explicit clarifying sentence would eliminate a common learner misconception.",
+    "'Forward pass' is used in beat 0 without definition for an audience described as intro ML students who know basic neural networks -- either define it inline or replace with 'each training step' to avoid assuming vocabulary.",
+    "The ensemble_diagram draw action (t=120) would benefit from specifying which neurons are crossed out in each of the four sub-network sketches, making the renderer's task fully deterministic rather than leaving mask composition to invention."
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "This is a strong intro lesson plan with a precise destination, well-specified board actions, and clean narration that defines most jargon on first use. The primary weakness is a subtle but consequential math ambiguity: the test-time rescaling description blurs inverted dropout and standard dropout and does not commit to whether weights or activations are scaled, which is precisely the point that confuses practitioners. Addressing that ambiguity -- ideally with a code snippet or an explicit disambiguation sentence -- would elevate this to near-reference quality."
+}

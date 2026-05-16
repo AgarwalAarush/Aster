@@ -1,0 +1,225 @@
+{
+  "id": "dynamic-programming-v1-001",
+  "topic": {
+    "id": "dynamic-programming",
+    "title": "Dynamic Programming",
+    "question": "Why does dynamic programming work, and how do optimal substructure and overlapping subproblems tell you when to use it?",
+    "domain": "cs-theory"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v1",
+    "name": "Whiteboard prompt v1 - visual balance + pacing fixes"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Dynamic Programming: Optimal Substructure and Overlapping Subproblems",
+    "learnerLevel": "intermediate CS students who know recursion",
+    "durationSeconds": 270,
+    "payoff": "DP turns exponential-time recursive algorithms into polynomial-time ones -- Fibonacci drops from O(2^n) to O(n), and shortest-path in a graph from exponential to O(V^2) -- by storing and reusing rather than recomputing subproblem answers",
+    "staircase": [
+      "naive recursion blows up by recomputing identical subproblems",
+      "optimal substructure: the optimal answer to a problem contains optimal answers to its subproblems",
+      "overlapping subproblems: the same subproblems recur across branches of the recursion",
+      "memoization: cache each subproblem answer the first time, return it on every subsequent call",
+      "bottom-up tabulation: fill a table in dependency order, eliminating recursion overhead",
+      "recognizing DP candidates: check both properties before choosing the technique"
+    ],
+    "destination": "DP works because optimal substructure lets you decompose the recurrence OPT(i) = combine(OPT(subproblems)), and overlapping subproblems ensures that caching those answers yields an exponential-to-polynomial speedup; a problem is a DP candidate if and only if it satisfies both properties"
+  },
+  "narration": {
+    "fullText": "Consider computing the fifth Fibonacci number -- defined as F(n) equals F(n minus one) plus F(n minus two), with F(0) equals zero and F(1) equals one. If we recurse naively, F(5) calls F(4) and F(3). F(4) calls F(3) and F(2). Notice F(3) appears in two separate branches -- and deeper down, F(2) and F(1) appear even more. This blowup is exponential: the call tree has O(2^n) nodes. Now let me draw that call tree so the redundancy is unmistakable. Here is F(5) at the root. Its two children are F(4) and F(3). F(4) spawns F(3) and F(2). F(3) on the left spawns F(2) and F(1). The subtrees rooted at F(3) on both sides are identical -- we compute the same work twice. This is the overlapping subproblems property: the same subproblem -- the same input to the same function -- appears in multiple branches of the recursion tree. That is the first diagnostic. Now ask a second question: does solving F(5) optimally require solving F(4) and F(3) optimally? Yes -- any deviation from the true F(4) or F(3) would corrupt F(5). This is optimal substructure: the correct answer to the whole problem is built directly from correct answers to its subproblems. Both properties together are the signal to use dynamic programming. The fix for overlapping subproblems is memoization -- memo meaning memory table. The first time we compute F(3) we store its value. Every subsequent call to F(3) hits the cache and returns in O(1). Let me draw the memoized call graph: the second call to F(3) is a dashed arrow straight to the cache, not a full subtree. The total number of distinct subproblems is only n plus one, so runtime collapses to O(n). Alternatively, we can go bottom-up: fill a one-dimensional table T where T of zero equals zero, T of one equals one, and for i from two to n, T of i equals T of i minus one plus T of i minus two. No recursion, no stack, just a sweep through the table. Let me write that recurrence on the board and fill a small table for n equals five. T zero is zero, T one is one, T two is one, T three is two, T four is three, T five is five. Each cell is filled exactly once: O(n) time, O(n) space, reducible to O(1) if we keep only the last two values. The general lesson: when you see a recursive formulation where the same subproblems recur and the optimal whole decomposes into optimal parts, you have a DP candidate. Cache or tabulate. Exponential becomes polynomial.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Consider computing the fifth Fibonacci number -- defined as F(n) equals F(n minus one) plus F(n minus two), with F(0) equals zero and F(1) equals one. If we recurse naively, F(5) calls F(4) and F(3). F(4) calls F(3) and F(2). Notice F(3) appears in two separate branches.",
+        "whyThisBeat": "naive recursion blows up by recomputing identical subproblems"
+      },
+      {
+        "atSec": 28,
+        "text": "Let me draw that call tree so the redundancy is unmistakable. F(5) is the root; its children are F(4) and F(3). F(4) spawns F(3) and F(2). The subtrees rooted at F(3) on both sides are identical -- we compute the same work twice. The call tree has O(2^n) nodes total.",
+        "whyThisBeat": "visual proof of exponential blowup from repeated subproblems"
+      },
+      {
+        "atSec": 58,
+        "text": "This repeated computation is the overlapping subproblems property: the same subproblem -- the same input to the same function -- appears in multiple branches of the recursion tree. That is the first diagnostic for when to use DP.",
+        "whyThisBeat": "overlapping subproblems: the same subproblems recur across branches"
+      },
+      {
+        "atSec": 82,
+        "text": "Now ask a second question: does solving F(5) optimally require solving F(4) and F(3) optimally? Yes -- any deviation from the true F(4) or F(3) would corrupt F(5). This is optimal substructure: the correct answer to the whole is built directly from correct answers to its subproblems.",
+        "whyThisBeat": "optimal substructure: optimal answer contains optimal sub-answers"
+      },
+      {
+        "atSec": 112,
+        "text": "Both properties together are the signal to use dynamic programming. The fix for overlapping subproblems is memoization -- memo meaning a memory table. The first time we compute F(3) we store its value. Every subsequent call hits the cache and returns in O(1), collapsing runtime to O(n).",
+        "whyThisBeat": "memoization: cache each subproblem answer on first compute"
+      },
+      {
+        "atSec": 145,
+        "text": "Let me draw the memoized call graph. The second call to F(3) is a dashed arrow straight to the cache box -- not a full subtree. Only n plus one distinct subproblems exist, so the total work is O(n).",
+        "whyThisBeat": "visual contrast between naive tree and memoized graph"
+      },
+      {
+        "atSec": 175,
+        "text": "Alternatively go bottom-up: fill a one-dimensional table T where T of zero equals zero, T of one equals one, and for i from two to n, T of i equals T of i minus one plus T of i minus two. No recursion stack -- just a sweep through the table.",
+        "whyThisBeat": "bottom-up tabulation: fill table in dependency order"
+      },
+      {
+        "atSec": 205,
+        "text": "Let me fill the table for n equals five: T zero is zero, T one is one, T two is one, T three is two, T four is three, T five is five. Each cell is filled exactly once: O(n) time and O(n) space, reducible to O(1) if we keep only the last two values.",
+        "whyThisBeat": "concrete table fill showing linear work"
+      },
+      {
+        "atSec": 235,
+        "text": "The general lesson: when you see a recursive formulation where the same subproblems recur and the optimal whole decomposes into optimal parts, you have a DP candidate. Cache or tabulate. Exponential becomes polynomial.",
+        "whyThisBeat": "recognizing DP candidates: check both properties before choosing"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "fib_recurrence",
+        "content": "F(n) = F(n-1) + F(n-2),  F(0)=0, F(1)=1",
+        "region": "top-left"
+      },
+      {
+        "at": 10,
+        "kind": "write",
+        "targetId": "naive_cost",
+        "content": "Naive recursion: O(2^n) time",
+        "region": "top-right"
+      },
+      {
+        "at": 28,
+        "kind": "draw",
+        "targetId": "call_tree",
+        "content": "Binary recursion tree rooted at node labeled F(5) at top-center. Two children: F(4) on the left, F(3) on the right. F(4) has children F(3) and F(2). The left F(3) child of F(4) has children F(2) and F(1). The right F(3) child of F(5) has children F(2) and F(1). Both F(3) subtrees are drawn fully to show duplication. Nodes are circles with labels. Red dashed box surrounds both F(3) nodes to highlight redundancy.",
+        "region": "center"
+      },
+      {
+        "at": 55,
+        "kind": "highlight",
+        "targetId": "call_tree",
+        "content": "circle both F(3) root nodes in red to emphasize they represent identical recomputed work",
+        "region": "center"
+      },
+      {
+        "at": 58,
+        "kind": "write",
+        "targetId": "prop_overlap",
+        "content": "Overlapping Subproblems: same (input, function) pair recomputed in multiple branches",
+        "region": "bottom-left"
+      },
+      {
+        "at": 82,
+        "kind": "write",
+        "targetId": "prop_optimal",
+        "content": "Optimal Substructure: OPT(n) built from OPT(n-1) and OPT(n-2) -- deviation in a sub-answer corrupts the whole",
+        "region": "bottom-right"
+      },
+      {
+        "at": 108,
+        "kind": "highlight",
+        "targetId": "prop_overlap",
+        "content": "underline the phrase 'same (input, function) pair' in blue to emphasize the precise condition",
+        "region": "bottom-left"
+      },
+      {
+        "at": 112,
+        "kind": "highlight",
+        "targetId": "prop_optimal",
+        "content": "underline the word 'OPT' in both subexpressions in green to stress that sub-answers must themselves be optimal",
+        "region": "bottom-right"
+      },
+      {
+        "at": 125,
+        "kind": "write",
+        "targetId": "memo_label",
+        "content": "Memoization: store F(k) on first compute; cache lookup is O(1)",
+        "region": "top-right"
+      },
+      {
+        "at": 145,
+        "kind": "draw",
+        "targetId": "memo_graph",
+        "content": "Directed acyclic graph showing memoized calls. Node F(5) at top. Solid arrows to F(4) and F(3)-first-call (left branch). F(4) has solid arrows to F(3)-cached and F(2)-first. F(3)-cached is shown as a dashed arrow pointing to a rectangle labeled CACHE instead of spawning children. Rectangle CACHE sits to the right and contains the entry 'F(3)=2'. All subsequent calls to F(3) or F(2) use dashed arrows to CACHE.",
+        "region": "center"
+      },
+      {
+        "at": 168,
+        "kind": "highlight",
+        "targetId": "memo_graph",
+        "content": "box the CACHE rectangle in yellow to emphasize it is consulted instead of recursing",
+        "region": "center"
+      },
+      {
+        "at": 175,
+        "kind": "erase",
+        "targetId": "call_tree",
+        "content": "all"
+      },
+      {
+        "at": 178,
+        "kind": "write",
+        "targetId": "recurrence_dp",
+        "content": "Bottom-up: T[0]=0, T[1]=1;  for i in 2..n: T[i] = T[i-1] + T[i-2]",
+        "region": "center"
+      },
+      {
+        "at": 195,
+        "kind": "erase",
+        "targetId": "memo_graph",
+        "content": "all"
+      },
+      {
+        "at": 205,
+        "kind": "draw",
+        "targetId": "dp_table",
+        "content": "A horizontal row of six cells labeled index 0 through 5 above each cell. Values filled left to right: cell 0 contains 0, cell 1 contains 1, cell 2 contains 1, cell 3 contains 2, cell 4 contains 3, cell 5 contains 5. An arrow sweeps left-to-right beneath the cells to show the fill order. Each filled cell is shaded light blue.",
+        "region": "center"
+      },
+      {
+        "at": 225,
+        "kind": "highlight",
+        "targetId": "dp_table",
+        "content": "circle cell 5 containing value 5 in green to mark the final answer",
+        "region": "center"
+      },
+      {
+        "at": 230,
+        "kind": "write",
+        "targetId": "complexity_dp",
+        "content": "Time: O(n)  |  Space: O(n), reducible to O(1)",
+        "region": "bottom-left"
+      },
+      {
+        "at": 235,
+        "kind": "write",
+        "targetId": "dp_rule",
+        "content": "DP candidate check: (1) Overlapping Subproblems  AND  (2) Optimal Substructure  =>  cache or tabulate",
+        "region": "bottom-center"
+      },
+      {
+        "at": 255,
+        "kind": "highlight",
+        "targetId": "dp_rule",
+        "content": "box both conditions 'Overlapping Subproblems' and 'Optimal Substructure' in red to emphasize they are jointly necessary",
+        "region": "bottom-center"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 178,
+      "language": "python",
+      "code": "def fib_dp(n):\n    if n <= 1:\n        return n\n    T = [0] * (n + 1)\n    T[1] = 1\n    for i in range(2, n + 1):\n        T[i] = T[i-1] + T[i-2]\n    return T[n]\n\ndef fib_opt(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a",
+      "purpose": "Makes the bottom-up recurrence concrete and shows that space can be reduced to O(1) by keeping only the two most recent values"
+    }
+  ]
+}

@@ -1,0 +1,297 @@
+You are a senior teaching evaluator and a senior whiteboard-lecture director. You are reviewing a structured plan for a continuous-whiteboard narrated video lesson and scoring it against a fixed rubric. The plan was produced by an LLM under a specific prompt variant; your scoring drives prompt iteration. Be exact, fair, and specific. Reward concrete decisions; penalize hand-waving and unjustified omissions.
+
+You will read:
+  - The subject (topic, question, domain, difficulty, intended learner level)
+  - The candidate lesson plan as JSON
+  - The rubric below
+
+You will score every criterion. You will not skip any. You will not invent criteria. You will use the integer maxes exactly as defined.
+
+You will then return a single JSON object. No prose. No markdown. JSON only.
+
+---
+
+SUBJECT
+  id: dropout-regularization
+  domain: ml-dl
+  difficulty: intro
+  title: Dropout Regularization
+  question: Why does randomly zeroing activations during training regularize a neural network, and what is happening at test time?
+
+CANDIDATE LESSON PLAN (JSON)
+{
+  "id": "dropout-regularization-v1-001",
+  "topic": {
+    "id": "dropout-regularization",
+    "title": "Dropout Regularization",
+    "question": "Why does randomly zeroing activations during training regularize a neural network, and what is happening at test time?",
+    "domain": "ml-dl"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v1",
+    "name": "Whiteboard prompt v1 - visual balance + pacing fixes"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Dropout: Regularizing Neural Nets by Randomly Turning Off Neurons",
+    "learnerLevel": "intro ML students who know basic neural networks",
+    "durationSeconds": 240,
+    "payoff": "Dropout cuts test error by 1-2% on benchmark tasks for free, and understanding it reveals why ensembling and co-adaptation explain overfitting in deep networks",
+    "staircase": [
+      "overfitting in neural networks",
+      "what dropout does during training",
+      "the co-adaptation problem dropout breaks",
+      "implicit ensemble interpretation",
+      "test-time rescaling to match training expectation",
+      "the keep-probability hyperparameter"
+    ],
+    "destination": "During training, each neuron is independently zeroed with probability p_drop, which prevents co-adaptation and approximates training an ensemble of 2^N sub-networks; at test time all neurons are active but each output is multiplied by the keep probability (1 minus p_drop) so the expected activation matches training"
+  },
+  "narration": {
+    "fullText": "Neural networks overfit -- they memorize training examples instead of learning general patterns. Dropout is a regularization technique, a method that reduces this gap, that addresses overfitting by randomly zeroing a fraction of neuron activations on every forward pass during training. Here is our network: three layers, each with several neurons. On this training step, we flip a coin for each neuron in the hidden layers. Each neuron stays active with keep probability p -- typically 0.5 -- and is zeroed, or dropped, with probability 1 minus p. The crossed-out neurons contribute nothing to this forward pass. Why does this help? Without dropout, neurons can co-adapt -- meaning neuron A learns to always rely on neuron B to fix its mistakes, so neither learns a robust feature on its own. Dropout breaks co-adaptation: since any neuron might be absent on the next step, every neuron must learn useful features independently. There is a second way to see this. Each random mask over N neurons defines a different sub-network. With N neurons in a layer, there are 2 to the N possible masks. Dropout is implicitly training an exponentially large ensemble -- a collection of models averaged together -- sharing weights across all sub-networks. Ensembles reduce variance, which is exactly what regularization does. Now, test time. We no longer drop neurons -- every neuron is active so we get a stable, deterministic output. But there is a mismatch: during training each neuron was active only p of the time, so any downstream neuron saw an expected input of p times the full activation. At test time the full activation arrives and would over-drive the network. We correct this by multiplying every weight or activation by p -- the keep probability -- at test time, restoring the expected value to match training. The keep probability p is a hyperparameter you choose: p equals 0.5 is common for hidden layers, p equals 0.8 for input layers. Higher p means less dropout, less regularization. Dropout prevents co-adaptation, approximates ensembling, and its test-time rescaling ensures consistent expected activations across both phases.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Neural networks overfit -- they memorize training examples instead of learning general patterns. Dropout is a regularization technique, a method that reduces this gap between training and test performance, and it works by randomly zeroing a fraction of neuron activations on every forward pass during training.",
+        "whyThisBeat": "overfitting in neural networks"
+      },
+      {
+        "atSec": 30,
+        "text": "Here is our network: three layers, each with several neurons. On this training step, we flip a coin for each neuron in the hidden layers. Each neuron stays active with keep probability p -- typically 0.5 -- and is zeroed, or dropped, with probability 1 minus p. The crossed-out neurons contribute nothing to this forward pass.",
+        "whyThisBeat": "what dropout does during training"
+      },
+      {
+        "atSec": 70,
+        "text": "Why does this help? Without dropout, neurons can co-adapt -- meaning neuron A learns to always rely on neuron B to fix its mistakes, so neither learns a robust feature on its own. Dropout breaks co-adaptation: since any neuron might be absent on the next step, every neuron must learn useful features independently.",
+        "whyThisBeat": "the co-adaptation problem dropout breaks"
+      },
+      {
+        "atSec": 110,
+        "text": "There is a second way to see this. Each random mask over N neurons defines a different sub-network. With N neurons in a layer, there are 2 to the N possible masks. Dropout is implicitly training an exponentially large ensemble -- a collection of models averaged together -- sharing weights across all sub-networks. Ensembles reduce variance, which is exactly what regularization does.",
+        "whyThisBeat": "implicit ensemble interpretation"
+      },
+      {
+        "atSec": 155,
+        "text": "Now, test time. We no longer drop neurons -- every neuron is active so we get a stable, deterministic output. But there is a mismatch: during training each neuron was active only p of the time, so any downstream neuron saw an expected input of p times the full activation. At test time the full activation arrives and would over-drive the network. We correct this by multiplying every weight or activation by p -- the keep probability -- at test time, restoring the expected value to match training.",
+        "whyThisBeat": "test-time rescaling to match training expectation"
+      },
+      {
+        "atSec": 205,
+        "text": "The keep probability p is a hyperparameter you choose: p equals 0.5 is common for hidden layers, p equals 0.8 for input layers. Higher p means less dropout, less regularization. Dropout prevents co-adaptation, approximates ensembling, and its test-time rescaling ensures consistent expected activations across both phases.",
+        "whyThisBeat": "the keep-probability hyperparameter"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title",
+        "content": "Dropout Regularization",
+        "region": "top-center"
+      },
+      {
+        "at": 5,
+        "kind": "write",
+        "targetId": "overfit_label",
+        "content": "Overfitting: network memorizes training data, fails on new data",
+        "region": "top-left"
+      },
+      {
+        "at": 15,
+        "kind": "draw",
+        "targetId": "network_diagram",
+        "content": "Three vertical columns of circles representing neural network layers: input layer on the left with 3 circles labeled x1 x2 x3, a hidden layer in the center with 5 circles labeled h1 h2 h3 h4 h5, and an output layer on the right with 2 circles labeled y1 y2; draw arrows connecting every input circle to every hidden circle, and every hidden circle to every output circle",
+        "region": "center"
+      },
+      {
+        "at": 32,
+        "kind": "write",
+        "targetId": "keep_prob_label",
+        "content": "Keep probability p = 0.5   (drop prob = 1 - p = 0.5)",
+        "region": "top-right"
+      },
+      {
+        "at": 40,
+        "kind": "draw",
+        "targetId": "dropout_mask",
+        "content": "Same three-layer network as network_diagram but with h2 and h4 in the hidden layer drawn with large red X marks through them and their incoming and outgoing arrows drawn as dashed gray lines to indicate they are zeroed out on this forward pass",
+        "region": "center"
+      },
+      {
+        "at": 55,
+        "kind": "highlight",
+        "targetId": "dropout_mask",
+        "content": "circle the two crossed-out neurons h2 and h4 in red to emphasize the zeroing operation",
+        "region": "center"
+      },
+      {
+        "at": 72,
+        "kind": "write",
+        "targetId": "coadapt_label",
+        "content": "Co-adaptation: neuron A relies on neuron B to correct its errors",
+        "region": "bottom-left"
+      },
+      {
+        "at": 85,
+        "kind": "draw",
+        "targetId": "coadapt_diagram",
+        "content": "Two circles side by side labeled A and B with a thick double-headed red arrow between them labeled 'fixes mistakes'; draw a large red X over the double-headed arrow to show dropout breaks this dependency",
+        "region": "bottom-left"
+      },
+      {
+        "at": 112,
+        "kind": "erase",
+        "targetId": "coadapt_label",
+        "content": "all"
+      },
+      {
+        "at": 113,
+        "kind": "erase",
+        "targetId": "coadapt_diagram",
+        "content": "all"
+      },
+      {
+        "at": 115,
+        "kind": "write",
+        "targetId": "ensemble_label",
+        "content": "2^N sub-networks, one per random mask",
+        "region": "bottom-left"
+      },
+      {
+        "at": 120,
+        "kind": "draw",
+        "targetId": "ensemble_diagram",
+        "content": "Four small two-layer network sketches arranged in a 2x2 grid, each with different neurons crossed out with X marks to represent different dropout masks; label the grid 'Ensemble of sub-networks sharing weights'",
+        "region": "bottom-center"
+      },
+      {
+        "at": 155,
+        "kind": "write",
+        "targetId": "test_label",
+        "content": "Test time: all neurons active (no dropout)",
+        "region": "top-right"
+      },
+      {
+        "at": 162,
+        "kind": "write",
+        "targetId": "mismatch_eq",
+        "content": "E[activation during training] = p * a",
+        "region": "center-right"
+      },
+      {
+        "at": 170,
+        "kind": "write",
+        "targetId": "rescale_eq",
+        "content": "Test-time output = p * a   (multiply by keep prob p)",
+        "region": "center-right"
+      },
+      {
+        "at": 178,
+        "kind": "highlight",
+        "targetId": "rescale_eq",
+        "content": "underline 'multiply by keep prob p' in blue to emphasize the rescaling correction",
+        "region": "center-right"
+      },
+      {
+        "at": 205,
+        "kind": "erase",
+        "targetId": "ensemble_diagram",
+        "content": "all"
+      },
+      {
+        "at": 207,
+        "kind": "write",
+        "targetId": "hyperparam_label",
+        "content": "Hyperparameter p:  hidden layers p=0.5,  input layers p=0.8",
+        "region": "bottom-center"
+      },
+      {
+        "at": 215,
+        "kind": "highlight",
+        "targetId": "keep_prob_label",
+        "content": "box the expression p = 0.5 in green to connect the hyperparameter definition to the earlier formula",
+        "region": "top-right"
+      },
+      {
+        "at": 225,
+        "kind": "write",
+        "targetId": "summary",
+        "content": "Dropout: break co-adaptation | implicit ensemble | test: scale by p",
+        "region": "bottom-right"
+      }
+    ]
+  }
+}
+
+Rubric (each criterion: id, label, max integer, scoring guidance):
+
+1) payoff-concreteness  (max 8)
+   The lesson.payoff states a concrete reason a learner should care, ideally with a number or specific stake. Vague payoffs ("important", "useful") score 0-2. Generic-but-true payoffs without numbers or stakes score 3-5. Concrete payoffs with numbers or sharp stakes score 6-8.
+
+2) staircase-coherence  (max 10)
+   The staircase rungs build monotonically: each rung is strictly necessary, no gaps, no rungs reach beyond what's needed. Score down for missing prerequisite, redundant rung, or rung that is actually the destination.
+
+3) destination-precision  (max 8)
+   The destination names a precise object (formula, mechanism, theorem, named technique) the learner can hold afterward. "Understand X" scores 0-2. "Hold formula F and know what each factor protects against" scores 7-8.
+
+4) narration-clarity  (max 12)
+   Every symbol is defined the first time it appears in narration. Every term of jargon is defined or unpacked the first time it appears. Sentences are concrete, not hand-wavy. No contradictions. Read through narration.beats in order and penalize each undefined symbol or jargon term.
+
+5) board-specificity  (max 10)
+   Every "draw" action is concrete enough that a renderer could execute it without inventing details. "Draw a graph" scores 0. "Draw three nodes A, B, C left-to-right with arrows A->B and B->C" scores full credit. "write" actions whose content is "the formula" or "the equation" without the actual content also lose points here.
+
+6) board-coherence  (max 10)
+   The action timeline forms a sensible whiteboard story: nothing is highlighted/transformed/erased without first being introduced; transformations preserve identity in a comprehensible way; the canvas state implied at each moment is plausible (not impossibly cluttered).
+
+7) board-visual-balance  (max 8)
+   Mix of action kinds is appropriate to the topic. Topics that admit diagrams (graphs, distributions, geometry, networks, hierarchies) should have multiple draw actions, not just text writes. Topics that are purely formal still need at least one structural diagram. Heavy text-dump with one-or-zero draws on a visual topic scores 0-3.
+
+8) math-notation-correctness  (max 10)
+   All formulas are mathematically correct. Symbol use is consistent (a symbol means the same thing throughout). Numerical examples are arithmetically correct. Catch incorrect derivations, off-by-one errors, dimension mismatches, wrong constants.
+
+9) code-content-decision  (max 6)
+   Did the lesson make the right decision about whether to include code-as-content? If code is present: is it syntactically valid in its declared language? Is it the right granularity for the beat? Is it correct for the concept? If code is absent: would including code have materially clarified the mechanism? Score 6 for correct decision well-executed; 3 for borderline; 0 for clearly wrong (broken code present, or code obviously needed and absent).
+
+10) pacing-and-density  (max 10)
+    Beats are appropriately spaced for difficulty: intro topics get more seconds per beat, advanced topics get denser pacing. No beat is overloaded with multiple distinct ideas. Total beat times respect durationSeconds. Score down for one beat doing five things, or for huge gaps with no narration.
+
+11) redundancy-and-focus  (max 8)
+    No repeated content across beats. Stays on the topic question. Doesn't waste time on tangents or restate what was just said.
+
+After scoring, write 1-3 topThreeIssues (highest-leverage fixes), set wouldRecommendForPipeline (true only if percent >= 75 AND no criterion below half its max), and write a 2-3 sentence summary.
+
+Return JSON matching this shape exactly:
+
+{
+  "candidateId": "<copy from candidate.id>",
+  "subjectId": "<copy from candidate.topic.id>",
+  "promptVariantId": "<copy from candidate.promptVariant.id>",
+  "criteria": [
+    { "id": "payoff-concreteness", "label": "Payoff concreteness", "max": 8, "score": <0-8>, "notes": "<specific reason for score>" },
+    { "id": "staircase-coherence", "label": "Staircase coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "destination-precision", "label": "Destination precision", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "narration-clarity", "label": "Narration clarity", "max": 12, "score": <0-12>, "notes": "..." },
+    { "id": "board-specificity", "label": "Board specificity", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-coherence", "label": "Board coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-visual-balance", "label": "Board visual balance", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "math-notation-correctness", "label": "Math and notation correctness", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "code-content-decision", "label": "Code-content decision", "max": 6, "score": <0-6>, "notes": "..." },
+    { "id": "pacing-and-density", "label": "Pacing and density", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "redundancy-and-focus", "label": "Redundancy and focus", "max": 8, "score": <0-8>, "notes": "..." }
+  ],
+  "totalScore": <sum of all criterion scores>,
+  "maxScore": 100,
+  "percent": <round(totalScore / maxScore * 100)>,
+  "topThreeIssues": ["<most important fix>", "<second>", "<third>"],
+  "wouldRecommendForPipeline": <true|false>,
+  "summary": "<2-3 sentences>"
+}
+
+Return ONLY the JSON object. No commentary. No fences. No preamble.
+
+Return ONLY the JSON object as your response. No commentary, no markdown fences.

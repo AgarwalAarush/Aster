@@ -1,0 +1,216 @@
+{
+  "sweepId": "2026-05-15-v1",
+  "promptVariantIds": [
+    "whiteboard-v1"
+  ],
+  "subjectCount": 5,
+  "recommendedCount": 5,
+  "mean": 88.6,
+  "median": 88,
+  "min": 87,
+  "max": 91,
+  "perSubject": [
+    {
+      "subjectId": "dynamic-programming",
+      "domain": "cs-theory",
+      "difficulty": "intermediate",
+      "percent": 91,
+      "totalScore": 91,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Beat at 112s introduces two distinct ideas simultaneously (both-properties-together as DP signal AND memoization mechanism) -- split into two beats to give each idea breathing room",
+        "The staircase orders optimal substructure before overlapping subproblems, but the narration introduces overlapping subproblems first; align the staircase order with the lesson execution order to prevent confusion during prompt iteration",
+        "The payoff's shortest-path claim ('exponential to O(V^2)') is context-dependent and should name the specific algorithm (e.g., Bellman-Ford on a dense graph) to maintain the same concreteness as the Fibonacci example"
+      ]
+    },
+    {
+      "subjectId": "bayes-rule",
+      "domain": "probability-stats",
+      "difficulty": "intro",
+      "percent": 89,
+      "totalScore": 89,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "The proportionality insight (staircase rung 5) and the 'Bayes as ratio' rung (rung 4) are nearly identical in concept -- future iterations should sharpen the distinction or merge them into one rung and add a more distinct step such as 'updating iteratively with sequential evidence'",
+        "The annotation '+57% from prior' on the posterior highlight is ambiguous between a percentage-point change and a multiplicative percentage; it should read '+57 percentage points' or show the before/after values explicitly to avoid learner confusion",
+        "Beat 7's whyThisBeat tag ('Bayes' rule as a ratio') does not match its actual content (the posterior result and takeaway summary); mismatched tags degrade prompt-iteration signal quality"
+      ]
+    },
+    {
+      "subjectId": "dropout-regularization",
+      "domain": "ml-dl",
+      "difficulty": "intro",
+      "percent": 88,
+      "totalScore": 88,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Math/notation ambiguity around test-time rescaling: the lesson does not distinguish inverted dropout (scale at train time by 1/p, no scaling at test) from standard dropout (scale at test time by p), and conflates 'multiply weights' vs 'multiply activations' -- a one-line code snippet or explicit clarifying sentence would eliminate a common learner misconception.",
+        "'Forward pass' is used in beat 0 without definition for an audience described as intro ML students who know basic neural networks -- either define it inline or replace with 'each training step' to avoid assuming vocabulary.",
+        "The ensemble_diagram draw action (t=120) would benefit from specifying which neurons are crossed out in each of the four sub-network sketches, making the renderer's task fully deterministic rather than leaving mask composition to invention."
+      ]
+    },
+    {
+      "subjectId": "em-algorithm",
+      "domain": "classical-ml",
+      "difficulty": "advanced",
+      "percent": 88,
+      "totalScore": 88,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "The ELBO-and-KL beat (t=75) introduces two major named objects (ELBO formula and the KL gap identity) in a single ~40-second beat; splitting it into two beats with a brief pause or a second diagram annotation would reduce cognitive overload at the densest conceptual moment.",
+        "The payoff lacks numerical or sharp-stakes framing -- adding a concrete hook such as 'EM is used to train every Gaussian mixture model in scikit-learn and underlies the Baum-Welch algorithm powering speech recognition' would push it from generic-but-true to specifically motivating.",
+        "The bound_curve_diagram is updated in-place across three separate draw actions (t=60, t=135, t=175) without explicit erase-and-redraw instructions; renderer instructions should either use explicit erase actions or describe incremental overlay precisely to avoid ambiguity about whether prior curve strokes persist."
+      ]
+    },
+    {
+      "subjectId": "eigenvectors-pca",
+      "domain": "pure-math",
+      "difficulty": "intermediate",
+      "percent": 87,
+      "totalScore": 87,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "The final beat (t=210) packs ranking by eigenvalue, orthogonality of eigenvectors, and the concluding synthesis into ~60 seconds, making it the densest beat in the lesson; splitting orthogonality into its own short beat or moving it earlier would improve pacing.",
+        "The narration states eigenvectors are directions C 'stretches or flips' but covariance matrices are positive semi-definite so eigenvalues are non-negative and flipping cannot occur; correcting this prevents a subtle misconception for learners who later encounter indefinite matrices.",
+        "The payoff promises to tie back to scikit-learn's PCA but no beat or board action closes that loop with even a one-line code label; adding a terminal beat showing pca.components_ with an annotation linking rows to eigenvectors would fulfill the payoff's concrete stake."
+      ]
+    }
+  ],
+  "perCriterion": [
+    {
+      "id": "payoff-concreteness",
+      "meanScore": 6.2,
+      "maxScore": 8,
+      "meanPercent": 77.5,
+      "lowestSubjectId": "em-algorithm",
+      "lowestScore": 5
+    },
+    {
+      "id": "pacing-and-density",
+      "meanScore": 8.2,
+      "maxScore": 10,
+      "meanPercent": 82,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    },
+    {
+      "id": "narration-clarity",
+      "meanScore": 10,
+      "maxScore": 12,
+      "meanPercent": 83.3,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 10
+    },
+    {
+      "id": "redundancy-and-focus",
+      "meanScore": 7,
+      "maxScore": 8,
+      "meanPercent": 87.5,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 7
+    },
+    {
+      "id": "math-notation-correctness",
+      "meanScore": 8.8,
+      "maxScore": 10,
+      "meanPercent": 88,
+      "lowestSubjectId": "dropout-regularization",
+      "lowestScore": 7
+    },
+    {
+      "id": "staircase-coherence",
+      "meanScore": 9,
+      "maxScore": 10,
+      "meanPercent": 90,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 9
+    },
+    {
+      "id": "board-specificity",
+      "meanScore": 9,
+      "maxScore": 10,
+      "meanPercent": 90,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 9
+    },
+    {
+      "id": "board-coherence",
+      "meanScore": 9,
+      "maxScore": 10,
+      "meanPercent": 90,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 9
+    },
+    {
+      "id": "code-content-decision",
+      "meanScore": 5.6,
+      "maxScore": 6,
+      "meanPercent": 93.3,
+      "lowestSubjectId": "dropout-regularization",
+      "lowestScore": 5
+    },
+    {
+      "id": "board-visual-balance",
+      "meanScore": 7.8,
+      "maxScore": 8,
+      "meanPercent": 97.5,
+      "lowestSubjectId": "eigenvectors-pca",
+      "lowestScore": 7
+    },
+    {
+      "id": "destination-precision",
+      "meanScore": 8,
+      "maxScore": 8,
+      "meanPercent": 100,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    }
+  ],
+  "commonIssues": [
+    {
+      "issue": "the proportionality insight (staircase rung 5) and the 'bayes as ratio' rung (rung 4) are nearly identical in concept -- future iterations should sharpen the distinction or merge them into one rung and add a more distinct step such as 'updating iteratively with sequential evidence'",
+      "count": 1
+    },
+    {
+      "issue": "the annotation '+57% from prior' on the posterior highlight is ambiguous between a percentage-point change and a multiplicative percentage; it should read '+57 percentage points' or show the before/after values explicitly to avoid learner confusion",
+      "count": 1
+    },
+    {
+      "issue": "beat 7's whythisbeat tag ('bayes' rule as a ratio') does not match its actual content (the posterior result and takeaway summary); mismatched tags degrade prompt-iteration signal quality",
+      "count": 1
+    },
+    {
+      "issue": "math/notation ambiguity around test-time rescaling: the lesson does not distinguish inverted dropout (scale at train time by 1/p, no scaling at test) from standard dropout (scale at test time by p), and conflates 'multiply weights' vs 'multiply activations' -- a one-line code snippet or explicit clarifying sentence would eliminate a common learner misconception.",
+      "count": 1
+    },
+    {
+      "issue": "'forward pass' is used in beat 0 without definition for an audience described as intro ml students who know basic neural networks -- either define it inline or replace with 'each training step' to avoid assuming vocabulary.",
+      "count": 1
+    },
+    {
+      "issue": "the ensemble_diagram draw action (t=120) would benefit from specifying which neurons are crossed out in each of the four sub-network sketches, making the renderer's task fully deterministic rather than leaving mask composition to invention.",
+      "count": 1
+    },
+    {
+      "issue": "beat at 112s introduces two distinct ideas simultaneously (both-properties-together as dp signal and memoization mechanism) -- split into two beats to give each idea breathing room",
+      "count": 1
+    },
+    {
+      "issue": "the staircase orders optimal substructure before overlapping subproblems, but the narration introduces overlapping subproblems first; align the staircase order with the lesson execution order to prevent confusion during prompt iteration",
+      "count": 1
+    },
+    {
+      "issue": "the payoff's shortest-path claim ('exponential to o(v^2)') is context-dependent and should name the specific algorithm (e.g., bellman-ford on a dense graph) to maintain the same concreteness as the fibonacci example",
+      "count": 1
+    },
+    {
+      "issue": "the final beat (t=210) packs ranking by eigenvalue, orthogonality of eigenvectors, and the concluding synthesis into ~60 seconds, making it the densest beat in the lesson; splitting orthogonality into its own short beat or moving it earlier would improve pacing.",
+      "count": 1
+    }
+  ]
+}

@@ -1,0 +1,310 @@
+You are a senior teaching evaluator and a senior whiteboard-lecture director. You are reviewing a structured plan for a continuous-whiteboard narrated video lesson and scoring it against a fixed rubric. The plan was produced by an LLM under a specific prompt variant; your scoring drives prompt iteration. Be exact, fair, and specific. Reward concrete decisions; penalize hand-waving and unjustified omissions.
+
+You will read:
+  - The subject (topic, question, domain, difficulty, intended learner level)
+  - The candidate lesson plan as JSON
+  - The rubric below
+
+You will score every criterion. You will not skip any. You will not invent criteria. You will use the integer maxes exactly as defined.
+
+You will then return a single JSON object. No prose. No markdown. JSON only.
+
+---
+
+SUBJECT
+  id: eigenvectors-pca
+  domain: pure-math
+  difficulty: intermediate
+  title: Eigenvectors and PCA
+  question: Why are PCA's principal components the eigenvectors of the data covariance matrix, ranked by eigenvalue?
+
+CANDIDATE LESSON PLAN (JSON)
+{
+  "id": "eigenvectors-pca-v1-001",
+  "topic": {
+    "id": "eigenvectors-pca",
+    "title": "Eigenvectors and PCA",
+    "question": "Why are PCA's principal components the eigenvectors of the data covariance matrix, ranked by eigenvalue?",
+    "domain": "pure-math"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v1",
+    "name": "Whiteboard prompt v1 - visual balance + pacing fixes"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "PCA: Why Principal Components Are Eigenvectors of the Covariance Matrix",
+    "learnerLevel": "undergraduates comfortable with linear algebra and basic statistics",
+    "durationSeconds": 270,
+    "payoff": "After this lesson you can explain exactly why scikit-learn's PCA returns eigenvectors, not just any direction -- and you'll know that the top eigenvector captures the maximum variance, quantified by its eigenvalue, so dropping the rest loses the least possible information.",
+    "staircase": [
+      "variance as the objective",
+      "the covariance matrix encodes all pairwise spreads",
+      "maximizing variance via a unit-vector constraint",
+      "Lagrange multiplier turns the problem into an eigenvector equation",
+      "eigenvalue equals the variance in that direction",
+      "ranking directions by eigenvalue ranks them by variance captured"
+    ],
+    "destination": "The principal components of PCA are the eigenvectors of the covariance matrix C because maximizing variance u^T C u subject to ||u||=1 leads, via a Lagrange multiplier, to the equation C u = lambda u -- an eigenvector equation -- where the eigenvalue lambda equals the variance captured along u, so sorting eigenvectors by descending lambda sorts directions by descending variance."
+  },
+  "narration": {
+    "fullText": "Suppose you have a dataset of n points in d dimensions. Arranged as rows of a matrix X, each column is a feature. PCA -- principal component analysis, a method that finds a lower-dimensional representation preserving as much spread as possible -- asks: which single direction in d-dimensional space captures the most variance? Let's write that formally. A direction is a unit vector u, meaning u^T u equals one. The variance of the data projected onto u is u^T C u, where C is the covariance matrix -- a d-by-d symmetric matrix whose i-j entry is the average product of the mean-centered features i and j. So our goal is: maximize u^T C u, subject to u^T u equals one. To handle this constrained optimization, we use a Lagrange multiplier -- a scalar lambda we introduce so that at the optimum, the constraint gradient is proportional to the objective gradient. Forming the Lagrangian L equals u^T C u minus lambda times (u^T u minus one), and differentiating with respect to u and setting to zero, we get two C u minus two lambda u equals zero, which simplifies to C u equals lambda u. That is exactly the definition of an eigenvector: a vector u that C stretches or flips without changing direction, scaled by the scalar lambda called the eigenvalue. Now look at what lambda means here. Substitute C u equals lambda u back into the variance expression: u^T C u equals u^T (lambda u) equals lambda times u^T u equals lambda times one equals lambda. So the eigenvalue lambda is the variance captured along u. To maximize variance, we pick the eigenvector with the largest eigenvalue. The second principal component is the eigenvector with the second-largest eigenvalue, and so on -- each one orthogonal to the previous because C is symmetric and real, so its eigenvectors are orthogonal. That is why PCA's principal components are the eigenvectors of C, ranked by eigenvalue.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Suppose you have a dataset of n points in d dimensions, arranged as rows of a matrix X. PCA -- principal component analysis, a method that finds a lower-dimensional representation preserving as much spread as possible -- asks: which single direction captures the most variance?",
+        "whyThisBeat": "variance as the objective"
+      },
+      {
+        "atSec": 28,
+        "text": "A direction is a unit vector u, meaning u transpose u equals one. The variance of the data projected onto u is u^T C u, where C is the covariance matrix -- a d-by-d symmetric matrix whose i-j entry is the average product of the mean-centered features i and j.",
+        "whyThisBeat": "the covariance matrix encodes all pairwise spreads"
+      },
+      {
+        "atSec": 65,
+        "text": "So our goal is: maximize u^T C u, subject to u^T u equals one. This is a constrained optimization problem.",
+        "whyThisBeat": "maximizing variance via a unit-vector constraint"
+      },
+      {
+        "atSec": 90,
+        "text": "To handle the constraint, we use a Lagrange multiplier -- a scalar lambda we introduce so that at the optimum, the constraint gradient is proportional to the objective gradient. We form the Lagrangian L equals u^T C u minus lambda times open-paren u^T u minus one close-paren, differentiate with respect to u, set to zero, and simplify to get C u equals lambda u.",
+        "whyThisBeat": "Lagrange multiplier turns the problem into an eigenvector equation"
+      },
+      {
+        "atSec": 145,
+        "text": "That is exactly the definition of an eigenvector: a vector u that C stretches or flips without changing direction, scaled by the scalar lambda called the eigenvalue.",
+        "whyThisBeat": "Lagrange multiplier turns the problem into an eigenvector equation"
+      },
+      {
+        "atSec": 170,
+        "text": "Now watch what lambda means. Substitute C u equals lambda u back into the variance expression: u^T C u equals u^T lambda u equals lambda times u^T u equals lambda. So the eigenvalue lambda literally equals the variance captured along u.",
+        "whyThisBeat": "eigenvalue equals the variance in that direction"
+      },
+      {
+        "atSec": 210,
+        "text": "To maximize variance, pick the eigenvector with the largest eigenvalue. The second principal component is the eigenvector with the second-largest eigenvalue, and so on. Each is orthogonal to the previous because C is real and symmetric, guaranteeing orthogonal eigenvectors. That is why PCA's principal components are the eigenvectors of C, ranked by eigenvalue.",
+        "whyThisBeat": "ranking directions by eigenvalue ranks them by variance captured"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title",
+        "content": "PCA: Principal Components = Eigenvectors of C",
+        "region": "top-center"
+      },
+      {
+        "at": 5,
+        "kind": "draw",
+        "targetId": "data_cloud",
+        "content": "A 2D scatter cloud of roughly 30 dots arranged in an elongated ellipse tilted at about 45 degrees, with a horizontal axis labeled x_1 and a vertical axis labeled x_2, centered near the origin. The cloud is taller along the 45-degree diagonal than perpendicular to it.",
+        "region": "left-half"
+      },
+      {
+        "at": 18,
+        "kind": "write",
+        "targetId": "question_label",
+        "content": "Which direction u captures the most variance?",
+        "region": "right-half"
+      },
+      {
+        "at": 28,
+        "kind": "draw",
+        "targetId": "unit_vec_arrow",
+        "content": "A bold arrow from the origin along the 45-degree diagonal of the scatter cloud, labeled u, with a small bracket near the tip annotated ||u||=1",
+        "region": "left-half"
+      },
+      {
+        "at": 38,
+        "kind": "write",
+        "targetId": "variance_expr",
+        "content": "Var(proj) = u^T C u",
+        "region": "right-half"
+      },
+      {
+        "at": 50,
+        "kind": "write",
+        "targetId": "cov_def",
+        "content": "C = (1/n) X^T X   [mean-centered X]; C_{ij} = avg of (x_i - mean_i)(x_j - mean_j)",
+        "region": "right-half"
+      },
+      {
+        "at": 65,
+        "kind": "write",
+        "targetId": "objective",
+        "content": "max  u^T C u  s.t. u^T u = 1",
+        "region": "center"
+      },
+      {
+        "at": 78,
+        "kind": "draw",
+        "targetId": "proj_diagram",
+        "content": "A single data point shown as a filled circle above the u arrow, with a dashed perpendicular line dropped to the arrow, and the foot of the perpendicular labeled 'proj = (u^T x) u'. The projected foot is a small circle on the u arrow.",
+        "region": "left-half"
+      },
+      {
+        "at": 90,
+        "kind": "write",
+        "targetId": "lagrangian",
+        "content": "L = u^T C u - lambda (u^T u - 1)",
+        "region": "center"
+      },
+      {
+        "at": 105,
+        "kind": "write",
+        "targetId": "derivative",
+        "content": "dL/du = 2Cu - 2 lambda u = 0",
+        "region": "center"
+      },
+      {
+        "at": 118,
+        "kind": "transform",
+        "targetId": "derivative",
+        "content": "C u = lambda u",
+        "region": "center"
+      },
+      {
+        "at": 130,
+        "kind": "highlight",
+        "targetId": "derivative",
+        "content": "box the equation C u = lambda u in red to mark it as the eigenvector equation",
+        "region": "center"
+      },
+      {
+        "at": 145,
+        "kind": "write",
+        "targetId": "eigen_def",
+        "content": "Eigenvector: C stretches u by lambda (direction unchanged, magnitude scaled)",
+        "region": "right-half"
+      },
+      {
+        "at": 158,
+        "kind": "erase",
+        "targetId": "lagrangian",
+        "content": "all"
+      },
+      {
+        "at": 162,
+        "kind": "erase",
+        "targetId": "objective",
+        "content": "all"
+      },
+      {
+        "at": 165,
+        "kind": "write",
+        "targetId": "var_equals_lambda",
+        "content": "u^T C u = u^T (lambda u) = lambda (u^T u) = lambda",
+        "region": "center"
+      },
+      {
+        "at": 178,
+        "kind": "highlight",
+        "targetId": "var_equals_lambda",
+        "content": "underline the final '= lambda' in blue to show eigenvalue equals variance",
+        "region": "center"
+      },
+      {
+        "at": 195,
+        "kind": "write",
+        "targetId": "ranking_rule",
+        "content": "PC1: eigenvector with largest lambda_1; PC2: eigenvector with lambda_2 (< lambda_1); ...; Variance captured by PC_k = lambda_k",
+        "region": "right-half"
+      },
+      {
+        "at": 215,
+        "kind": "highlight",
+        "targetId": "data_cloud",
+        "content": "draw a thick green arrow through the long axis of the scatter cloud labeled 'PC1 (lambda_1 large)' and a shorter orange arrow through the short axis labeled 'PC2 (lambda_2 small)'",
+        "region": "left-half"
+      },
+      {
+        "at": 240,
+        "kind": "write",
+        "targetId": "orthogonality_note",
+        "content": "C real symmetric => eigenvectors orthogonal",
+        "region": "right-half"
+      },
+      {
+        "at": 252,
+        "kind": "highlight",
+        "targetId": "ranking_rule",
+        "content": "box the line 'Variance captured by PC_k = lambda_k' in yellow",
+        "region": "right-half"
+      }
+    ]
+  }
+}
+
+Rubric (each criterion: id, label, max integer, scoring guidance):
+
+1) payoff-concreteness  (max 8)
+   The lesson.payoff states a concrete reason a learner should care, ideally with a number or specific stake. Vague payoffs ("important", "useful") score 0-2. Generic-but-true payoffs without numbers or stakes score 3-5. Concrete payoffs with numbers or sharp stakes score 6-8.
+
+2) staircase-coherence  (max 10)
+   The staircase rungs build monotonically: each rung is strictly necessary, no gaps, no rungs reach beyond what's needed. Score down for missing prerequisite, redundant rung, or rung that is actually the destination.
+
+3) destination-precision  (max 8)
+   The destination names a precise object (formula, mechanism, theorem, named technique) the learner can hold afterward. "Understand X" scores 0-2. "Hold formula F and know what each factor protects against" scores 7-8.
+
+4) narration-clarity  (max 12)
+   Every symbol is defined the first time it appears in narration. Every term of jargon is defined or unpacked the first time it appears. Sentences are concrete, not hand-wavy. No contradictions. Read through narration.beats in order and penalize each undefined symbol or jargon term.
+
+5) board-specificity  (max 10)
+   Every "draw" action is concrete enough that a renderer could execute it without inventing details. "Draw a graph" scores 0. "Draw three nodes A, B, C left-to-right with arrows A->B and B->C" scores full credit. "write" actions whose content is "the formula" or "the equation" without the actual content also lose points here.
+
+6) board-coherence  (max 10)
+   The action timeline forms a sensible whiteboard story: nothing is highlighted/transformed/erased without first being introduced; transformations preserve identity in a comprehensible way; the canvas state implied at each moment is plausible (not impossibly cluttered).
+
+7) board-visual-balance  (max 8)
+   Mix of action kinds is appropriate to the topic. Topics that admit diagrams (graphs, distributions, geometry, networks, hierarchies) should have multiple draw actions, not just text writes. Topics that are purely formal still need at least one structural diagram. Heavy text-dump with one-or-zero draws on a visual topic scores 0-3.
+
+8) math-notation-correctness  (max 10)
+   All formulas are mathematically correct. Symbol use is consistent (a symbol means the same thing throughout). Numerical examples are arithmetically correct. Catch incorrect derivations, off-by-one errors, dimension mismatches, wrong constants.
+
+9) code-content-decision  (max 6)
+   Did the lesson make the right decision about whether to include code-as-content? If code is present: is it syntactically valid in its declared language? Is it the right granularity for the beat? Is it correct for the concept? If code is absent: would including code have materially clarified the mechanism? Score 6 for correct decision well-executed; 3 for borderline; 0 for clearly wrong (broken code present, or code obviously needed and absent).
+
+10) pacing-and-density  (max 10)
+    Beats are appropriately spaced for difficulty: intro topics get more seconds per beat, advanced topics get denser pacing. No beat is overloaded with multiple distinct ideas. Total beat times respect durationSeconds. Score down for one beat doing five things, or for huge gaps with no narration.
+
+11) redundancy-and-focus  (max 8)
+    No repeated content across beats. Stays on the topic question. Doesn't waste time on tangents or restate what was just said.
+
+After scoring, write 1-3 topThreeIssues (highest-leverage fixes), set wouldRecommendForPipeline (true only if percent >= 75 AND no criterion below half its max), and write a 2-3 sentence summary.
+
+Return JSON matching this shape exactly:
+
+{
+  "candidateId": "<copy from candidate.id>",
+  "subjectId": "<copy from candidate.topic.id>",
+  "promptVariantId": "<copy from candidate.promptVariant.id>",
+  "criteria": [
+    { "id": "payoff-concreteness", "label": "Payoff concreteness", "max": 8, "score": <0-8>, "notes": "<specific reason for score>" },
+    { "id": "staircase-coherence", "label": "Staircase coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "destination-precision", "label": "Destination precision", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "narration-clarity", "label": "Narration clarity", "max": 12, "score": <0-12>, "notes": "..." },
+    { "id": "board-specificity", "label": "Board specificity", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-coherence", "label": "Board coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-visual-balance", "label": "Board visual balance", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "math-notation-correctness", "label": "Math and notation correctness", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "code-content-decision", "label": "Code-content decision", "max": 6, "score": <0-6>, "notes": "..." },
+    { "id": "pacing-and-density", "label": "Pacing and density", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "redundancy-and-focus", "label": "Redundancy and focus", "max": 8, "score": <0-8>, "notes": "..." }
+  ],
+  "totalScore": <sum of all criterion scores>,
+  "maxScore": 100,
+  "percent": <round(totalScore / maxScore * 100)>,
+  "topThreeIssues": ["<most important fix>", "<second>", "<third>"],
+  "wouldRecommendForPipeline": <true|false>,
+  "summary": "<2-3 sentences>"
+}
+
+Return ONLY the JSON object. No commentary. No fences. No preamble.
+
+Return ONLY the JSON object as your response. No commentary, no markdown fences.

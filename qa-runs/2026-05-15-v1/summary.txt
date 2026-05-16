@@ -1,0 +1,38 @@
+Sweep: 2026-05-15-v1
+Prompt variant(s): whiteboard-v1
+Subjects critiqued: 5
+Mean: 88.6%   Median: 88%   Min: 87%   Max: 91%
+Recommended for pipeline: 5 / 5
+
+Per subject (sorted by percent, descending):
+  91 %  cs-theory           intermediate  dynamic-programming [REC]
+  89 %  probability-stats   intro         bayes-rule [REC]
+  88 %  ml-dl               intro         dropout-regularization [REC]
+  88 %  classical-ml        advanced      em-algorithm [REC]
+  87 %  pure-math           intermediate  eigenvectors-pca [REC]
+
+Per criterion (sorted by mean percent, ascending — worst first):
+  pct%  mean/max  criterion-id                       lowest-subject
+  77.5  6.2/8     payoff-concreteness               em-algorithm (5)
+  82    8.2/10    pacing-and-density                bayes-rule (8)
+  83.3  10/12     narration-clarity                 bayes-rule (10)
+  87.5  7/8       redundancy-and-focus              bayes-rule (7)
+  88    8.8/10    math-notation-correctness         dropout-regularization (7)
+  90    9/10      staircase-coherence               bayes-rule (9)
+  90    9/10      board-specificity                 bayes-rule (9)
+  90    9/10      board-coherence                   bayes-rule (9)
+  93.3  5.6/6     code-content-decision             dropout-regularization (5)
+  97.5  7.8/8     board-visual-balance              eigenvectors-pca (7)
+  100   8/8       destination-precision             bayes-rule (8)
+
+Most common issues raised across subjects:
+  x1  the proportionality insight (staircase rung 5) and the 'bayes as ratio' rung (rung 4) are nearly identical in concept -- future iterations …
+  x1  the annotation '+57% from prior' on the posterior highlight is ambiguous between a percentage-point change and a multiplicative percentage;…
+  x1  beat 7's whythisbeat tag ('bayes' rule as a ratio') does not match its actual content (the posterior result and takeaway summary); mismatch…
+  x1  math/notation ambiguity around test-time rescaling: the lesson does not distinguish inverted dropout (scale at train time by 1/p, no scalin…
+  x1  'forward pass' is used in beat 0 without definition for an audience described as intro ml students who know basic neural networks -- either…
+  x1  the ensemble_diagram draw action (t=120) would benefit from specifying which neurons are crossed out in each of the four sub-network sketch…
+  x1  beat at 112s introduces two distinct ideas simultaneously (both-properties-together as dp signal and memoization mechanism) -- split into t…
+  x1  the staircase orders optimal substructure before overlapping subproblems, but the narration introduces overlapping subproblems first; align…
+  x1  the payoff's shortest-path claim ('exponential to o(v^2)') is context-dependent and should name the specific algorithm (e.g., bellman-ford …
+  x1  the final beat (t=210) packs ranking by eigenvalue, orthogonality of eigenvectors, and the concluding synthesis into ~60 seconds, making it…

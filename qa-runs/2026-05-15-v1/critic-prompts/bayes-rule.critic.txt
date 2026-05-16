@@ -1,0 +1,326 @@
+You are a senior teaching evaluator and a senior whiteboard-lecture director. You are reviewing a structured plan for a continuous-whiteboard narrated video lesson and scoring it against a fixed rubric. The plan was produced by an LLM under a specific prompt variant; your scoring drives prompt iteration. Be exact, fair, and specific. Reward concrete decisions; penalize hand-waving and unjustified omissions.
+
+You will read:
+  - The subject (topic, question, domain, difficulty, intended learner level)
+  - The candidate lesson plan as JSON
+  - The rubric below
+
+You will score every criterion. You will not skip any. You will not invent criteria. You will use the integer maxes exactly as defined.
+
+You will then return a single JSON object. No prose. No markdown. JSON only.
+
+---
+
+SUBJECT
+  id: bayes-rule
+  domain: probability-stats
+  difficulty: intro
+  title: Bayes' Rule
+  question: How does Bayes' rule update beliefs given evidence, and why is the posterior proportional to likelihood times prior?
+
+CANDIDATE LESSON PLAN (JSON)
+{
+  "id": "bayes-rule-v1-001",
+  "topic": {
+    "id": "bayes-rule",
+    "title": "Bayes' Rule",
+    "question": "How does Bayes' rule update beliefs given evidence, and why is the posterior proportional to likelihood times prior?",
+    "domain": "probability-stats"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v1",
+    "name": "Whiteboard prompt v1 - visual balance + pacing fixes"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Bayes' Rule: Updating Beliefs with Evidence",
+    "learnerLevel": "intro probability students",
+    "durationSeconds": 240,
+    "payoff": "Bayes' rule lets you rationally revise any belief the moment new data arrives -- powering spam filters, medical tests, and AI that improves with experience, all from one formula",
+    "staircase": [
+      "probability as a degree of belief",
+      "the joint probability decomposition",
+      "what prior and likelihood mean",
+      "Bayes' rule as a ratio",
+      "why posterior is proportional to likelihood times prior",
+      "normalizing to get a true probability"
+    ],
+    "destination": "The learner holds the formula P(H|E) = P(E|H) * P(H) / P(E), knows that P(H) is the prior belief before evidence, P(E|H) is the likelihood of seeing E if H were true, P(E) is a normalizing constant, and understands that the posterior P(H|E) is proportional to P(E|H) * P(H) because P(E) is just a fixed scaling factor"
+  },
+  "narration": {
+    "fullText": "Suppose you wake up feeling sick. Before any test, you already have some belief about whether you have the flu -- call that your prior, written P of H, where H stands for the hypothesis that you have flu. The prior is your degree of belief before seeing any evidence. Now a doctor gives you a test and it comes back positive. How should that change your belief? Bayes' rule answers exactly this. Let's build it from first principles using a probability tree. A probability tree breaks every joint outcome into a chain of conditional steps. We write P of H and E -- the probability that both H and E are true -- in two equivalent ways. First, it equals P of E given H times P of H: the chance the test would be positive if you truly have flu, multiplied by your prior chance of having flu. Second, by symmetry, it also equals P of H given E times P of E. Setting these equal gives us Bayes' rule: P of H given E equals P of E given H times P of H, all divided by P of E. Let's name each piece. P of H given E is the posterior -- your updated belief after seeing the evidence. P of E given H is the likelihood -- how probable is this evidence if H were true? P of H is the prior -- your belief before any data. P of E is the marginal probability of the evidence -- a normalizing constant that makes the posterior sum to one across all hypotheses. Here is the key insight: P of E is just a fixed number for any particular piece of evidence. So the posterior is proportional to likelihood times prior. That proportionality symbol means we can compare hypotheses just by multiplying likelihood by prior, without even computing the full denominator. To turn proportionality into equality -- to get a true probability -- we divide by P of E, which is computed by summing likelihood times prior over every possible hypothesis. Our tree makes this concrete. Say P of H, the prior for flu, is 0.1 -- flu is uncommon. Say P of positive test given flu is 0.9 -- the test is usually right when you do have flu. The likelihood times prior is 0.9 times 0.1, which is 0.09. We also need the same product for the alternative: no flu. P of positive test given no flu is 0.05, and P of no flu is 0.9, giving 0.05 times 0.9 equals 0.045. P of E -- the denominator -- is 0.09 plus 0.045, which is 0.135. Dividing 0.09 by 0.135 gives a posterior of about 0.67. A positive test tripled your belief from 10 percent to 67 percent. That is Bayes' rule in action: evidence multiplies your prior belief, and a constant rescales the result into a valid probability.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Suppose you wake up feeling sick. Before any test, you already have some belief about whether you have the flu -- call that your prior, written P of H, where H stands for the hypothesis that you have flu. The prior is your degree of belief before seeing any evidence.",
+        "whyThisBeat": "probability as a degree of belief"
+      },
+      {
+        "atSec": 28,
+        "text": "Now a doctor gives you a test and it comes back positive. How should that change your belief? Bayes' rule answers exactly this. Let's build it from first principles using a probability tree. A probability tree breaks every joint outcome into a chain of conditional steps.",
+        "whyThisBeat": "the joint probability decomposition"
+      },
+      {
+        "atSec": 55,
+        "text": "We write P of H and E -- the probability that both H and E are true -- in two equivalent ways. First, it equals P of E given H times P of H. Second, by symmetry, it also equals P of H given E times P of E. Setting these equal gives us Bayes' rule: P of H given E equals P of E given H times P of H, all divided by P of E.",
+        "whyThisBeat": "the joint probability decomposition"
+      },
+      {
+        "atSec": 90,
+        "text": "Let's name each piece. P of H given E is the posterior -- your updated belief after seeing the evidence. P of E given H is the likelihood -- how probable is this evidence if H were true? P of H is the prior -- your belief before any data. P of E is the marginal probability of the evidence -- a normalizing constant that makes the posterior sum to one across all hypotheses.",
+        "whyThisBeat": "what prior and likelihood mean"
+      },
+      {
+        "atSec": 125,
+        "text": "Here is the key insight: P of E is just a fixed number for any particular piece of evidence. So the posterior is proportional to likelihood times prior. That proportionality symbol means we can compare hypotheses just by multiplying likelihood by prior, without computing the full denominator. To turn proportionality into equality, we divide by P of E, computed by summing likelihood times prior over every hypothesis.",
+        "whyThisBeat": "why posterior is proportional to likelihood times prior"
+      },
+      {
+        "atSec": 162,
+        "text": "Our tree makes this concrete. Say P of H, the prior for flu, is 0.1 -- flu is uncommon. The likelihood P of positive test given flu is 0.9. Likelihood times prior is 0.9 times 0.1, which is 0.09. For the alternative -- no flu -- likelihood times prior is 0.05 times 0.9, which is 0.045. The denominator P of E is 0.09 plus 0.045, equaling 0.135.",
+        "whyThisBeat": "normalizing to get a true probability"
+      },
+      {
+        "atSec": 205,
+        "text": "Dividing 0.09 by 0.135 gives a posterior of about 0.67. A positive test tripled your belief from 10 percent to 67 percent. That is Bayes' rule in action: evidence multiplies your prior belief, and a constant rescales the result into a valid probability.",
+        "whyThisBeat": "Bayes' rule as a ratio"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "label_prior",
+        "content": "Prior: P(H) = degree of belief before evidence",
+        "region": "top-left"
+      },
+      {
+        "at": 8,
+        "kind": "write",
+        "targetId": "label_H",
+        "content": "H = hypothesis (e.g., have flu)",
+        "region": "top-left"
+      },
+      {
+        "at": 18,
+        "kind": "write",
+        "targetId": "label_E",
+        "content": "E = evidence (e.g., positive test)",
+        "region": "top-left"
+      },
+      {
+        "at": 28,
+        "kind": "draw",
+        "targetId": "tree_diagram",
+        "content": "A probability tree rooted at a single node labeled 'Start' on the left. Two branches split right: upper branch labeled 'H (flu)  P(H)=0.1' leading to node H, lower branch labeled 'not H (no flu)  P(not H)=0.9' leading to node not-H. From node H, two sub-branches: upper labeled 'E+ given H  0.9' reaching leaf labeled 'H and E+', lower labeled 'E- given H  0.1' reaching leaf labeled 'H and E-'. From node not-H, two sub-branches: upper labeled 'E+ given not-H  0.05' reaching leaf labeled 'not-H and E+', lower labeled 'E- given not-H  0.95' reaching leaf labeled 'not-H and E-'. Leaves stacked on the right half.",
+        "region": "right-half"
+      },
+      {
+        "at": 55,
+        "kind": "write",
+        "targetId": "eq_joint_1",
+        "content": "P(H and E) = P(E|H) * P(H)",
+        "region": "center-left"
+      },
+      {
+        "at": 65,
+        "kind": "write",
+        "targetId": "eq_joint_2",
+        "content": "P(H and E) = P(H|E) * P(E)",
+        "region": "center-left"
+      },
+      {
+        "at": 75,
+        "kind": "write",
+        "targetId": "eq_bayes",
+        "content": "P(H|E) = [ P(E|H) * P(H) ] / P(E)",
+        "region": "center-left"
+      },
+      {
+        "at": 90,
+        "kind": "highlight",
+        "targetId": "eq_bayes",
+        "content": "box the numerator P(E|H) * P(H) in blue to distinguish it from the denominator",
+        "region": "center-left"
+      },
+      {
+        "at": 100,
+        "kind": "write",
+        "targetId": "label_posterior",
+        "content": "P(H|E) = posterior  (updated belief)",
+        "region": "top-center"
+      },
+      {
+        "at": 108,
+        "kind": "write",
+        "targetId": "label_likelihood",
+        "content": "P(E|H) = likelihood  (how well H explains E)",
+        "region": "top-center"
+      },
+      {
+        "at": 116,
+        "kind": "write",
+        "targetId": "label_marginal",
+        "content": "P(E) = marginal evidence  (normalizing constant)",
+        "region": "top-center"
+      },
+      {
+        "at": 125,
+        "kind": "write",
+        "targetId": "eq_proportional",
+        "content": "P(H|E)  proportional-to  P(E|H) * P(H)",
+        "region": "center-left"
+      },
+      {
+        "at": 133,
+        "kind": "highlight",
+        "targetId": "eq_proportional",
+        "content": "underline the phrase 'proportional-to' in red to emphasize the core relationship",
+        "region": "center-left"
+      },
+      {
+        "at": 140,
+        "kind": "draw",
+        "targetId": "bar_prior",
+        "content": "A horizontal probability bar spanning the full width of a small panel, divided into two segments: left segment spanning 10 percent of width labeled 'P(H)=0.1  flu' filled light blue, right segment spanning 90 percent labeled 'P(not H)=0.9  no flu' filled light grey. A vertical tick at the 10 percent mark. Panel labeled 'Prior beliefs' above it.",
+        "region": "bottom-left"
+      },
+      {
+        "at": 155,
+        "kind": "write",
+        "targetId": "note_PE",
+        "content": "P(E) = sum over all H of [ P(E|H) * P(H) ]",
+        "region": "center-left"
+      },
+      {
+        "at": 162,
+        "kind": "write",
+        "targetId": "calc_flu",
+        "content": "P(E|H)*P(H) = 0.9 * 0.1 = 0.09",
+        "region": "bottom-center"
+      },
+      {
+        "at": 172,
+        "kind": "write",
+        "targetId": "calc_noflu",
+        "content": "P(E|not H)*P(not H) = 0.05 * 0.9 = 0.045",
+        "region": "bottom-center"
+      },
+      {
+        "at": 182,
+        "kind": "write",
+        "targetId": "calc_PE",
+        "content": "P(E) = 0.09 + 0.045 = 0.135",
+        "region": "bottom-center"
+      },
+      {
+        "at": 192,
+        "kind": "highlight",
+        "targetId": "calc_PE",
+        "content": "circle the value 0.135 in green to mark it as the denominator going into the formula",
+        "region": "bottom-center"
+      },
+      {
+        "at": 200,
+        "kind": "draw",
+        "targetId": "bar_posterior",
+        "content": "A horizontal probability bar identical in width to bar_prior, now divided to show updated beliefs: left segment spanning 67 percent labeled 'P(H|E) = 0.67  flu' filled darker blue, right segment spanning 33 percent labeled 'P(not H|E) = 0.33  no flu' filled light grey. Panel labeled 'Posterior beliefs after positive test' above it, placed directly below bar_prior.",
+        "region": "bottom-left"
+      },
+      {
+        "at": 210,
+        "kind": "write",
+        "targetId": "calc_posterior",
+        "content": "P(H|E) = 0.09 / 0.135 = 0.67",
+        "region": "bottom-center"
+      },
+      {
+        "at": 220,
+        "kind": "highlight",
+        "targetId": "calc_posterior",
+        "content": "box the result 0.67 in red and draw a large upward arrow next to it annotated '+57% from prior'",
+        "region": "bottom-center"
+      },
+      {
+        "at": 228,
+        "kind": "highlight",
+        "targetId": "eq_bayes",
+        "content": "underline the entire equation P(H|E) = [P(E|H)*P(H)] / P(E) in green as the final takeaway formula",
+        "region": "center-left"
+      }
+    ]
+  }
+}
+
+Rubric (each criterion: id, label, max integer, scoring guidance):
+
+1) payoff-concreteness  (max 8)
+   The lesson.payoff states a concrete reason a learner should care, ideally with a number or specific stake. Vague payoffs ("important", "useful") score 0-2. Generic-but-true payoffs without numbers or stakes score 3-5. Concrete payoffs with numbers or sharp stakes score 6-8.
+
+2) staircase-coherence  (max 10)
+   The staircase rungs build monotonically: each rung is strictly necessary, no gaps, no rungs reach beyond what's needed. Score down for missing prerequisite, redundant rung, or rung that is actually the destination.
+
+3) destination-precision  (max 8)
+   The destination names a precise object (formula, mechanism, theorem, named technique) the learner can hold afterward. "Understand X" scores 0-2. "Hold formula F and know what each factor protects against" scores 7-8.
+
+4) narration-clarity  (max 12)
+   Every symbol is defined the first time it appears in narration. Every term of jargon is defined or unpacked the first time it appears. Sentences are concrete, not hand-wavy. No contradictions. Read through narration.beats in order and penalize each undefined symbol or jargon term.
+
+5) board-specificity  (max 10)
+   Every "draw" action is concrete enough that a renderer could execute it without inventing details. "Draw a graph" scores 0. "Draw three nodes A, B, C left-to-right with arrows A->B and B->C" scores full credit. "write" actions whose content is "the formula" or "the equation" without the actual content also lose points here.
+
+6) board-coherence  (max 10)
+   The action timeline forms a sensible whiteboard story: nothing is highlighted/transformed/erased without first being introduced; transformations preserve identity in a comprehensible way; the canvas state implied at each moment is plausible (not impossibly cluttered).
+
+7) board-visual-balance  (max 8)
+   Mix of action kinds is appropriate to the topic. Topics that admit diagrams (graphs, distributions, geometry, networks, hierarchies) should have multiple draw actions, not just text writes. Topics that are purely formal still need at least one structural diagram. Heavy text-dump with one-or-zero draws on a visual topic scores 0-3.
+
+8) math-notation-correctness  (max 10)
+   All formulas are mathematically correct. Symbol use is consistent (a symbol means the same thing throughout). Numerical examples are arithmetically correct. Catch incorrect derivations, off-by-one errors, dimension mismatches, wrong constants.
+
+9) code-content-decision  (max 6)
+   Did the lesson make the right decision about whether to include code-as-content? If code is present: is it syntactically valid in its declared language? Is it the right granularity for the beat? Is it correct for the concept? If code is absent: would including code have materially clarified the mechanism? Score 6 for correct decision well-executed; 3 for borderline; 0 for clearly wrong (broken code present, or code obviously needed and absent).
+
+10) pacing-and-density  (max 10)
+    Beats are appropriately spaced for difficulty: intro topics get more seconds per beat, advanced topics get denser pacing. No beat is overloaded with multiple distinct ideas. Total beat times respect durationSeconds. Score down for one beat doing five things, or for huge gaps with no narration.
+
+11) redundancy-and-focus  (max 8)
+    No repeated content across beats. Stays on the topic question. Doesn't waste time on tangents or restate what was just said.
+
+After scoring, write 1-3 topThreeIssues (highest-leverage fixes), set wouldRecommendForPipeline (true only if percent >= 75 AND no criterion below half its max), and write a 2-3 sentence summary.
+
+Return JSON matching this shape exactly:
+
+{
+  "candidateId": "<copy from candidate.id>",
+  "subjectId": "<copy from candidate.topic.id>",
+  "promptVariantId": "<copy from candidate.promptVariant.id>",
+  "criteria": [
+    { "id": "payoff-concreteness", "label": "Payoff concreteness", "max": 8, "score": <0-8>, "notes": "<specific reason for score>" },
+    { "id": "staircase-coherence", "label": "Staircase coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "destination-precision", "label": "Destination precision", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "narration-clarity", "label": "Narration clarity", "max": 12, "score": <0-12>, "notes": "..." },
+    { "id": "board-specificity", "label": "Board specificity", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-coherence", "label": "Board coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-visual-balance", "label": "Board visual balance", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "math-notation-correctness", "label": "Math and notation correctness", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "code-content-decision", "label": "Code-content decision", "max": 6, "score": <0-6>, "notes": "..." },
+    { "id": "pacing-and-density", "label": "Pacing and density", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "redundancy-and-focus", "label": "Redundancy and focus", "max": 8, "score": <0-8>, "notes": "..." }
+  ],
+  "totalScore": <sum of all criterion scores>,
+  "maxScore": 100,
+  "percent": <round(totalScore / maxScore * 100)>,
+  "topThreeIssues": ["<most important fix>", "<second>", "<third>"],
+  "wouldRecommendForPipeline": <true|false>,
+  "summary": "<2-3 sentences>"
+}
+
+Return ONLY the JSON object. No commentary. No fences. No preamble.
+
+Return ONLY the JSON object as your response. No commentary, no markdown fences.

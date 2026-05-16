@@ -1,0 +1,17 @@
+New sweep:     2026-05-15-v1 (whiteboard-v1)
+  mean=88.6%  min=87%  max=91%
+Champion:      2026-05-15-baseline-v0-iter5 (whiteboard-v0)
+  mean=85.2%  min=80%
+Mean delta:    +3.4pp
+Min delta:     +7.0pp
+Per-subject regressions (>3pp drop vs champion on a shared subject): 0
+
+Decision: ACCEPT
+Reason:   mean improved by >=0.5pp and no subject regressed by >3pp
+
+Threshold check (mean>=90 & all-criteria-mean>=85 & all-subjects>=82):
+  mean>=90:           FAIL  (88.6%)
+  per-criterion>=85:  FAIL  (worst: payoff-concreteness 77.5%)
+  per-subject>=82:    PASS  (worst: eigenvectors-pca 87%)
+
+THRESHOLD NOT MET — continue iterating.
