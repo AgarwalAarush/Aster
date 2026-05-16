@@ -1,0 +1,74 @@
+{
+  "sweepId": "2026-05-15-v2",
+  "variantId": "whiteboard-v2",
+  "mean": 91.2,
+  "min": 90,
+  "perSubject": [
+    {
+      "subjectId": "dropout-regularization",
+      "percent": 93
+    },
+    {
+      "subjectId": "eigenvectors-pca",
+      "percent": 92
+    },
+    {
+      "subjectId": "dynamic-programming",
+      "percent": 91
+    },
+    {
+      "subjectId": "bayes-rule",
+      "percent": 90
+    },
+    {
+      "subjectId": "em-algorithm",
+      "percent": 90
+    }
+  ],
+  "perCriterion": [
+    {
+      "id": "pacing-and-density",
+      "meanPercent": 84
+    },
+    {
+      "id": "narration-clarity",
+      "meanPercent": 85
+    },
+    {
+      "id": "board-coherence",
+      "meanPercent": 86
+    },
+    {
+      "id": "redundancy-and-focus",
+      "meanPercent": 87.5
+    },
+    {
+      "id": "staircase-coherence",
+      "meanPercent": 90
+    },
+    {
+      "id": "math-notation-correctness",
+      "meanPercent": 90
+    },
+    {
+      "id": "board-specificity",
+      "meanPercent": 92
+    },
+    {
+      "id": "board-visual-balance",
+      "meanPercent": 97.5
+    },
+    {
+      "id": "payoff-concreteness",
+      "meanPercent": 100
+    },
+    {
+      "id": "destination-precision",
+      "meanPercent": 100
+    },
+    {
+      "id": "code-content-decision",
+      "meanPercent": 100
+    }
+  ]
+}
