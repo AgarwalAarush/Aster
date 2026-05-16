@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "qa:education": "node --experimental-strip-types --no-warnings scripts/education-qa.ts",
+    "qa:video": "node --experimental-strip-types --no-warnings scripts/video-eval.ts",
     "test": "vitest run"
   },
   "dependencies": {
@@ -26,6 +27,7 @@
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.6",
     "jsdom": "^29.1.1",
+    "playwright": "^1.52.0",
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.6"
