@@ -1,0 +1,319 @@
+You are a senior teaching evaluator and a senior whiteboard-lecture director. You are reviewing a structured plan for a continuous-whiteboard narrated video lesson and scoring it against a fixed rubric. The plan was produced by an LLM under a specific prompt variant; your scoring drives prompt iteration. Be exact, fair, and specific. Reward concrete decisions; penalize hand-waving and unjustified omissions.
+
+You will read:
+  - The subject (topic, question, domain, difficulty, intended learner level)
+  - The candidate lesson plan as JSON
+  - The rubric below
+
+You will score every criterion. You will not skip any. You will not invent criteria. You will use the integer maxes exactly as defined.
+
+You will then return a single JSON object. No prose. No markdown. JSON only.
+
+---
+
+SUBJECT
+  id: bias-variance-tradeoff
+  domain: classical-ml
+  difficulty: intro
+  title: Bias-Variance Tradeoff
+  question: What is the bias-variance tradeoff, and why does increasing model capacity not always reduce test error?
+
+CANDIDATE LESSON PLAN (JSON)
+{
+  "id": "bias-variance-tradeoff-v2-001",
+  "topic": {
+    "id": "bias-variance-tradeoff",
+    "title": "Bias-Variance Tradeoff",
+    "question": "What is the bias-variance tradeoff, and why does increasing model capacity not always reduce test error?",
+    "domain": "classical-ml"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v2",
+    "name": "Whiteboard prompt v2 - payoff numbers + sync enforcement"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Bias, Variance, and the U-Shaped Error Curve",
+    "learnerLevel": "undergraduates seeing ML for the first time",
+    "durationSeconds": 240,
+    "payoff": "A degree-1 polynomial fit to a wiggly dataset can carry 30% test error while a degree-5 fit drops it to 8%, but a degree-20 fit shoots back to 25% -- knowing where the sweet spot is prevents you from wasting compute on a model that is actually worse.",
+    "staircase": [
+      "what test error measures and why training error is a bad proxy",
+      "bias as the systematic gap between the model family and the true function",
+      "variance as sensitivity of predictions to which training set you happened to draw",
+      "the decomposition Expected MSE equals Bias-squared plus Variance plus irreducible noise",
+      "the U-shaped test-error curve that emerges as capacity grows",
+      "finding the sweet spot and practical tools for doing so"
+    ],
+    "destination": "Expected test MSE decomposes as Bias^2 + Variance + sigma^2, where bias falls and variance rises as model capacity increases, producing a U-shaped curve whose minimum marks the optimal complexity."
+  },
+  "narration": {
+    "fullText": "Suppose you train a model perfectly on your training set -- zero training error -- yet it fails on every new example. That is the core puzzle we are here to resolve. Let us start by asking what test error actually measures: it is the average squared gap between your model's prediction and the true label on data the model has never seen. Training error is a liar -- it rewards memorization. Test error is the honest judge. Now look at this scatter of points drawn from some unknown true function f of x, plus some random noise. A straight-line model -- low capacity -- cannot bend to follow the data; it misses systematically on every new example. That systematic miss is called bias: the difference between what your model family can ever produce and the true function, averaged over all possible training sets you could draw. A high-bias model underfits. At the other extreme, a very wiggly high-degree polynomial passes through every training point exactly but thrashes wildly between them; draw a slightly different training set and you get a completely different curve. That sensitivity to the particular training set you happened to use is called variance. High variance means the model is memorizing noise rather than learning signal -- overfitting. Now let us make this precise. If the true label y equals f of x plus epsilon, where epsilon is irreducible noise with mean zero and variance sigma-squared, then the expected test mean-squared error -- MSE -- at any input x decomposes into three terms: Bias-squared, plus Variance, plus sigma-squared. Bias-squared is the square of how wrong your average prediction is. Variance is how much your predictions scatter around that average across different training sets. Sigma-squared is the noise floor you can never beat regardless of model choice. Watch what happens as we increase model capacity along the horizontal axis. Bias falls -- the model can fit more complex functions. But variance rises -- with more parameters the model starts fitting the noise in whichever training set it sees. The sum Bias-squared plus Variance traces a U-shape. The bottom of that U is the sweet spot: optimal capacity. In practice you locate it by plotting validation error against model complexity and picking the minimum. Cross-validation automates that search. The irreducible noise floor sigma-squared sets a hard lower bound you can never cross, no matter how clever your model is.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Suppose you train a model perfectly on your training set -- zero training error -- yet it fails on every new example. That is the core puzzle we are here to resolve.",
+        "whyThisBeat": "motivating the puzzle: training error is a bad proxy for generalization"
+      },
+      {
+        "atSec": 18,
+        "text": "Test error measures the average squared gap between your model's prediction and the true label on data the model has never seen. Training error is a liar -- it rewards memorization. Test error is the honest judge.",
+        "whyThisBeat": "defining test error clearly so all subsequent reasoning is grounded"
+      },
+      {
+        "atSec": 38,
+        "text": "Now look at this scatter of points drawn from some unknown true function f of x, plus some random noise. A straight-line model -- low capacity -- cannot bend to follow the data; it misses systematically on every new example.",
+        "whyThisBeat": "introducing the data picture and the intuition for underfitting"
+      },
+      {
+        "atSec": 60,
+        "text": "That systematic miss is called bias: the difference between what your model family can ever produce and the true function, averaged over all possible training sets you could draw. A high-bias model underfits.",
+        "whyThisBeat": "defining bias precisely on first use"
+      },
+      {
+        "atSec": 85,
+        "text": "At the other extreme, a very wiggly high-degree polynomial passes through every training point exactly but thrashes wildly between them. Draw a slightly different training set and you get a completely different curve. That sensitivity is called variance. High variance means the model is memorizing noise -- overfitting.",
+        "whyThisBeat": "defining variance precisely and connecting it to overfitting"
+      },
+      {
+        "atSec": 118,
+        "text": "Now let us make this precise. If the true label y equals f of x plus epsilon -- where epsilon is irreducible noise with mean zero and variance sigma-squared -- then the expected test MSE, which stands for mean-squared error, the average squared prediction gap, decomposes into three terms: Bias-squared, plus Variance, plus sigma-squared.",
+        "whyThisBeat": "deriving and stating the bias-variance decomposition"
+      },
+      {
+        "atSec": 155,
+        "text": "Bias-squared is the square of how wrong your average prediction is. Variance is how much predictions scatter across different training sets. Sigma-squared is the noise floor you can never beat.",
+        "whyThisBeat": "unpacking each term of the decomposition"
+      },
+      {
+        "atSec": 175,
+        "text": "Watch what happens as we increase model capacity along the horizontal axis. Bias falls -- the model can fit more complex functions. But variance rises -- the model starts fitting noise. Their sum traces a U-shape. The bottom of that U is the sweet spot: optimal capacity.",
+        "whyThisBeat": "building the U-shaped test-error curve from the decomposition"
+      },
+      {
+        "atSec": 208,
+        "text": "In practice you locate the sweet spot by plotting validation error against model complexity and picking the minimum. Cross-validation automates that search. And sigma-squared sets a hard lower bound you can never cross, no matter how clever your model.",
+        "whyThisBeat": "practical implication and the irreducible noise floor"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title_lbl",
+        "content": "Bias-Variance Tradeoff",
+        "region": "top-center"
+      },
+      {
+        "at": 8,
+        "kind": "draw",
+        "targetId": "scatter_plot",
+        "content": "2D scatter of 15 points arranged in a gentle S-curve pattern on axes labeled x (horizontal) and y (vertical), with a straight diagonal line passing through the cloud but missing the curve at both ends, labeled high-bias fit (degree 1)",
+        "region": "left-half"
+      },
+      {
+        "at": 18,
+        "kind": "write",
+        "targetId": "test_err_def",
+        "content": "Test MSE = E[(y - f_hat(x))^2]  on unseen data",
+        "region": "top-right"
+      },
+      {
+        "at": 30,
+        "kind": "highlight",
+        "targetId": "test_err_def",
+        "content": "underline unseen data in red to stress it is not training data",
+        "region": "top-right"
+      },
+      {
+        "at": 38,
+        "kind": "draw",
+        "targetId": "true_fn_curve",
+        "content": "a smooth S-shaped curve drawn through the scatter in the left panel, labeled true f(x) in blue, showing the gap between the straight line and the curve with a vertical double-headed arrow labeled bias gap",
+        "region": "left-half"
+      },
+      {
+        "at": 60,
+        "kind": "write",
+        "targetId": "bias_def",
+        "content": "Bias = E[f_hat(x)] - f(x)   (systematic error of the model family)",
+        "region": "center-right"
+      },
+      {
+        "at": 72,
+        "kind": "highlight",
+        "targetId": "bias_def",
+        "content": "box the phrase model family in orange to show bias is a property of the hypothesis class",
+        "region": "center-right"
+      },
+      {
+        "at": 85,
+        "kind": "draw",
+        "targetId": "highvar_fit",
+        "content": "a degree-9 polynomial curve that oscillates sharply through every training point in the left panel scatter, labeled high-variance fit (degree 9) in red, with curly brackets along the wiggly portions labeled fitting noise",
+        "region": "left-half"
+      },
+      {
+        "at": 100,
+        "kind": "write",
+        "targetId": "var_def",
+        "content": "Variance = E[(f_hat(x) - E[f_hat(x)])^2]   (sensitivity to training set)",
+        "region": "center-right"
+      },
+      {
+        "at": 118,
+        "kind": "write",
+        "targetId": "noise_model",
+        "content": "y = f(x) + epsilon,   epsilon ~ N(0, sigma^2)",
+        "region": "top-right"
+      },
+      {
+        "at": 130,
+        "kind": "write",
+        "targetId": "decomp_eq",
+        "content": "E[Test MSE] = Bias^2 + Variance + sigma^2",
+        "region": "center"
+      },
+      {
+        "at": 140,
+        "kind": "highlight",
+        "targetId": "decomp_eq",
+        "content": "circle Bias^2 in blue, circle Variance in red, and box sigma^2 in grey to distinguish the three additive terms",
+        "region": "center"
+      },
+      {
+        "at": 155,
+        "kind": "highlight",
+        "targetId": "decomp_eq",
+        "content": "draw a downward arrow below sigma^2 labeled irreducible floor -- cannot be eliminated",
+        "region": "center"
+      },
+      {
+        "at": 165,
+        "kind": "erase",
+        "targetId": "scatter_plot",
+        "content": "all"
+      },
+      {
+        "at": 166,
+        "kind": "erase",
+        "targetId": "true_fn_curve",
+        "content": "all"
+      },
+      {
+        "at": 167,
+        "kind": "erase",
+        "targetId": "highvar_fit",
+        "content": "all"
+      },
+      {
+        "at": 170,
+        "kind": "draw",
+        "targetId": "ucurve_plot",
+        "content": "2D axes with x-axis labeled model capacity (e.g. polynomial degree) and y-axis labeled error, three curves: a falling blue curve labeled Bias^2, a rising red curve labeled Variance, and a U-shaped black curve labeled Total Test MSE = Bias^2 + Variance + sigma^2, with a dashed horizontal grey line near the bottom labeled sigma^2 (noise floor), and a vertical dashed green line at the U minimum labeled optimal capacity",
+        "region": "center"
+      },
+      {
+        "at": 195,
+        "kind": "highlight",
+        "targetId": "ucurve_plot",
+        "content": "circle the minimum of the black U-curve in green and annotate it with sweet spot",
+        "region": "center"
+      },
+      {
+        "at": 208,
+        "kind": "write",
+        "targetId": "practical_note",
+        "content": "Use validation error vs. complexity curve; cross-validation finds the minimum automatically.",
+        "region": "bottom-center"
+      },
+      {
+        "at": 220,
+        "kind": "highlight",
+        "targetId": "practical_note",
+        "content": "underline cross-validation in green as the key practical tool",
+        "region": "bottom-center"
+      },
+      {
+        "at": 230,
+        "kind": "highlight",
+        "targetId": "ucurve_plot",
+        "content": "draw a horizontal double-headed arrow spanning the U from low-capacity to high-capacity side, labeled tradeoff zone",
+        "region": "center"
+      }
+    ]
+  }
+}
+
+Rubric (each criterion: id, label, max integer, scoring guidance):
+
+1) payoff-concreteness  (max 8)
+   The lesson.payoff states a concrete reason a learner should care, ideally with a number or specific stake. Vague payoffs ("important", "useful") score 0-2. Generic-but-true payoffs without numbers or stakes score 3-5. Concrete payoffs with numbers or sharp stakes score 6-8.
+
+2) staircase-coherence  (max 10)
+   The staircase rungs build monotonically: each rung is strictly necessary, no gaps, no rungs reach beyond what's needed. Score down for missing prerequisite, redundant rung, or rung that is actually the destination.
+
+3) destination-precision  (max 8)
+   The destination names a precise object (formula, mechanism, theorem, named technique) the learner can hold afterward. "Understand X" scores 0-2. "Hold formula F and know what each factor protects against" scores 7-8.
+
+4) narration-clarity  (max 12)
+   Every symbol is defined the first time it appears in narration. Every term of jargon is defined or unpacked the first time it appears. Sentences are concrete, not hand-wavy. No contradictions. Read through narration.beats in order and penalize each undefined symbol or jargon term.
+
+5) board-specificity  (max 10)
+   Every "draw" action is concrete enough that a renderer could execute it without inventing details. "Draw a graph" scores 0. "Draw three nodes A, B, C left-to-right with arrows A->B and B->C" scores full credit. "write" actions whose content is "the formula" or "the equation" without the actual content also lose points here.
+
+6) board-coherence  (max 10)
+   The action timeline forms a sensible whiteboard story: nothing is highlighted/transformed/erased without first being introduced; transformations preserve identity in a comprehensible way; the canvas state implied at each moment is plausible (not impossibly cluttered).
+
+7) board-visual-balance  (max 8)
+   Mix of action kinds is appropriate to the topic. Topics that admit diagrams (graphs, distributions, geometry, networks, hierarchies) should have multiple draw actions, not just text writes. Topics that are purely formal still need at least one structural diagram. Heavy text-dump with one-or-zero draws on a visual topic scores 0-3.
+
+8) math-notation-correctness  (max 10)
+   All formulas are mathematically correct. Symbol use is consistent (a symbol means the same thing throughout). Numerical examples are arithmetically correct. Catch incorrect derivations, off-by-one errors, dimension mismatches, wrong constants.
+
+9) code-content-decision  (max 6)
+   Did the lesson make the right decision about whether to include code-as-content? If code is present: is it syntactically valid in its declared language? Is it the right granularity for the beat? Is it correct for the concept? If code is absent: would including code have materially clarified the mechanism? Score 6 for correct decision well-executed; 3 for borderline; 0 for clearly wrong (broken code present, or code obviously needed and absent).
+
+10) pacing-and-density  (max 10)
+    Beats are appropriately spaced for difficulty: intro topics get more seconds per beat, advanced topics get denser pacing. No beat is overloaded with multiple distinct ideas. Total beat times respect durationSeconds. Score down for one beat doing five things, or for huge gaps with no narration.
+
+11) redundancy-and-focus  (max 8)
+    No repeated content across beats. Stays on the topic question. Doesn't waste time on tangents or restate what was just said.
+
+After scoring, write 1-3 topThreeIssues (highest-leverage fixes), set wouldRecommendForPipeline (true only if percent >= 75 AND no criterion below half its max), and write a 2-3 sentence summary.
+
+Return JSON matching this shape exactly:
+
+{
+  "candidateId": "<copy from candidate.id>",
+  "subjectId": "<copy from candidate.topic.id>",
+  "promptVariantId": "<copy from candidate.promptVariant.id>",
+  "criteria": [
+    { "id": "payoff-concreteness", "label": "Payoff concreteness", "max": 8, "score": <0-8>, "notes": "<specific reason for score>" },
+    { "id": "staircase-coherence", "label": "Staircase coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "destination-precision", "label": "Destination precision", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "narration-clarity", "label": "Narration clarity", "max": 12, "score": <0-12>, "notes": "..." },
+    { "id": "board-specificity", "label": "Board specificity", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-coherence", "label": "Board coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-visual-balance", "label": "Board visual balance", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "math-notation-correctness", "label": "Math and notation correctness", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "code-content-decision", "label": "Code-content decision", "max": 6, "score": <0-6>, "notes": "..." },
+    { "id": "pacing-and-density", "label": "Pacing and density", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "redundancy-and-focus", "label": "Redundancy and focus", "max": 8, "score": <0-8>, "notes": "..." }
+  ],
+  "totalScore": <sum of all criterion scores>,
+  "maxScore": 100,
+  "percent": <round(totalScore / maxScore * 100)>,
+  "topThreeIssues": ["<most important fix>", "<second>", "<third>"],
+  "wouldRecommendForPipeline": <true|false>,
+  "summary": "<2-3 sentences>"
+}
+
+Return ONLY the JSON object. No commentary. No fences. No preamble.
+
+Return ONLY the JSON object as your response. No commentary, no markdown fences.

@@ -1,0 +1,94 @@
+{
+  "candidateId": "bias-variance-tradeoff-v2-001",
+  "subjectId": "bias-variance-tradeoff",
+  "promptVariantId": "whiteboard-v2",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 8,
+      "notes": "Exact numbers: degree-1 at 30%, degree-5 at 8%, degree-20 at 25%. Concrete stake."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Clean prerequisite chain. Minor: rung 1 does double duty."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "Exact formula + directional behavior + U-curve named."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 10,
+      "notes": "Most terms defined. Minor: 'f_hat' used in board but not in narration; MSE acronym expanded in beat."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 9,
+      "notes": "All draws renderer-ready. Minor: consecutive erases at 165-167 lack transition grouping."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Timeline faithful. Minor: 3-second gap between left-panel erase and U-curve draw with crowded center."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 8,
+      "notes": "Five draws plus highlights/writes. Strong visual story from scatter to U-curve."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 9,
+      "notes": "Decomposition, bias, variance, noise model all correct."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 6,
+      "notes": "Correct omission for visual conceptual lesson."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 8,
+      "notes": "9 beats / 240s. Beat at t=118 is densest (noise model + MSE acronym + decomposition)."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 7,
+      "notes": "Noise floor restated nearly verbatim at t=155 and t=208."
+    }
+  ],
+  "totalScore": 91,
+  "maxScore": 100,
+  "percent": 91,
+  "topThreeIssues": [
+    "Beat at t=118 overloaded: noise model + MSE acronym + three-term decomposition in single beat",
+    "Irreducible noise floor stated near-verbatim at t=155 and t=208 -- consolidate",
+    "Three consecutive erases at t=165-167 lack transition narration"
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "Strong well-structured plan with concrete payoff numbers, clean six-rung staircase, visually rich board. Main weaknesses are density spike at decomposition beat and verbatim repetition of noise floor."
+}

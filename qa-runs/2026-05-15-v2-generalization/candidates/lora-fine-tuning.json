@@ -1,0 +1,240 @@
+{
+  "id": "lora-fine-tuning-v2-001",
+  "topic": {
+    "id": "lora-fine-tuning",
+    "title": "LoRA Fine-Tuning",
+    "question": "Why can LoRA approximate full fine-tuning by training a low-rank update, and what does the rank control?",
+    "domain": "ai-systems"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v2",
+    "name": "Whiteboard prompt v2 - payoff numbers + sync enforcement"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "LoRA: Low-Rank Adaptation and Why It Works",
+    "learnerLevel": "ML engineers familiar with transformers and gradient descent",
+    "durationSeconds": 240,
+    "payoff": "LoRA cuts trainable parameters from 40 billion to roughly 4 million on a 7B-parameter model -- a 10,000x reduction -- while matching full fine-tuning quality on most downstream benchmarks, making fine-tuning feasible on a single consumer GPU.",
+    "staircase": [
+      "full fine-tuning parameter cost",
+      "low-rank matrix factorization",
+      "LoRA parameterization W plus BA",
+      "rank r as intrinsic dimensionality",
+      "initialization and training mechanics",
+      "rank trade-off: expressiveness versus parameter count"
+    ],
+    "destination": "The learner holds delta-W equals B times A where B is d-by-r and A is r-by-k with r much less than min(d,k), understands that rank r bounds the number of independent directions the weight update can explore, and can compute the parameter savings as r times (d plus k) versus d times k."
+  },
+  "narration": {
+    "fullText": "Fine-tuning a large language model means updating every weight -- for a 7-billion-parameter model that is 40 billion floats of gradient state, optimizer moments, and weight copies, far too much for a single GPU. LoRA -- Low-Rank Adaptation -- sidesteps this by noticing that the weight change delta-W learned during fine-tuning tends to live in a very low-dimensional subspace, an observation confirmed empirically: the intrinsic rank of task-relevant updates is often just 4 to 64 even when the weight matrix has millions of entries. Here is how it works. Take any weight matrix W with shape d-by-k -- say 4096 by 4096 in a transformer attention projection. Instead of updating W directly, we freeze it and introduce two small matrices: B with shape d-by-r and A with shape r-by-k, where r is the rank, a hyperparameter we choose. The effective weight during the forward pass -- one left-to-right evaluation of the network from input through all layers to output -- becomes W plus B times A. Because r is much smaller than d and k, the number of new trainable parameters is r times d plus r times k, which equals r times the sum of d and k, instead of d times k. At rank 8 on a 4096-by-4096 matrix that is 8 times 8192 equals 65,536 parameters versus 16 million -- a 244-fold reduction per layer, and roughly 10,000-fold across the full model. Now what does rank actually control? Think of B times A as spanning an r-dimensional subspace of the space of d-by-k matrices. Rank r is the intrinsic dimensionality -- the number of independent directions -- that the fine-tuning update is allowed to move in. A rank-1 update can only shift the weight along a single direction: every column of delta-W is a scalar multiple of the same vector. Rank 4 gives four independent directions, rank 64 gives sixty-four. Higher rank means more expressive updates but more parameters; lower rank means cheaper training but a tighter bottleneck. The initialization matters: A is initialized with a random Gaussian draw so the subspace starts diverse, and B is initialized to all zeros so that B times A equals zero at the start of training -- the model begins exactly at its pre-trained state with no random perturbation. During training only A and B receive gradients; W stays frozen. At inference time you can fold B times A back into W -- add the low-rank product to the original weight -- so there is zero extra latency compared to the base model. The rank is your dial: crank it up toward full rank and you recover full fine-tuning expressiveness; push it down to 1 or 2 and you get maximum parameter efficiency at the cost of update flexibility. Empirically, ranks between 4 and 16 recover most of the quality of full fine-tuning on standard benchmarks, which is why LoRA has become the default adapter method for large language models.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Fine-tuning a large language model means updating every weight -- for a 7-billion-parameter model that is 40 billion floats of gradient state, optimizer moments, and weight copies, far too much for a single GPU.",
+        "whyThisBeat": "full fine-tuning parameter cost"
+      },
+      {
+        "atSec": 20,
+        "text": "LoRA -- Low-Rank Adaptation -- sidesteps this by noticing that the weight change delta-W learned during fine-tuning tends to live in a very low-dimensional subspace. The intrinsic rank of task-relevant updates is often just 4 to 64 even when the weight matrix has millions of entries.",
+        "whyThisBeat": "low-rank matrix factorization"
+      },
+      {
+        "atSec": 45,
+        "text": "Here is how it works. Take any weight matrix W with shape d-by-k -- say 4096 by 4096 in a transformer attention projection. Instead of updating W directly, we freeze it and introduce two small matrices: B with shape d-by-r and A with shape r-by-k, where r is the rank, a hyperparameter we choose.",
+        "whyThisBeat": "LoRA parameterization W plus BA"
+      },
+      {
+        "atSec": 75,
+        "text": "The effective weight during the forward pass -- one left-to-right evaluation of the network from input through all layers to output -- becomes W plus B times A. Because r is much smaller than d and k, the number of new trainable parameters is r times d plus r times k -- at rank 8 on a 4096-by-4096 matrix that is 65,536 parameters versus 16 million, a 244-fold reduction per layer.",
+        "whyThisBeat": "LoRA parameterization W plus BA"
+      },
+      {
+        "atSec": 105,
+        "text": "Now what does rank actually control? Think of B times A as spanning an r-dimensional subspace of the space of d-by-k matrices. Rank r is the intrinsic dimensionality -- the number of independent directions -- that the fine-tuning update is allowed to move in. A rank-1 update can only shift the weight along a single direction; rank 64 gives sixty-four independent directions.",
+        "whyThisBeat": "rank r as intrinsic dimensionality"
+      },
+      {
+        "atSec": 135,
+        "text": "The initialization matters: A is initialized with a random Gaussian draw so the subspace starts diverse, and B is initialized to all zeros so that B times A equals zero at the start of training -- the model begins exactly at its pre-trained state with no random perturbation.",
+        "whyThisBeat": "initialization and training mechanics"
+      },
+      {
+        "atSec": 160,
+        "text": "During training only A and B receive gradients; W stays frozen. At inference time you fold B times A back into W -- add the low-rank product to the original weight -- so there is zero extra latency compared to the base model.",
+        "whyThisBeat": "initialization and training mechanics"
+      },
+      {
+        "atSec": 185,
+        "text": "The rank is your dial: crank it up toward full rank and you recover full fine-tuning expressiveness; push it down to 1 or 2 and you get maximum parameter efficiency at the cost of update flexibility. Empirically ranks between 4 and 16 recover most of the quality of full fine-tuning on standard benchmarks.",
+        "whyThisBeat": "rank trade-off: expressiveness versus parameter count"
+      },
+      {
+        "atSec": 210,
+        "text": "That is LoRA: freeze W, train B and A where delta-W equals B times A with rank r much less than min of d and k, and r controls how many independent directions the update can explore -- the smaller r, the cheaper the training, the tighter the bottleneck.",
+        "whyThisBeat": "rank trade-off: expressiveness versus parameter count"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title_lora",
+        "content": "LoRA: Low-Rank Adaptation",
+        "region": "top-center"
+      },
+      {
+        "at": 5,
+        "kind": "write",
+        "targetId": "cost_problem",
+        "content": "Full fine-tune: 7B params -> ~40B floats (weights + gradients + optimizer moments)",
+        "region": "top-left"
+      },
+      {
+        "at": 12,
+        "kind": "draw",
+        "targetId": "dataflow_diagram",
+        "content": "Dataflow diagram: rectangle labeled Input x on left, arrow right into rectangle labeled Frozen W (d x k) in blue, then arrow right into rectangle labeled Output on right. Below the frozen W rectangle a dashed bypass path: arrow down-left into small rectangle labeled A (r x k) then arrow right into small rectangle labeled B (d x r) then arrow up-right merging with the main path via a plus-circle labeled sum. Both A and B rectangles outlined in orange. Tensor shape labels on arrows: k entering A, r between A and B, d exiting B.",
+        "region": "center"
+      },
+      {
+        "at": 30,
+        "kind": "write",
+        "targetId": "lora_eq",
+        "content": "delta-W = B * A,   B in R^{d x r},  A in R^{r x k},  r << min(d, k)",
+        "region": "top-right"
+      },
+      {
+        "at": 42,
+        "kind": "highlight",
+        "targetId": "dataflow_diagram",
+        "content": "circle the orange A and B rectangles in red to emphasize these are the only trainable components",
+        "region": "center"
+      },
+      {
+        "at": 48,
+        "kind": "draw",
+        "targetId": "matrix_decomp",
+        "content": "Three side-by-side matrix outlines: left matrix labeled W (d x k) tall and wide in blue with a lock icon; middle matrix labeled B (d x r) tall and narrow in orange; right matrix labeled A (r x k) short and wide in orange. An equals sign between W and the pair B*A. Dimension labels: d=4096, k=4096, r=8 written below each matrix. Underneath the orange pair write 65,536 params and underneath W write 16M params.",
+        "region": "left-half"
+      },
+      {
+        "at": 65,
+        "kind": "write",
+        "targetId": "param_savings",
+        "content": "params: r*(d+k)  vs  d*k   =>  r=8: 65,536 vs 16,777,216",
+        "region": "right-half"
+      },
+      {
+        "at": 78,
+        "kind": "highlight",
+        "targetId": "param_savings",
+        "content": "box the ratio 65,536 vs 16,777,216 in green and write 244x fewer beside it",
+        "region": "right-half"
+      },
+      {
+        "at": 88,
+        "kind": "write",
+        "targetId": "forward_pass_eq",
+        "content": "y = (W + B*A) x    [forward pass: left-to-right eval, input->layers->output]",
+        "region": "top-right"
+      },
+      {
+        "at": 100,
+        "kind": "highlight",
+        "targetId": "forward_pass_eq",
+        "content": "underline W + B*A in blue to show the merged weight at inference",
+        "region": "top-right"
+      },
+      {
+        "at": 108,
+        "kind": "draw",
+        "targetId": "rank_subspace",
+        "content": "A 2D coordinate plane with axes labeled direction 1 and direction 2. A shaded ellipse centered at origin labeled full delta-W space (d*k dims, too large). Inside it a bold line segment from origin labeled rank-1 update: one direction. Alongside a bolder set of two orthogonal arrows from origin labeled rank-2 update: two independent directions. Annotation: r arrows = r degrees of freedom for the update.",
+        "region": "right-half"
+      },
+      {
+        "at": 128,
+        "kind": "write",
+        "targetId": "rank_label",
+        "content": "rank r = intrinsic dimensionality of update subspace",
+        "region": "right-half"
+      },
+      {
+        "at": 140,
+        "kind": "write",
+        "targetId": "init_rule",
+        "content": "Init: A ~ N(0, sigma^2),   B = 0   =>   B*A = 0 at step 0",
+        "region": "bottom-left"
+      },
+      {
+        "at": 150,
+        "kind": "highlight",
+        "targetId": "init_rule",
+        "content": "draw a red box around B = 0 and annotate preserves pre-trained output at start",
+        "region": "bottom-left"
+      },
+      {
+        "at": 162,
+        "kind": "write",
+        "targetId": "freeze_note",
+        "content": "Frozen: W (no grad).  Trained: A, B only.",
+        "region": "bottom-left"
+      },
+      {
+        "at": 175,
+        "kind": "erase",
+        "targetId": "cost_problem",
+        "content": "all"
+      },
+      {
+        "at": 178,
+        "kind": "write",
+        "targetId": "merge_note",
+        "content": "Inference: W' = W + B*A  (merge once, zero added latency)",
+        "region": "bottom-center"
+      },
+      {
+        "at": 192,
+        "kind": "draw",
+        "targetId": "rank_tradeoff_curve",
+        "content": "A curve on axes: x-axis labeled rank r from 1 to full-rank (d*k), y-axis labeled update expressiveness. The curve rises steeply at low rank then flattens toward full rank. A dashed vertical line at r=8 labeled typical sweet spot. Left region shaded light red labeled cheap, bottlenecked. Right region shaded light blue labeled expressive, costly. A horizontal dotted line labeled full fine-tune quality near the top.",
+        "region": "right-half"
+      },
+      {
+        "at": 210,
+        "kind": "highlight",
+        "targetId": "lora_eq",
+        "content": "circle r in the equation delta-W = B * A in orange and annotate r controls expressiveness vs cost",
+        "region": "top-right"
+      },
+      {
+        "at": 222,
+        "kind": "write",
+        "targetId": "takeaway",
+        "content": "LoRA: freeze W, train B*A with rank r << min(d,k). r = independent directions available to the update.",
+        "region": "bottom-center"
+      },
+      {
+        "at": 235,
+        "kind": "highlight",
+        "targetId": "takeaway",
+        "content": "underline r = independent directions available to the update in green",
+        "region": "bottom-center"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 140,
+      "language": "python",
+      "code": "import torch\nimport torch.nn as nn\n\nclass LoRALinear(nn.Module):\n    def __init__(self, d_in, d_out, rank=8):\n        super().__init__()\n        self.W = nn.Linear(d_in, d_out, bias=False)\n        self.W.weight.requires_grad = False\n        self.A = nn.Parameter(torch.randn(rank, d_in) * 0.01)\n        self.B = nn.Parameter(torch.zeros(d_out, rank))\n\n    def forward(self, x):\n        delta_W = self.B @ self.A\n        return self.W(x) + x @ delta_W.T",
+      "purpose": "Makes concrete that B is zero-initialized so delta-W starts at zero, A and B are the only parameters with requires_grad=True, and the effective weight is W plus B times A computed in the forward pass"
+    }
+  ]
+}

@@ -1,0 +1,310 @@
+You are a senior teaching evaluator and a senior whiteboard-lecture director. You are reviewing a structured plan for a continuous-whiteboard narrated video lesson and scoring it against a fixed rubric. The plan was produced by an LLM under a specific prompt variant; your scoring drives prompt iteration. Be exact, fair, and specific. Reward concrete decisions; penalize hand-waving and unjustified omissions.
+
+You will read:
+  - The subject (topic, question, domain, difficulty, intended learner level)
+  - The candidate lesson plan as JSON
+  - The rubric below
+
+You will score every criterion. You will not skip any. You will not invent criteria. You will use the integer maxes exactly as defined.
+
+You will then return a single JSON object. No prose. No markdown. JSON only.
+
+---
+
+SUBJECT
+  id: mle-vs-map
+  domain: probability-stats
+  difficulty: intermediate
+  title: MLE vs MAP
+  question: How do maximum likelihood estimation and maximum a posteriori estimation differ, and when does each give the better answer?
+
+CANDIDATE LESSON PLAN (JSON)
+{
+  "id": "mle-vs-map-v2-001",
+  "topic": {
+    "id": "mle-vs-map",
+    "title": "MLE vs MAP",
+    "question": "How do maximum likelihood estimation and maximum a posteriori estimation differ, and when does each give the better answer?",
+    "domain": "probability-stats"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v2",
+    "name": "Whiteboard prompt v2 - payoff numbers + sync enforcement"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "MLE vs MAP: When Data Alone Is Not Enough",
+    "learnerLevel": "statistics or ML students who know Bayes' rule",
+    "durationSeconds": 240,
+    "payoff": "A Beta(2,2) prior on a coin's bias corrects MLE's embarrassing p-hat=1 estimate after just 3 heads in 3 flips -- one prior choice fixes a failure mode that would require dozens of extra coin flips to self-correct under MLE alone.",
+    "staircase": [
+      "MLE failure mode with tiny data",
+      "MLE as the argmax of the likelihood",
+      "Bayes' rule connects likelihood to posterior",
+      "MAP adds log-prior as a regularizer",
+      "MAP shrinks estimates toward the prior",
+      "Choosing MLE vs MAP by data quantity and prior quality"
+    ],
+    "destination": "The learner holds theta_MAP = argmax_theta [log P(D|theta) + log P(theta)], recognizes that MLE is the special case with a flat (uniform) prior, and can state when each estimator wins: MLE when data is abundant and a prior would bias the answer, MAP when data is scarce and a calibrated prior prevents overfitting."
+  },
+  "narration": {
+    "fullText": "Imagine flipping a coin three times and getting heads every time. Maximum likelihood estimation -- MLE, the parameter value that makes the observed data most probable -- would conclude the coin has a 100% chance of landing heads. That is almost certainly wrong, and today we will see exactly why, and how MAP fixes it. On the board I will draw our coin-flip scenario and mark where MLE breaks. MLE says: find the value of theta, our unknown parameter, that maximizes P of D given theta -- the likelihood, meaning the probability of seeing the data we actually saw, treated as a function of theta rather than of the data. We write theta-hat MLE equals argmax over theta of P of D given theta -- where argmax means the input value that achieves the largest output, not the largest output itself. For three heads, that curve peaks at theta equals 1, giving the absurd estimate. Now let's bring in a prior. Bayes' rule tells us that the posterior -- P of theta given D -- is proportional to the likelihood times the prior P of theta. The prior encodes what we believed about theta before seeing any data. MAP, or maximum a posteriori estimation, finds the theta that maximizes this posterior. Taking logarithms -- which preserve the location of the maximum -- gives us theta-hat MAP equals argmax over theta of the quantity log P of D given theta plus log P of theta. Compare that to MLE: MLE maximizes log P of D given theta alone. MAP adds log P of theta, a regularization term that pulls the estimate toward regions of high prior probability. For our coin, a Beta distribution with parameters alpha equals 2 and beta equals 2 -- a symmetric hump centered at 0.5 -- serves as our prior, encoding the belief that the coin is probably fair. The MAP estimate then balances the three observed heads against that prior belief, landing near 0.6 rather than 1.0. So when does each estimator win? Use MLE when you have abundant data -- the likelihood will dominate and a prior would only bias you. Use MAP when data is scarce or noisy and you have a calibrated prior, because the prior acts as a guard rail against overfitting. The unifying formula to carry with you is theta-hat MAP equals argmax of log-likelihood plus log-prior -- and MLE is simply the special case where log-prior is constant, that is, where you have a uniform prior over all values of theta.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Imagine flipping a coin three times and getting heads every time. MLE -- maximum likelihood estimation, the parameter value that makes the observed data most probable -- would conclude the coin has a 100% chance of landing heads. That is almost certainly wrong, and today we will see exactly why, and how MAP fixes it.",
+        "whyThisBeat": "MLE failure mode with tiny data -- motivates the entire lesson"
+      },
+      {
+        "atSec": 32,
+        "text": "MLE says: find the value of theta, our unknown parameter, that maximizes P of D given theta -- the likelihood, meaning the probability of seeing the data we actually saw, treated as a function of theta rather than of the data. We write theta-hat MLE equals argmax over theta of P of D given theta -- where argmax means the input value that achieves the largest output, not the largest output itself. For three heads, that likelihood curve peaks at theta equals 1.",
+        "whyThisBeat": "MLE as the argmax of the likelihood -- installs the formal definition"
+      },
+      {
+        "atSec": 72,
+        "text": "Now let's bring in a prior. Bayes' rule tells us that the posterior -- P of theta given D -- is proportional to the likelihood times the prior P of theta. The prior encodes what we believed about theta before seeing any data.",
+        "whyThisBeat": "Bayes' rule connects likelihood to posterior -- introduces the prior"
+      },
+      {
+        "atSec": 100,
+        "text": "MAP, or maximum a posteriori estimation, finds the theta that maximizes this posterior. Taking logarithms -- which preserve the location of the maximum -- gives us theta-hat MAP equals argmax over theta of log P of D given theta plus log P of theta. Compare that to MLE: MLE maximizes log P of D given theta alone. MAP adds log P of theta, a regularization term that pulls the estimate toward regions of high prior probability.",
+        "whyThisBeat": "MAP adds log-prior as a regularizer -- derives the key formula"
+      },
+      {
+        "atSec": 140,
+        "text": "For our coin, a Beta distribution with parameters alpha equals 2 and beta equals 2 -- a symmetric hump centered at 0.5 -- serves as our prior. The MAP estimate balances the three observed heads against that prior belief, landing near 0.6 rather than 1.0. That single prior choice corrects the failure mode without any new data.",
+        "whyThisBeat": "MAP shrinks estimates toward the prior -- makes regularization concrete"
+      },
+      {
+        "atSec": 175,
+        "text": "So when does each estimator win? Use MLE when you have abundant data -- the likelihood dominates and a prior would only bias you. Use MAP when data is scarce or noisy and you have a calibrated prior, because the prior acts as a guard rail against overfitting to a small sample.",
+        "whyThisBeat": "Choosing MLE vs MAP by data quantity and prior quality -- actionable decision rule"
+      },
+      {
+        "atSec": 210,
+        "text": "The formula to carry with you is theta-hat MAP equals argmax of log-likelihood plus log-prior. MLE is simply the special case where log-prior is constant -- a uniform prior over all values of theta. That single equation unifies both estimators.",
+        "whyThisBeat": "Synthesis -- installs the unifying formula and the MLE-as-special-case insight"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title_label",
+        "content": "MLE vs MAP",
+        "region": "top-center"
+      },
+      {
+        "at": 5,
+        "kind": "draw",
+        "targetId": "coin_flip_diagram",
+        "content": "Three coin icons arranged left to right labeled H, H, H, with a question mark above a theta symbol beneath them, and an arrow pointing right to the text p-hat MLE = 1.0 circled in red",
+        "region": "center-left"
+      },
+      {
+        "at": 18,
+        "kind": "highlight",
+        "targetId": "coin_flip_diagram",
+        "content": "circle the p-hat MLE = 1.0 label in red to flag it as the failure case",
+        "region": "center-left"
+      },
+      {
+        "at": 32,
+        "kind": "write",
+        "targetId": "mle_formula",
+        "content": "theta-hat_MLE = argmax_{theta} P(D | theta)",
+        "region": "top-left"
+      },
+      {
+        "at": 35,
+        "kind": "draw",
+        "targetId": "likelihood_curve",
+        "content": "A smooth curve on labeled axes -- horizontal axis labeled theta from 0 to 1, vertical axis labeled P(D|theta) -- rising monotonically and peaking sharply at theta=1, with a dot at the peak labeled theta-hat MLE = 1",
+        "region": "center"
+      },
+      {
+        "at": 50,
+        "kind": "highlight",
+        "targetId": "mle_formula",
+        "content": "underline argmax in blue to emphasize it means the input achieving the maximum, not the maximum value itself",
+        "region": "top-left"
+      },
+      {
+        "at": 60,
+        "kind": "highlight",
+        "targetId": "likelihood_curve",
+        "content": "draw a vertical dashed red line at theta=1 and label it MLE collapses here to show the degenerate peak",
+        "region": "center"
+      },
+      {
+        "at": 72,
+        "kind": "write",
+        "targetId": "bayes_rule",
+        "content": "P(theta | D) proportional to P(D | theta) * P(theta)",
+        "region": "top-right"
+      },
+      {
+        "at": 80,
+        "kind": "write",
+        "targetId": "prior_label",
+        "content": "P(theta) = prior: belief about theta before data",
+        "region": "right-half"
+      },
+      {
+        "at": 88,
+        "kind": "highlight",
+        "targetId": "bayes_rule",
+        "content": "box P(theta) in green to mark it as the new ingredient MAP adds over MLE",
+        "region": "top-right"
+      },
+      {
+        "at": 100,
+        "kind": "write",
+        "targetId": "map_formula",
+        "content": "theta-hat_MAP = argmax_{theta} [ log P(D|theta) + log P(theta) ]",
+        "region": "center-left"
+      },
+      {
+        "at": 110,
+        "kind": "highlight",
+        "targetId": "map_formula",
+        "content": "underline log P(theta) in green and annotate regularizer -- pulls theta toward prior",
+        "region": "center-left"
+      },
+      {
+        "at": 120,
+        "kind": "draw",
+        "targetId": "map_vs_mle_curve",
+        "content": "Two curves on shared axes -- horizontal axis labeled theta from 0 to 1, one red curve labeled log-likelihood peaking at theta=1, one green curve labeled log-prior Beta(2,2) peaking at theta=0.5 as a smooth hump -- their sum shown as a dashed blue curve peaking near theta=0.6, with a vertical dashed line at 0.6 labeled theta-hat MAP",
+        "region": "center"
+      },
+      {
+        "at": 140,
+        "kind": "write",
+        "targetId": "beta_prior_label",
+        "content": "Prior: Beta(alpha=2, beta=2) -- symmetric hump centered at 0.5, encodes coin is probably fair",
+        "region": "right-half"
+      },
+      {
+        "at": 155,
+        "kind": "highlight",
+        "targetId": "map_vs_mle_curve",
+        "content": "draw a bracket between theta=0.6 and theta=1.0 on the horizontal axis and label it shrinkage toward prior",
+        "region": "center"
+      },
+      {
+        "at": 175,
+        "kind": "write",
+        "targetId": "decision_rule",
+        "content": "Use MLE: large data, no reliable prior  |  Use MAP: small data, calibrated prior",
+        "region": "bottom"
+      },
+      {
+        "at": 185,
+        "kind": "highlight",
+        "targetId": "decision_rule",
+        "content": "box small data, calibrated prior in green to flag the MAP use case",
+        "region": "bottom"
+      },
+      {
+        "at": 195,
+        "kind": "erase",
+        "targetId": "coin_flip_diagram",
+        "content": "all"
+      },
+      {
+        "at": 200,
+        "kind": "write",
+        "targetId": "unifying_formula",
+        "content": "theta-hat_MAP = argmax [ log P(D|theta) + log P(theta) ]   MLE: log P(theta) = const (uniform prior)",
+        "region": "center"
+      },
+      {
+        "at": 210,
+        "kind": "highlight",
+        "targetId": "unifying_formula",
+        "content": "box the entire equation in blue and annotate MLE is MAP with flat prior to seal the unifying insight",
+        "region": "center"
+      },
+      {
+        "at": 220,
+        "kind": "erase",
+        "targetId": "decision_rule",
+        "content": "all"
+      }
+    ]
+  }
+}
+
+Rubric (each criterion: id, label, max integer, scoring guidance):
+
+1) payoff-concreteness  (max 8)
+   The lesson.payoff states a concrete reason a learner should care, ideally with a number or specific stake. Vague payoffs ("important", "useful") score 0-2. Generic-but-true payoffs without numbers or stakes score 3-5. Concrete payoffs with numbers or sharp stakes score 6-8.
+
+2) staircase-coherence  (max 10)
+   The staircase rungs build monotonically: each rung is strictly necessary, no gaps, no rungs reach beyond what's needed. Score down for missing prerequisite, redundant rung, or rung that is actually the destination.
+
+3) destination-precision  (max 8)
+   The destination names a precise object (formula, mechanism, theorem, named technique) the learner can hold afterward. "Understand X" scores 0-2. "Hold formula F and know what each factor protects against" scores 7-8.
+
+4) narration-clarity  (max 12)
+   Every symbol is defined the first time it appears in narration. Every term of jargon is defined or unpacked the first time it appears. Sentences are concrete, not hand-wavy. No contradictions. Read through narration.beats in order and penalize each undefined symbol or jargon term.
+
+5) board-specificity  (max 10)
+   Every "draw" action is concrete enough that a renderer could execute it without inventing details. "Draw a graph" scores 0. "Draw three nodes A, B, C left-to-right with arrows A->B and B->C" scores full credit. "write" actions whose content is "the formula" or "the equation" without the actual content also lose points here.
+
+6) board-coherence  (max 10)
+   The action timeline forms a sensible whiteboard story: nothing is highlighted/transformed/erased without first being introduced; transformations preserve identity in a comprehensible way; the canvas state implied at each moment is plausible (not impossibly cluttered).
+
+7) board-visual-balance  (max 8)
+   Mix of action kinds is appropriate to the topic. Topics that admit diagrams (graphs, distributions, geometry, networks, hierarchies) should have multiple draw actions, not just text writes. Topics that are purely formal still need at least one structural diagram. Heavy text-dump with one-or-zero draws on a visual topic scores 0-3.
+
+8) math-notation-correctness  (max 10)
+   All formulas are mathematically correct. Symbol use is consistent (a symbol means the same thing throughout). Numerical examples are arithmetically correct. Catch incorrect derivations, off-by-one errors, dimension mismatches, wrong constants.
+
+9) code-content-decision  (max 6)
+   Did the lesson make the right decision about whether to include code-as-content? If code is present: is it syntactically valid in its declared language? Is it the right granularity for the beat? Is it correct for the concept? If code is absent: would including code have materially clarified the mechanism? Score 6 for correct decision well-executed; 3 for borderline; 0 for clearly wrong (broken code present, or code obviously needed and absent).
+
+10) pacing-and-density  (max 10)
+    Beats are appropriately spaced for difficulty: intro topics get more seconds per beat, advanced topics get denser pacing. No beat is overloaded with multiple distinct ideas. Total beat times respect durationSeconds. Score down for one beat doing five things, or for huge gaps with no narration.
+
+11) redundancy-and-focus  (max 8)
+    No repeated content across beats. Stays on the topic question. Doesn't waste time on tangents or restate what was just said.
+
+After scoring, write 1-3 topThreeIssues (highest-leverage fixes), set wouldRecommendForPipeline (true only if percent >= 75 AND no criterion below half its max), and write a 2-3 sentence summary.
+
+Return JSON matching this shape exactly:
+
+{
+  "candidateId": "<copy from candidate.id>",
+  "subjectId": "<copy from candidate.topic.id>",
+  "promptVariantId": "<copy from candidate.promptVariant.id>",
+  "criteria": [
+    { "id": "payoff-concreteness", "label": "Payoff concreteness", "max": 8, "score": <0-8>, "notes": "<specific reason for score>" },
+    { "id": "staircase-coherence", "label": "Staircase coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "destination-precision", "label": "Destination precision", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "narration-clarity", "label": "Narration clarity", "max": 12, "score": <0-12>, "notes": "..." },
+    { "id": "board-specificity", "label": "Board specificity", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-coherence", "label": "Board coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-visual-balance", "label": "Board visual balance", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "math-notation-correctness", "label": "Math and notation correctness", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "code-content-decision", "label": "Code-content decision", "max": 6, "score": <0-6>, "notes": "..." },
+    { "id": "pacing-and-density", "label": "Pacing and density", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "redundancy-and-focus", "label": "Redundancy and focus", "max": 8, "score": <0-8>, "notes": "..." }
+  ],
+  "totalScore": <sum of all criterion scores>,
+  "maxScore": 100,
+  "percent": <round(totalScore / maxScore * 100)>,
+  "topThreeIssues": ["<most important fix>", "<second>", "<third>"],
+  "wouldRecommendForPipeline": <true|false>,
+  "summary": "<2-3 sentences>"
+}
+
+Return ONLY the JSON object. No commentary. No fences. No preamble.
+
+Return ONLY the JSON object as your response. No commentary, no markdown fences.

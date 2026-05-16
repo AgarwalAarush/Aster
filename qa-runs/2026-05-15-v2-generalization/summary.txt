@@ -1,0 +1,38 @@
+Sweep: 2026-05-15-v2-generalization
+Prompt variant(s): whiteboard-v2
+Subjects critiqued: 5
+Mean: 91.4%   Median: 91%   Min: 91%   Max: 92%
+Recommended for pipeline: 5 / 5
+
+Per subject (sorted by percent, descending):
+  92 %  probability-stats   intermediate  central-limit-theorem [REC]
+  92 %  ai-systems          advanced      lora-fine-tuning [REC]
+  91 %  classical-ml        intro         bias-variance-tradeoff [REC]
+  91 %  classical-ml        intermediate  gradient-boosting [REC]
+  91 %  probability-stats   intermediate  mle-vs-map [REC]
+
+Per criterion (sorted by mean percent, ascending — worst first):
+  pct%  mean/max  criterion-id                       lowest-subject
+  84    8.4/10    pacing-and-density                bias-variance-tradeoff (8)
+  86.7  10.4/12   narration-clarity                 bias-variance-tradeoff (10)
+  87.5  7/8       redundancy-and-focus              bias-variance-tradeoff (7)
+  88    8.8/10    board-coherence                   mle-vs-map (8)
+  90    9/10      staircase-coherence               bias-variance-tradeoff (9)
+  90    9/10      board-specificity                 bias-variance-tradeoff (9)
+  90    9/10      math-notation-correctness         bias-variance-tradeoff (9)
+  96.7  5.8/6     code-content-decision             lora-fine-tuning (5)
+  100   8/8       payoff-concreteness               bias-variance-tradeoff (8)
+  100   8/8       destination-precision             bias-variance-tradeoff (8)
+  100   8/8       board-visual-balance              bias-variance-tradeoff (8)
+
+Most common issues raised across subjects:
+  x1  beat at t=118 overloaded: noise model + mse acronym + three-term decomposition in single beat
+  x1  irreducible noise floor stated near-verbatim at t=155 and t=208 -- consolidate
+  x1  three consecutive erases at t=165-167 lack transition narration
+  x1  board canvas crowding from t=143-198: 8+ simultaneous elements with no intermediate erases; add strategic erases before mgf proof section
+  x1  mgf factoring step at t=143 algebraically abrupt; add intermediate form m_{z_n}(t) = [m_{(x_i-mu)/(sigma/sqrt(n))}(t)]^n explicitly
+  x1  closing beat (t=240) restates opening payoff near-verbatim instead of synthesizing mgf proof back to practical rule
+  x1  beat at t=112 overloaded: approximation argument + eta introduction in 36s
+  x1  narration/board inconsistency on eta range: 'between zero and one' (narration) vs '(0,1]' (board)
+  x1  accuracy_claim at t=5 never revisited; circle or erase at t=200 to close the visual loop
+  x1  parameter-reduction ratio arithmetic error: 65,536 vs 16,777,216 is 256x not 244x; fix in both narration t=75 and board action at t=65

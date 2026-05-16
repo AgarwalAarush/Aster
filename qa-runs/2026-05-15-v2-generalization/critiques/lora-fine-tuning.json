@@ -1,0 +1,94 @@
+{
+  "candidateId": "lora-fine-tuning-v2-001",
+  "subjectId": "lora-fine-tuning",
+  "promptVariantId": "whiteboard-v2",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 8,
+      "notes": "Exact numbers: 40B to 4M params, 10,000x reduction, 7B model, single GPU."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Six rungs clean. Minor: 'initialization and training mechanics' is slightly composite."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "Formula with explicit shapes + rank semantics + parameter count formula."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 11,
+      "notes": "Most terms defined on first use including 'forward pass'. Minor: 'optimizer moments' used at t=0 without unpacking."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 9,
+      "notes": "All draws concrete with labels, colors, dimensions. Minor: rank_tradeoff_curve axis tick values not specified."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Timeline logical. Minor: erase of cost_problem at t=175 slightly late."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 8,
+      "notes": "Four draws: dataflow, matrix decomp, rank subspace, tradeoff curve. Excellent mix."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 9,
+      "notes": "Core formula correct. ARITHMETIC: 16,777,216 / 65,536 = 256, not 244 as stated. Init convention correct."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 5,
+      "notes": "LoRALinear class correctly demonstrates W frozen, B=0 init, A random. Syntactically valid."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 9,
+      "notes": "240s, 9 beats, ~26s/beat. Beat at t=75 slightly dense (forward pass + parameter count)."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 7,
+      "notes": "Tight focus. Mild reinforcement of rank tradeoff at t=185 and t=210 (complementary angles)."
+    }
+  ],
+  "totalScore": 92,
+  "maxScore": 100,
+  "percent": 92,
+  "topThreeIssues": [
+    "Parameter-reduction ratio arithmetic error: 65,536 vs 16,777,216 is 256x not 244x; fix in both narration t=75 and board action at t=65",
+    "'Optimizer moments' used at t=0 without definition; either gloss or replace",
+    "Initialization rung in staircase combines two ideas (init policy + frozen-W/gradient routing); split for precision"
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "High-quality plan with concrete quantified payoff, clean staircase, precise algebraic destination, well-specified board with multiple diagram types, syntactically correct code. Only substantive defect is an arithmetic error (244x vs correct 256x) appearing in both narration and board."
+}

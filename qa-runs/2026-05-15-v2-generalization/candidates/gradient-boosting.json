@@ -1,0 +1,252 @@
+{
+  "id": "gradient-boosting-v2-001",
+  "topic": {
+    "id": "gradient-boosting",
+    "title": "Gradient Boosting",
+    "question": "Why does gradient boosting build models stage-wise on residuals, and how is that equivalent to gradient descent in function space?",
+    "domain": "classical-ml"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v2",
+    "name": "Whiteboard prompt v2 - payoff numbers + sync enforcement"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Gradient Boosting: Residuals as Gradient Descent in Function Space",
+    "learnerLevel": "ML practitioners who know decision trees and basic calculus",
+    "durationSeconds": 240,
+    "payoff": "Gradient boosting with 100 shallow trees routinely beats a single deep tree by 10 to 20 percentage points on tabular benchmarks; knowing why each tree fits residuals -- and that this is steepest descent on a loss surface over functions -- lets you tune learning rate, tree depth, and number of rounds with principled intuition rather than guesswork.",
+    "staircase": [
+      "prediction error as a differentiable loss",
+      "gradient of the loss with respect to the prediction function",
+      "residuals as the negative gradient for squared-error loss",
+      "stage-wise greedy function update",
+      "convergence as gradient descent in function space"
+    ],
+    "destination": "The stage-wise update F_m(x) = F_{m-1}(x) + eta * h_m(x), where h_m is a weak learner fit to the negative gradient -dL/dF evaluated at F_{m-1}, makes gradient boosting identical to steepest gradient descent on the loss functional over the space of prediction functions, with learning rate eta controlling step size."
+  },
+  "narration": {
+    "fullText": "Gradient boosting with a hundred shallow trees routinely beats a single deep tree by ten to twenty points of accuracy on tabular data. But why? Let us build the intuition from first principles. We have a dataset of N input-output pairs. We want a prediction function F of x -- a mapping from inputs to real-valued predictions -- that minimises a differentiable loss L, where L measures the total cost of wrong predictions summed over all training examples. Think of squared error: L equals the sum over i of one half times y_i minus F of x_i, squared. Now here is the key question: how do we improve F? In ordinary gradient descent -- the algorithm that takes steps opposite to the derivative to minimise a function -- we update a parameter vector by subtracting the gradient. But F is not a finite parameter vector; it is a function. So we work in function space: instead of asking which direction in parameter space reduces L the most, we ask which pointwise change to F reduces L the most. The negative gradient of L with respect to F, evaluated at each training point x_i, is exactly r_i equals negative dL over dF of x_i. For squared error, this derivative is y_i minus F of x_i -- exactly the residual, the leftover prediction error. So fitting a tree h to the residuals is the same as fitting a tree to the negative gradient: a steepest-descent step in function space. Because we cannot perfectly represent this gradient step as a single tree, we do the next best thing: we fit h_m to approximate the negative gradient, then take a small step eta -- the learning rate, a scalar between zero and one controlling how far we move -- in that direction. The new prediction becomes F_m of x equals F_{m-1} of x plus eta times h_m of x. We repeat this M times, adding one tree per stage. Each stage greedily reduces the loss just as each gradient step descends the loss surface. This is gradient descent in function space: M steps, each fitting a weak learner to the current negative gradient and accumulating it with learning rate eta. That is why boosting builds models stage-wise on residuals -- residuals are the gradient, and the stage-wise sum is the descent path.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Gradient boosting with a hundred shallow trees routinely beats a single deep tree by ten to twenty points of accuracy on tabular data. But why? Let us build the intuition from first principles.",
+        "whyThisBeat": "motivate with a concrete accuracy gain, establishing why the mechanism matters"
+      },
+      {
+        "atSec": 18,
+        "text": "We have a dataset of N input-output pairs. We want a prediction function F of x -- a mapping from inputs to real-valued predictions -- that minimises a differentiable loss L, where L measures the total cost of wrong predictions summed over all training examples.",
+        "whyThisBeat": "prediction error as a differentiable loss -- first rung of the staircase"
+      },
+      {
+        "atSec": 40,
+        "text": "Think of squared error: L equals the sum over i of one half times y_i minus F of x_i, squared. This is the loss surface we want to descend.",
+        "whyThisBeat": "make the loss concrete with squared error so the gradient calculation is tangible"
+      },
+      {
+        "atSec": 58,
+        "text": "In ordinary gradient descent -- the algorithm that takes steps opposite to the derivative to minimise a function -- we update a parameter vector by subtracting the gradient. But F is not a finite parameter vector; it is a function.",
+        "whyThisBeat": "gradient of the loss with respect to the prediction function -- second rung, pivoting from parameter space to function space"
+      },
+      {
+        "atSec": 82,
+        "text": "So we work in function space. The negative gradient of L with respect to F, evaluated at each training point x_i, is r_i equals negative dL over dF of x_i. For squared error this equals y_i minus F of x_i -- exactly the residual, the leftover prediction error.",
+        "whyThisBeat": "residuals as the negative gradient -- third rung, the central equivalence"
+      },
+      {
+        "atSec": 112,
+        "text": "Fitting a tree h to the residuals is the same as fitting a tree to the negative gradient: a steepest-descent step in function space. Because we cannot perfectly represent this gradient step as a single tree, we fit h_m to approximate it, then take a small step eta -- the learning rate, a scalar between zero and one -- in that direction.",
+        "whyThisBeat": "stage-wise greedy function update -- fourth rung, introducing the update rule and learning rate"
+      },
+      {
+        "atSec": 148,
+        "text": "The new prediction becomes F_m of x equals F_{m-1} of x plus eta times h_m of x. We repeat this M times, adding one tree per stage.",
+        "whyThisBeat": "write the formal update equation and connect repetition to the algorithm loop"
+      },
+      {
+        "atSec": 170,
+        "text": "Each stage greedily reduces the loss just as each gradient step descends the loss surface. This is gradient descent in function space: M steps, each fitting a weak learner to the current negative gradient and accumulating it with learning rate eta.",
+        "whyThisBeat": "convergence as gradient descent in function space -- fifth rung, the destination"
+      },
+      {
+        "atSec": 200,
+        "text": "That is why boosting builds models stage-wise on residuals -- residuals are the gradient, and the stage-wise sum is the descent path. Tune eta smaller for a smoother, safer descent; add more trees to take more steps.",
+        "whyThisBeat": "land the destination with a practical tuning takeaway that ties back to the payoff"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title_label",
+        "content": "Gradient Boosting: Why Residuals?",
+        "region": "top-center"
+      },
+      {
+        "at": 5,
+        "kind": "write",
+        "targetId": "accuracy_claim",
+        "content": "+10 to +20 pp accuracy: 100 shallow trees vs. 1 deep tree",
+        "region": "top-right"
+      },
+      {
+        "at": 18,
+        "kind": "write",
+        "targetId": "loss_def",
+        "content": "L(F) = sum_i  (1/2)(y_i - F(x_i))^2",
+        "region": "top-left"
+      },
+      {
+        "at": 22,
+        "kind": "write",
+        "targetId": "F_def_label",
+        "content": "F(x): prediction function  (not a parameter vector -- a function)",
+        "region": "center-left"
+      },
+      {
+        "at": 35,
+        "kind": "draw",
+        "targetId": "loss_landscape",
+        "content": "A smooth U-shaped curve on x-y axes where the x-axis is labeled F (function space) and the y-axis is labeled L(F). Mark a point P on the right descending slope with a small filled circle, and draw a short downward-left tangent arrow at P labeled gradient step.",
+        "region": "center"
+      },
+      {
+        "at": 55,
+        "kind": "highlight",
+        "targetId": "loss_def",
+        "content": "circle the term (y_i - F(x_i)) in red to flag it as the quantity whose negative gradient we will compute",
+        "region": "top-left"
+      },
+      {
+        "at": 62,
+        "kind": "write",
+        "targetId": "grad_param",
+        "content": "Param. space:  theta <- theta - alpha * dL/d_theta",
+        "region": "bottom-left"
+      },
+      {
+        "at": 70,
+        "kind": "write",
+        "targetId": "pivot_label",
+        "content": "But F is a function, not a vector. Work in function space instead.",
+        "region": "center-left"
+      },
+      {
+        "at": 82,
+        "kind": "write",
+        "targetId": "neg_grad_def",
+        "content": "r_i = - dL/dF(x_i)  =  y_i - F(x_i)   (residual = negative gradient)",
+        "region": "center"
+      },
+      {
+        "at": 95,
+        "kind": "highlight",
+        "targetId": "neg_grad_def",
+        "content": "underline y_i - F(x_i) in blue to show the residual equals the negative gradient for squared error",
+        "region": "center"
+      },
+      {
+        "at": 100,
+        "kind": "draw",
+        "targetId": "function_space_diagram",
+        "content": "A vertical number line on the left labeled F(x_1) with a tick mark at the current value labeled F_{m-1}(x_1), and a short upward arrow of length proportional to r_1 labeled r_1 = negative gradient. Repeat the same structure for x_2 and x_3 spaced to the right, showing three parallel number lines each with a current prediction tick and a residual arrow pointing toward the true label.",
+        "region": "right-half"
+      },
+      {
+        "at": 112,
+        "kind": "write",
+        "targetId": "tree_fit_label",
+        "content": "Fit tree h_m(x) to {(x_i, r_i)}: approximate the gradient step",
+        "region": "center-left"
+      },
+      {
+        "at": 125,
+        "kind": "draw",
+        "targetId": "tree_diagram",
+        "content": "A small decision tree diagram with a root node labeled x_1 < 3.5?, a left child leaf labeled h = 0.42, and a right child leaf labeled h = -0.31. Below the tree write the label h_m approximates -gradient.",
+        "region": "bottom-center"
+      },
+      {
+        "at": 148,
+        "kind": "write",
+        "targetId": "update_rule",
+        "content": "F_m(x) = F_{m-1}(x) + eta * h_m(x)",
+        "region": "center"
+      },
+      {
+        "at": 155,
+        "kind": "highlight",
+        "targetId": "update_rule",
+        "content": "box the entire equation in green and annotate: eta in (0,1] is learning rate -- controls step size",
+        "region": "center"
+      },
+      {
+        "at": 162,
+        "kind": "write",
+        "targetId": "loop_label",
+        "content": "Repeat m = 1 ... M  (one tree per gradient step)",
+        "region": "center-left"
+      },
+      {
+        "at": 170,
+        "kind": "highlight",
+        "targetId": "loss_landscape",
+        "content": "draw a dotted path of three successive downward-left steps along the U-curve at targetId loss_landscape, labeled step 1, step 2, step 3, to show iterative descent",
+        "region": "center"
+      },
+      {
+        "at": 185,
+        "kind": "erase",
+        "targetId": "grad_param",
+        "content": "all"
+      },
+      {
+        "at": 186,
+        "kind": "erase",
+        "targetId": "pivot_label",
+        "content": "all"
+      },
+      {
+        "at": 190,
+        "kind": "write",
+        "targetId": "equivalence_label",
+        "content": "Gradient descent in function space: each h_m fits -gradient; each eta*h_m is one descent step",
+        "region": "bottom-left"
+      },
+      {
+        "at": 205,
+        "kind": "highlight",
+        "targetId": "equivalence_label",
+        "content": "underline the phrase gradient descent in function space in red to mark it as the core equivalence",
+        "region": "bottom-left"
+      },
+      {
+        "at": 215,
+        "kind": "write",
+        "targetId": "tuning_hint",
+        "content": "Smaller eta -> smoother descent; more M -> more steps",
+        "region": "bottom-right"
+      },
+      {
+        "at": 225,
+        "kind": "highlight",
+        "targetId": "update_rule",
+        "content": "box eta in the update rule with a dashed orange box to link learning rate to the tuning hint",
+        "region": "center"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 148,
+      "language": "python",
+      "code": "import numpy as np\n\ndef gradient_boost(X, y, n_trees=100, lr=0.1, max_depth=3):\n    from sklearn.tree import DecisionTreeRegressor\n    F = np.zeros(len(y))\n    trees = []\n    for m in range(n_trees):\n        residuals = y - F\n        h = DecisionTreeRegressor(max_depth=max_depth)\n        h.fit(X, residuals)\n        F += lr * h.predict(X)\n        trees.append(h)\n    return F, trees",
+      "purpose": "makes the stage-wise update F_m = F_{m-1} + lr*h_m and the residual-as-negative-gradient calculation concrete and runnable"
+    }
+  ]
+}
