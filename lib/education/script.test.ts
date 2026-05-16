@@ -97,6 +97,43 @@ describe("createStoryboard", () => {
     expect(JSON.stringify(calls[0])).toContain("diagram");
   });
 
+  it("repairs model-invented motion targets for known motion beat types", async () => {
+    const storyboardWithLooseTargets = structuredClone(responseStoryboard);
+    storyboardWithLooseTargets.scenes[1]?.motionBeats.push({
+      type: "drawPath",
+      target: "inputs",
+      at: 1.2,
+    });
+    storyboardWithLooseTargets.scenes[3]?.motionBeats.push({
+      type: "revealText",
+      target: "recapText",
+      at: 1.8,
+    });
+
+    const fakeClient: StoryboardPlannerClient = {
+      chat: {
+        completions: {
+          create: async () => ({
+            choices: [
+              {
+                message: {
+                  content: JSON.stringify(storyboardWithLooseTargets),
+                },
+              },
+            ],
+          }),
+        },
+      },
+    };
+
+    const storyboard = await createStoryboard("How does photosynthesis work?", {
+      client: fakeClient,
+    });
+
+    expect(storyboard.scenes[1]?.motionBeats[1]?.target).toBe("diagram");
+    expect(storyboard.scenes[3]?.motionBeats[1]?.target).toBe("keyLine");
+  });
+
   it("rejects empty questions before calling OpenAI", async () => {
     let called = false;
     const fakeClient: StoryboardPlannerClient = {

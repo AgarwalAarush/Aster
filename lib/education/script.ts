@@ -35,6 +35,15 @@ type CreateStoryboardOptions = {
 };
 
 const DEFAULT_MODEL = "gpt-4.1-mini";
+const MOTION_TARGET_BY_TYPE = {
+  drawPath: "diagram",
+  morphBlob: "ambient",
+  revealText: "keyLine",
+  pulseNode: "diagram",
+  slidePanel: "scene",
+  transformEquation: "equation",
+  scatterParticles: "particles",
+} as const;
 
 export async function createStoryboard(
   question: string,
@@ -72,7 +81,7 @@ export async function createStoryboard(
     throw new Error("OpenAI returned an empty storyboard");
   }
 
-  return parseStoryboard(JSON.parse(rawContent));
+  return parseStoryboard(normalizeMotionBeatTargets(JSON.parse(rawContent)));
 }
 
 function buildStoryboardPrompt(question: string): string {
@@ -113,9 +122,40 @@ Rules:
 - Use 4 scenes.
 - Set style exactly to "monochromeLiquidGlass".
 - Keep durationSeconds between 20 and 30.
+- For each motionBeat.target, choose exactly one token from: ambient, scene, diagram, equation, keyLine, particles.
 - Explain by analogy, then principle, then example, then recap.
 - Avoid jargon unless you define it immediately.
 - Make every visual feasible with SVG, text, simple shapes, particles, linework, and GSAP motion.
 - Do not include HTML, CSS, JavaScript, markdown, image URLs, or arbitrary code.
 - Prefer sparse on-screen text over paragraphs.`;
+}
+
+function normalizeMotionBeatTargets(value: unknown): unknown {
+  if (!isRecord(value) || !Array.isArray(value.scenes)) {
+    return value;
+  }
+
+  for (const scene of value.scenes) {
+    if (!isRecord(scene) || !Array.isArray(scene.motionBeats)) {
+      continue;
+    }
+
+    for (const beat of scene.motionBeats) {
+      if (!isRecord(beat) || typeof beat.type !== "string") {
+        continue;
+      }
+
+      const target = MOTION_TARGET_BY_TYPE[beat.type as keyof typeof MOTION_TARGET_BY_TYPE];
+
+      if (target) {
+        beat.target = target;
+      }
+    }
+  }
+
+  return value;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
 }

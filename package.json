@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "qa:education": "node --experimental-strip-types --no-warnings scripts/education-qa.ts",
     "test": "vitest run"
   },
   "dependencies": {
