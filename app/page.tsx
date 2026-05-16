@@ -56,11 +56,11 @@ export default function Home() {
   return (
     <main className="relative min-h-screen overflow-hidden px-6 py-8 text-neutral-950 md:px-10">
       <div className="pointer-events-none absolute inset-x-8 top-8 h-px bg-gradient-to-r from-transparent via-neutral-950/15 to-transparent" />
-      <div className="pointer-events-none absolute left-[-8rem] top-24 h-[30rem] w-[30rem] rounded-full border border-white/70 bg-white/35 blur-3xl" />
+      <div className="pointer-events-none absolute left-[-8rem] top-24 h-[30rem] w-[30rem] rounded-full bg-white/35 blur-3xl" />
       <div className="pointer-events-none absolute bottom-[-10rem] right-[-6rem] h-[34rem] w-[34rem] rounded-full border border-neutral-300/50 bg-neutral-200/40 blur-3xl" />
 
       <section className="relative mx-auto grid min-h-[calc(100vh-4rem)] max-w-7xl gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="flex flex-col justify-between rounded-[2rem] border border-white/80 bg-white/60 p-7 shadow-[0_24px_90px_rgba(20,20,20,0.10)] backdrop-blur-2xl md:p-10">
+        <div className="flex flex-col justify-between rounded-[2rem] bg-white/60 p-7 shadow-[0_24px_90px_rgba(20,20,20,0.10)] backdrop-blur-2xl md:p-10">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.48em] text-neutral-500">Aster Studio</p>
             <h1 className="mt-7 font-[var(--font-display)] text-5xl leading-[0.92] tracking-[-0.07em] text-neutral-950 md:text-7xl">
@@ -98,7 +98,7 @@ export default function Home() {
           </form>
         </div>
 
-        <div className="rounded-[2rem] border border-white/80 bg-white/45 p-5 shadow-[0_24px_90px_rgba(20,20,20,0.12)] backdrop-blur-2xl md:p-7">
+        <div className="rounded-[2rem] bg-white/45 p-5 shadow-[0_24px_90px_rgba(20,20,20,0.12)] backdrop-blur-2xl md:p-7">
           <div className="flex h-full flex-col">
             <div className="aspect-video overflow-hidden rounded-[1.5rem] border border-neutral-200 bg-neutral-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_24px_80px_rgba(20,20,20,0.16)]">
               {result ? (
@@ -126,7 +126,7 @@ export default function Home() {
             </div>
 
             {result ? (
-              <div className="mt-6 rounded-[1.5rem] border border-white/80 bg-white/55 p-5 shadow-inner shadow-white/50">
+              <div className="mt-6 rounded-[1.5rem] bg-white/55 p-5 shadow-inner shadow-white/50">
                 <p className="text-sm font-bold uppercase tracking-[0.28em] text-neutral-500">Rendered Lesson</p>
                 <h2 className="mt-4 font-[var(--font-display)] text-4xl leading-none tracking-[-0.05em] text-neutral-950">
                   {result.title}
@@ -154,7 +154,7 @@ export default function Home() {
 
 function InfoCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-3xl border border-white/80 bg-white/50 p-5 shadow-inner shadow-white/50">
+    <div className="rounded-3xl bg-white/50 p-5 shadow-inner shadow-white/50">
       <p className="text-xs font-bold uppercase tracking-[0.28em] text-neutral-400">{label}</p>
       <p className="mt-3 text-sm font-semibold text-neutral-900">{value}</p>
     </div>
