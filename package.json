@@ -10,9 +10,11 @@
     "typecheck": "tsc --noEmit",
     "qa:education": "node --experimental-strip-types --no-warnings scripts/education-qa.ts",
     "qa:video": "node --experimental-strip-types --no-warnings scripts/video-eval.ts",
+    "qa:loop": "node --experimental-strip-types --no-warnings scripts/qa-autonomous-loop.ts",
     "test": "vitest run"
   },
   "dependencies": {
+    "@cursor/sdk": "^1.0.13",
     "next": "^16.2.6",
     "openai": "^6.37.0",
     "react": "^19.2.6",
