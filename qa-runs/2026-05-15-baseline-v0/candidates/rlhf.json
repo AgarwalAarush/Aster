@@ -1,0 +1,303 @@
+{
+  "id": "rlhf-v0-001",
+  "topic": {
+    "id": "rlhf",
+    "title": "RLHF",
+    "question": "How does reinforcement learning from human feedback align language models, and what role do the reward model and KL penalty play?",
+    "domain": "ai-systems"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v0",
+    "name": "Whiteboard seed prompt v0"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "RLHF: Aligning Language Models with Human Feedback",
+    "learnerLevel": "advanced",
+    "durationSeconds": 270,
+    "payoff": "Understand precisely how RLHF fine-tunes a language model using a reward model and KL penalty, where the KL coefficient beta typically sits between 0.01 and 0.5 and controls the alignment-capability tradeoff",
+    "staircase": [
+      "Establish the alignment problem: pretrained LMs maximize next-token likelihood, not human preference",
+      "Introduce the reward model R trained on human comparison data to score outputs",
+      "Show how RL (PPO) uses R to update the policy pi",
+      "Identify the reward hacking failure mode: pi collapses toward adversarial high-R outputs",
+      "Introduce the KL divergence penalty to anchor pi near the reference policy pi_ref",
+      "Write the full RLHF objective combining reward and KL penalty",
+      "Reason through beta: low beta chases reward and risks drift, high beta freezes the model"
+    ],
+    "destination": "The RLHF objective J(pi) = E[R(x,y)] - beta * KL(pi || pi_ref) where beta is a scalar controlling how far the fine-tuned policy may drift from the pretrained reference, preventing reward hacking while preserving language quality"
+  },
+  "narration": {
+    "fullText": "Start with the alignment problem. A pretrained language model, which we call pi-ref, is trained by maximizing the likelihood of human-written text. That objective produces fluent language, but fluency is not the same as helpfulness, harmlessness, or honesty. We need a way to steer pi-ref toward outputs humans actually prefer. That is the alignment problem. The solution RLHF, which stands for Reinforcement Learning from Human Feedback, works in three stages. Stage one: collect preference data. Given a prompt x, sample two responses y-A and y-B from the model, show them to a human labeler, and record which they prefer. Stage two: train a reward model, which we call R of x comma y. R is a neural network, usually initialized from pi-ref itself, fine-tuned to assign a scalar score to any prompt-response pair so that preferred responses receive higher scores. Concretely, R is trained with a Bradley-Terry loss: minimize the negative log probability that R of x comma y-A is greater than R of x comma y-B, given that y-A was preferred. Stage three: use reinforcement learning to fine-tune a new policy pi, meaning our updated language model, to maximize the expected reward E of R of x comma y under pi. The algorithm most commonly used is PPO, proximal policy optimization, which clips policy update ratios to keep updates stable. But here is the failure mode called reward hacking. If we maximize R unconstrained, pi learns to produce outputs that fool R into giving high scores, outputs that are repetitive, verbose, or semantically degenerate, because R is only an approximation of true human preference. To prevent this, we add a KL divergence penalty. KL of pi given pi-ref measures how far the new policy pi has drifted from the reference pi-ref in bits. The full RLHF objective is J of pi equals E over prompts x and responses y drawn from pi of the quantity R of x comma y minus beta times KL of pi given pi-ref. Beta is a non-negative scalar hyperparameter. When beta is near zero, the model is free to chase high reward and risks hacking. When beta is large, the model stays close to pi-ref and barely changes. In practice beta is tuned between 0.01 and 0.5. This single equation is the heart of RLHF: maximize human-scored reward while staying KL-close to the pretrained base, with beta as the dial between alignment and capability preservation.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Start with the alignment problem. A pretrained language model, which we call pi-ref, is trained by maximizing the likelihood of human-written text.",
+        "whyThisBeat": "Rung 1: establish what pretrained LMs optimize and why that is insufficient for alignment"
+      },
+      {
+        "atSec": 18,
+        "text": "Fluency is not the same as helpfulness, harmlessness, or honesty. We need a way to steer pi-ref toward outputs humans actually prefer. That is the alignment problem.",
+        "whyThisBeat": "Rung 1 continued: name the gap between likelihood maximization and human preference"
+      },
+      {
+        "atSec": 32,
+        "text": "The solution, RLHF, Reinforcement Learning from Human Feedback, works in three stages. Stage one: collect preference data. Given a prompt x, sample two responses y-A and y-B, show them to a human labeler, and record which they prefer.",
+        "whyThisBeat": "Rung 2: introduce the data collection pipeline that grounds the reward model"
+      },
+      {
+        "atSec": 55,
+        "text": "Stage two: train a reward model R of x comma y. R is a neural network fine-tuned to assign a scalar score to any prompt-response pair. It is trained with a Bradley-Terry loss: minimize the negative log probability that R of x comma y-A exceeds R of x comma y-B, given y-A was preferred.",
+        "whyThisBeat": "Rung 2: define R precisely including its loss function"
+      },
+      {
+        "atSec": 85,
+        "text": "Stage three: use reinforcement learning to fine-tune a new policy pi to maximize expected reward E of R of x comma y. The algorithm is PPO, proximal policy optimization, which clips update ratios to keep training stable.",
+        "whyThisBeat": "Rung 3: connect reward model to RL policy update via PPO"
+      },
+      {
+        "atSec": 115,
+        "text": "But here is the failure mode called reward hacking. If we maximize R unconstrained, pi learns to produce outputs that fool R with high scores but are repetitive, verbose, or semantically degenerate, because R is only an approximation of true human preference.",
+        "whyThisBeat": "Rung 4: motivate the KL penalty by naming the reward hacking failure mode"
+      },
+      {
+        "atSec": 140,
+        "text": "To prevent this, we add a KL divergence penalty. KL of pi given pi-ref measures how far the new policy has drifted from the reference pi-ref in bits.",
+        "whyThisBeat": "Rung 5: introduce KL divergence and its role as an anchor"
+      },
+      {
+        "atSec": 158,
+        "text": "The full RLHF objective is J of pi equals E over x and y drawn from pi of R of x comma y minus beta times KL of pi given pi-ref.",
+        "whyThisBeat": "Rung 6: write the complete objective combining reward and KL penalty"
+      },
+      {
+        "atSec": 185,
+        "text": "Beta is a non-negative scalar hyperparameter. When beta is near zero, the model chases high reward and risks hacking. When beta is large, the model stays close to pi-ref and barely changes.",
+        "whyThisBeat": "Rung 7: reason through the beta tradeoff qualitatively"
+      },
+      {
+        "atSec": 218,
+        "text": "In practice beta is tuned between 0.01 and 0.5. This single equation is the heart of RLHF: maximize human-scored reward while staying KL-close to the pretrained base, with beta as the dial between alignment and capability preservation.",
+        "whyThisBeat": "Rung 7 continued: anchor with concrete beta range and restate the destination"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "label_alignment_problem",
+        "content": "The Alignment Problem",
+        "region": "top-center"
+      },
+      {
+        "at": 1,
+        "kind": "write",
+        "targetId": "pretrained_obj",
+        "content": "Pretrained LM: maximize  P(y | x)  over human text",
+        "region": "upper-left"
+      },
+      {
+        "at": 2,
+        "kind": "write",
+        "targetId": "pi_ref_label",
+        "content": "pi_ref = reference (pretrained) policy",
+        "region": "upper-left-below"
+      },
+      {
+        "at": 18,
+        "kind": "write",
+        "targetId": "gap_label",
+        "content": "Fluency != Helpfulness, Harmlessness, Honesty",
+        "region": "upper-right"
+      },
+      {
+        "at": 19,
+        "kind": "draw",
+        "targetId": "gap_arrow",
+        "content": "draw horizontal arrow from pretrained_obj rightward to gap_label, labeled alignment gap",
+        "region": "upper-center"
+      },
+      {
+        "at": 32,
+        "kind": "erase",
+        "targetId": "label_alignment_problem",
+        "content": "all"
+      },
+      {
+        "at": 33,
+        "kind": "write",
+        "targetId": "rlhf_title",
+        "content": "RLHF: Reinforcement Learning from Human Feedback",
+        "region": "top-center"
+      },
+      {
+        "at": 34,
+        "kind": "write",
+        "targetId": "stage1_header",
+        "content": "Stage 1: Preference Data Collection",
+        "region": "left-column-top"
+      },
+      {
+        "at": 35,
+        "kind": "write",
+        "targetId": "stage1_detail",
+        "content": "Prompt x -> sample y_A, y_B from pi_ref  ->  human picks preferred",
+        "region": "left-column"
+      },
+      {
+        "at": 36,
+        "kind": "draw",
+        "targetId": "stage1_diagram",
+        "content": "draw two boxes labeled y_A and y_B side by side below stage1_detail, with a human figure icon between them and a checkmark above y_A indicating preference",
+        "region": "left-column-lower"
+      },
+      {
+        "at": 55,
+        "kind": "write",
+        "targetId": "stage2_header",
+        "content": "Stage 2: Reward Model R(x, y)",
+        "region": "center-column-top"
+      },
+      {
+        "at": 56,
+        "kind": "write",
+        "targetId": "reward_model_desc",
+        "content": "R: neural net (init from pi_ref) -> scalar score",
+        "region": "center-column"
+      },
+      {
+        "at": 57,
+        "kind": "write",
+        "targetId": "bt_loss",
+        "content": "BT Loss:  -log sigma( R(x,y_A) - R(x,y_B) )  minimized when y_A preferred",
+        "region": "center-column-lower"
+      },
+      {
+        "at": 85,
+        "kind": "write",
+        "targetId": "stage3_header",
+        "content": "Stage 3: RL Fine-tuning with PPO",
+        "region": "right-column-top"
+      },
+      {
+        "at": 86,
+        "kind": "write",
+        "targetId": "ppo_obj_naive",
+        "content": "Maximize  E[R(x,y)]  under new policy pi",
+        "region": "right-column"
+      },
+      {
+        "at": 87,
+        "kind": "write",
+        "targetId": "ppo_note",
+        "content": "PPO clips ratio pi(y|x)/pi_ref(y|x) for stability",
+        "region": "right-column-lower"
+      },
+      {
+        "at": 88,
+        "kind": "draw",
+        "targetId": "pipeline_arrow_12",
+        "content": "draw arrow from stage1_diagram rightward to reward_model_desc labeled trains",
+        "region": "center-upper"
+      },
+      {
+        "at": 89,
+        "kind": "draw",
+        "targetId": "pipeline_arrow_23",
+        "content": "draw arrow from reward_model_desc rightward to ppo_obj_naive labeled guides",
+        "region": "center-upper-right"
+      },
+      {
+        "at": 115,
+        "kind": "write",
+        "targetId": "hacking_label",
+        "content": "Reward Hacking",
+        "region": "center-bottom"
+      },
+      {
+        "at": 116,
+        "kind": "write",
+        "targetId": "hacking_desc",
+        "content": "Unconstrained pi -> repetitive/degenerate outputs that fool R",
+        "region": "center-bottom-below"
+      },
+      {
+        "at": 117,
+        "kind": "highlight",
+        "targetId": "ppo_obj_naive",
+        "content": "ppo_obj_naive"
+      },
+      {
+        "at": 140,
+        "kind": "write",
+        "targetId": "kl_def",
+        "content": "KL(pi || pi_ref) = sum_y pi(y|x) log[ pi(y|x) / pi_ref(y|x) ]  (in bits)",
+        "region": "lower-left"
+      },
+      {
+        "at": 141,
+        "kind": "write",
+        "targetId": "kl_meaning",
+        "content": "KL = 0 means pi identical to pi_ref; KL large means pi has drifted far",
+        "region": "lower-left-below"
+      },
+      {
+        "at": 158,
+        "kind": "erase",
+        "targetId": "hacking_desc",
+        "content": "hacking_desc"
+      },
+      {
+        "at": 159,
+        "kind": "write",
+        "targetId": "rlhf_objective",
+        "content": "J(pi) = E_{x, y~pi} [ R(x,y)  -  beta * KL(pi || pi_ref) ]",
+        "region": "lower-center"
+      },
+      {
+        "at": 160,
+        "kind": "highlight",
+        "targetId": "rlhf_objective",
+        "content": "rlhf_objective"
+      },
+      {
+        "at": 185,
+        "kind": "write",
+        "targetId": "beta_label",
+        "content": "beta >= 0  (hyperparameter)",
+        "region": "lower-right"
+      },
+      {
+        "at": 186,
+        "kind": "draw",
+        "targetId": "beta_number_line",
+        "content": "draw horizontal number line from 0 to 1, mark 0 labeled chase reward, mark 1 labeled frozen near pi_ref, with a bracket between 0.01 and 0.5 labeled typical range",
+        "region": "lower-right-below"
+      },
+      {
+        "at": 218,
+        "kind": "highlight",
+        "targetId": "beta_label",
+        "content": "beta_label"
+      },
+      {
+        "at": 219,
+        "kind": "highlight",
+        "targetId": "beta_number_line",
+        "content": "beta_number_line"
+      },
+      {
+        "at": 220,
+        "kind": "write",
+        "targetId": "final_summary",
+        "content": "RLHF: maximize R(x,y) while staying KL-close to pi_ref; beta is the alignment dial",
+        "region": "bottom-center"
+      }
+    ]
+  }
+}

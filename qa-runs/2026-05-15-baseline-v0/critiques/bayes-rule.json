@@ -1,0 +1,94 @@
+{
+  "candidateId": "bayes-rule-v0-001",
+  "subjectId": "bayes-rule",
+  "promptVariantId": "whiteboard-v0",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 7,
+      "notes": "Payoff names a specific scenario (medical test, 1% disease prior), uses a concrete number (1%), and promises a concrete posterior probability output. Loses one point because it doesn't state the actual posterior number (10%) that makes it fully falsifiable as a promise."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 8,
+      "notes": "Rungs 1-7 build logically: prior -> likelihood -> marginal -> derivation -> proportionality -> numerical application -> base-rate intuition. Minor issue: rung 4 ('Derive Bayes' rule from the definition of conditional probability') is not actually executed in narration -- the derivation is skipped and the formula is simply stated. Also rung 6 and rung 5 are partially reordered in execution (numerical application comes before proportionality shorthand is formally named). Coherent overall but the derivation gap is real."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "Destination precisely names the formula P(H|E) = P(E|H)*P(H) / P(E), names each term's role, and adds the proportionality shorthand. This is the strongest possible form for a formula-level destination at intro level."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 9,
+      "notes": "H, E, P(H), P(E|H), P(H^c) are all defined on first use. 'Posterior,' 'likelihood,' 'marginal probability,' and 'prior' are all unpacked. One gap: the narration says 'suppose the test is 90 percent accurate' for P(E|H)=0.9, conflating sensitivity with accuracy without noting the distinction -- minor but could confuse intro learners. No arithmetic contradictions. Sentence-level clarity is strong throughout."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 6,
+      "notes": "Most write actions are concrete and include actual content strings. The single draw action at t=200 is only semi-concrete: 'draw bracket spanning P(E|H)*P(H) in eq_bayes_full labeled numerator=likelihood*prior, and arrow pointing down to eq_proportional labeled drop denominator to get proportionality' -- a renderer could mostly execute this but 'bracket spanning' leaves bracket style and exact coordinates unspecified. No other draw actions exist, which limits overall specificity of the visual layer."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 8,
+      "notes": "Every highlight and erase targets an element previously written. The erase sequence at t=168-174 clears label_intuition, eq_marginal_calc, eq_total_prob, and label_marginal to make room for the proportionality conclusion -- this is a coherent whiteboard move. Minor issue: 'label_intuition' is written at t=158 in region upper-right and erased at t=168, giving it only 10 seconds of visibility before being cleared, which feels abrupt given it carries the key conceptual payoff. Canvas does not appear impossibly cluttered."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 4,
+      "notes": "Only one draw action in the entire board sequence (at t=200). Bayes' rule admits useful visual representations: a tree diagram of the two hypotheses and their branches, a probability bar/table showing how 0.0882 decomposes, or a belief update arrow. None of these appear. The lesson is almost entirely text writes with a handful of highlights and erases. For an intro lesson on a topic with strong diagrammatic affordances, this is a significant gap."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 9,
+      "notes": "All formulas correct: P(H|E) = P(E|H)*P(H)/P(E) is stated correctly. Numerical arithmetic is correct: 0.9*0.01=0.009, 0.08*0.99=0.0792, sum=0.0882, 0.009/0.0882~=0.102. Symbol use is consistent throughout narration and board. One minor notational inconsistency: narration uses 'P of H-complement' and board uses 'H^c' -- different typographic conventions for the same symbol, though both are standard and unlikely to confuse."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 6,
+      "notes": "No code is included. For an intro probability-stats lesson on Bayes' rule, code would be supplemental rather than essential -- the mechanism is mathematical, not algorithmic. The absence is the correct decision for this subject and learner level."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 8,
+      "notes": "10 beats over 240 seconds averages ~24 seconds per beat, appropriate for intro level. Beat at t=88 (marginal probability definition via law of total probability) is slightly dense -- it introduces both the concept name and the formula in one beat -- but not severely overloaded. Beat at t=178 covers proportionality shorthand AND the normalizing constant role, two distinct ideas. Total beat span ends at t=178 with no narration beat covering t=194-240 (the final board actions have no corresponding narration beats), leaving ~60 seconds underspecified in narration."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 7,
+      "notes": "Content stays tightly on the topic question. The base-rate intuition at t=158 beat and t=178 beat slightly re-covers the same 'disease is rare therefore posterior stays low' point. No off-topic tangents. Proportionality shorthand is introduced cleanly at the end without repeating the full formula derivation."
+    }
+  ],
+  "totalScore": 80,
+  "maxScore": 100,
+  "percent": 80,
+  "topThreeIssues": [
+    "Board visual balance is severely underdeveloped -- only one draw action exists for a topic with strong diagrammatic affordances; adding a two-branch probability tree or a belief-update bar would materially improve comprehension.",
+    "The derivation step (staircase rung 4: 'derive Bayes' rule from conditional probability') is promised but never executed -- the formula is simply stated; either deliver the derivation or remove that rung.",
+    "The final ~60 seconds of board actions (t=194-240) have no corresponding narration beats, leaving the audio-visual sync undefined for the lesson's closing visual."
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "This lesson plan has a strong mathematical spine -- the formula, notation, and numerics are all correct, the staircase builds logically, and the destination is precisely stated. The primary weakness is the near-complete absence of diagram-based board actions: a topic as visually tractable as Bayes' rule warrants at least a probability tree or belief-update diagram, and the single vague draw action at the very end is insufficient. With the addition of one or two concrete visual diagrams and a resolved narration-board sync for the final segment, this plan would be production-ready."
+}

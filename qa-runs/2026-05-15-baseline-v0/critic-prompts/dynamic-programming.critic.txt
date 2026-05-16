@@ -1,0 +1,413 @@
+You are a senior teaching evaluator and a senior whiteboard-lecture director. You are reviewing a structured plan for a continuous-whiteboard narrated video lesson and scoring it against a fixed rubric. The plan was produced by an LLM under a specific prompt variant; your scoring drives prompt iteration. Be exact, fair, and specific. Reward concrete decisions; penalize hand-waving and unjustified omissions.
+
+You will read:
+  - The subject (topic, question, domain, difficulty, intended learner level)
+  - The candidate lesson plan as JSON
+  - The rubric below
+
+You will score every criterion. You will not skip any. You will not invent criteria. You will use the integer maxes exactly as defined.
+
+You will then return a single JSON object. No prose. No markdown. JSON only.
+
+---
+
+SUBJECT
+  id: dynamic-programming
+  domain: cs-theory
+  difficulty: intermediate
+  title: Dynamic Programming
+  question: Why does dynamic programming work, and how do optimal substructure and overlapping subproblems tell you when to use it?
+
+CANDIDATE LESSON PLAN (JSON)
+{
+  "id": "dynamic-programming-v0-001",
+  "topic": {
+    "id": "dynamic-programming",
+    "title": "Dynamic Programming",
+    "question": "Why does dynamic programming work, and how do optimal substructure and overlapping subproblems tell you when to use it?",
+    "domain": "cs-theory"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v0",
+    "name": "Whiteboard seed prompt v0"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Why Dynamic Programming Works: Optimal Substructure and Overlapping Subproblems",
+    "learnerLevel": "intermediate",
+    "durationSeconds": 270,
+    "payoff": "Naive recursion on Fibonacci recomputes the same call exponentially — O(2^n) time — while DP collapses that to O(n) by storing each subproblem answer exactly once",
+    "staircase": [
+      "Motivate with Fibonacci: naive recursion is exponentially slow",
+      "Name the two conditions DP requires: optimal substructure and overlapping subproblems",
+      "Define optimal substructure: an optimal solution contains optimal solutions to sub-problems",
+      "Define overlapping subproblems: the same sub-problem recurs many times in the recursion tree",
+      "Show the Fibonacci recursion tree and count redundant calls",
+      "Introduce memoization: store each answer in a table the first time, look it up thereafter",
+      "Generalize: the DP recurrence plus a table gives polynomial time whenever both conditions hold"
+    ],
+    "destination": "Learner can state both DP conditions, verify them on a new problem, and explain why storing subproblem answers collapses exponential recursion to polynomial time"
+  },
+  "narration": {
+    "fullText": "Let us ask a simple question: why is computing the n-th Fibonacci number hard the naive way, and what does dynamic programming actually fix? Fibonacci is defined by the recurrence F of n equals F of n minus one plus F of n minus two, with base cases F of zero equals zero and F of one equals one. A direct recursive program just applies that definition, but watch what happens in the call tree. To compute F of five, we call F of four and F of three. F of four calls F of three and F of two. F of three appears twice already, and every branch it spawns appears again and again. The total number of calls grows like two to the power n — that is exponential time, which becomes unusable even for n around forty. Dynamic programming fixes this, but only when two conditions are present. The first is optimal substructure: the answer to a big problem is built from answers to strictly smaller sub-problems using a fixed rule — the recurrence. For Fibonacci that rule is simply addition. The second is overlapping subproblems: those smaller sub-problems are not all distinct; the very same sub-problem, say F of three, is needed by multiple larger problems. When both conditions hold, we can memoize — that is, store each sub-problem answer in a table the first time we compute it, and look it up in constant time on every subsequent request. Now F of three is computed once and retrieved everywhere else. The recursion tree collapses into a straight line of n unique sub-problems, each solved in O of one time after its dependencies are ready, giving O of n total time. That is the complete mechanism: optimal substructure gives us the recurrence, overlapping subproblems justify the table, and together they turn exponential into polynomial.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Let us ask a simple question: why is computing the n-th Fibonacci number hard the naive way, and what does dynamic programming actually fix?",
+        "whyThisBeat": "Hook — frames the concrete puzzle the lesson will resolve"
+      },
+      {
+        "atSec": 12,
+        "text": "Fibonacci is defined by the recurrence F of n equals F of n minus one plus F of n minus two, with base cases F of zero equals zero and F of one equals one.",
+        "whyThisBeat": "Rung 1 — establishes the running example and its recurrence"
+      },
+      {
+        "atSec": 28,
+        "text": "A direct recursive program just applies that definition, but watch what happens in the call tree. To compute F of five, we call F of four and F of three. F of four calls F of three and F of two. F of three appears twice already, and every branch it spawns appears again and again.",
+        "whyThisBeat": "Rung 5 setup — builds the recursion tree visually to expose redundancy"
+      },
+      {
+        "atSec": 60,
+        "text": "The total number of calls grows like two to the power n — that is exponential time, which becomes unusable even for n around forty.",
+        "whyThisBeat": "Rung 1 payoff — quantifies the cost of naive recursion"
+      },
+      {
+        "atSec": 78,
+        "text": "Dynamic programming fixes this, but only when two conditions are present.",
+        "whyThisBeat": "Transition — announces the two conditions that gate DP applicability"
+      },
+      {
+        "atSec": 88,
+        "text": "The first is optimal substructure: the answer to a big problem is built from answers to strictly smaller sub-problems using a fixed rule — the recurrence. For Fibonacci that rule is simply addition.",
+        "whyThisBeat": "Rung 3 — defines optimal substructure with the running example"
+      },
+      {
+        "atSec": 115,
+        "text": "The second is overlapping subproblems: those smaller sub-problems are not all distinct; the very same sub-problem, say F of three, is needed by multiple larger problems.",
+        "whyThisBeat": "Rung 4 — defines overlapping subproblems and points to the tree evidence"
+      },
+      {
+        "atSec": 145,
+        "text": "When both conditions hold, we can memoize — that is, store each sub-problem answer in a table the first time we compute it, and look it up in constant time on every subsequent request.",
+        "whyThisBeat": "Rung 6 — introduces memoization as the mechanical solution"
+      },
+      {
+        "atSec": 175,
+        "text": "Now F of three is computed once and retrieved everywhere else. The recursion tree collapses into a straight line of n unique sub-problems, each solved in O of one time after its dependencies are ready, giving O of n total time.",
+        "whyThisBeat": "Rung 5 payoff — shows the collapse from exponential tree to linear chain"
+      },
+      {
+        "atSec": 215,
+        "text": "That is the complete mechanism: optimal substructure gives us the recurrence, overlapping subproblems justify the table, and together they turn exponential into polynomial.",
+        "whyThisBeat": "Rung 7 — generalizes the mechanism so learner can apply it to new problems"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title_label",
+        "content": "Dynamic Programming",
+        "region": "top-center"
+      },
+      {
+        "at": 12,
+        "kind": "write",
+        "targetId": "recurrence_def",
+        "content": "F(n) = F(n-1) + F(n-2)",
+        "region": "upper-left"
+      },
+      {
+        "at": 18,
+        "kind": "write",
+        "targetId": "base_cases",
+        "content": "F(0) = 0,  F(1) = 1",
+        "region": "upper-left-below"
+      },
+      {
+        "at": 28,
+        "kind": "draw",
+        "targetId": "tree_root",
+        "content": "single node labeled F(5) at top-center of a binary tree region",
+        "region": "center"
+      },
+      {
+        "at": 33,
+        "kind": "draw",
+        "targetId": "tree_l1_left",
+        "content": "node labeled F(4) connected by a line from F(5), placed lower-left of F(5)",
+        "region": "center-left"
+      },
+      {
+        "at": 36,
+        "kind": "draw",
+        "targetId": "tree_l1_right",
+        "content": "node labeled F(3) connected by a line from F(5), placed lower-right of F(5)",
+        "region": "center-right"
+      },
+      {
+        "at": 40,
+        "kind": "draw",
+        "targetId": "tree_l2_ll",
+        "content": "node labeled F(3) connected by a line from F(4), placed lower-left of F(4)",
+        "region": "center-left"
+      },
+      {
+        "at": 43,
+        "kind": "draw",
+        "targetId": "tree_l2_lr",
+        "content": "node labeled F(2) connected by a line from F(4), placed lower-right of F(4)",
+        "region": "center"
+      },
+      {
+        "at": 46,
+        "kind": "draw",
+        "targetId": "tree_l2_rl",
+        "content": "node labeled F(2) connected by a line from F(3) right-branch, placed lower-left of that F(3)",
+        "region": "center-right"
+      },
+      {
+        "at": 49,
+        "kind": "draw",
+        "targetId": "tree_l2_rr",
+        "content": "node labeled F(1) connected by a line from F(3) right-branch, placed lower-right of that F(3)",
+        "region": "right"
+      },
+      {
+        "at": 53,
+        "kind": "highlight",
+        "targetId": "tree_l1_right",
+        "content": "tree_l1_right",
+        "region": "center-right"
+      },
+      {
+        "at": 55,
+        "kind": "highlight",
+        "targetId": "tree_l2_ll",
+        "content": "tree_l2_ll",
+        "region": "center-left"
+      },
+      {
+        "at": 60,
+        "kind": "write",
+        "targetId": "complexity_naive",
+        "content": "Naive calls ~ 2^n   (exponential)",
+        "region": "upper-right"
+      },
+      {
+        "at": 78,
+        "kind": "write",
+        "targetId": "two_conditions_header",
+        "content": "DP requires two conditions:",
+        "region": "middle-left"
+      },
+      {
+        "at": 88,
+        "kind": "write",
+        "targetId": "condition_1",
+        "content": "1. Optimal Substructure: optimal answer built from optimal sub-answers via recurrence",
+        "region": "middle-left-below"
+      },
+      {
+        "at": 100,
+        "kind": "highlight",
+        "targetId": "recurrence_def",
+        "content": "recurrence_def",
+        "region": "upper-left"
+      },
+      {
+        "at": 115,
+        "kind": "write",
+        "targetId": "condition_2",
+        "content": "2. Overlapping Sub-problems: same sub-problem appears in multiple branches",
+        "region": "middle-left-below2"
+      },
+      {
+        "at": 128,
+        "kind": "highlight",
+        "targetId": "tree_l1_right",
+        "content": "tree_l1_right",
+        "region": "center-right"
+      },
+      {
+        "at": 130,
+        "kind": "highlight",
+        "targetId": "tree_l2_ll",
+        "content": "tree_l2_ll",
+        "region": "center-left"
+      },
+      {
+        "at": 145,
+        "kind": "write",
+        "targetId": "memo_label",
+        "content": "Memoization: table T where T[k] stores F(k) after first computation",
+        "region": "lower-left"
+      },
+      {
+        "at": 155,
+        "kind": "draw",
+        "targetId": "memo_table",
+        "content": "horizontal row of boxes labeled k=0,1,2,3,4,5 with values 0,1,1,2,3,5 filled in left to right",
+        "region": "lower-center"
+      },
+      {
+        "at": 165,
+        "kind": "highlight",
+        "targetId": "memo_table",
+        "content": "memo_table",
+        "region": "lower-center"
+      },
+      {
+        "at": 175,
+        "kind": "erase",
+        "targetId": "tree_l2_ll",
+        "content": "all",
+        "region": "center-left"
+      },
+      {
+        "at": 178,
+        "kind": "erase",
+        "targetId": "tree_l2_rl",
+        "content": "all",
+        "region": "center-right"
+      },
+      {
+        "at": 181,
+        "kind": "erase",
+        "targetId": "tree_l2_lr",
+        "content": "all",
+        "region": "center"
+      },
+      {
+        "at": 184,
+        "kind": "erase",
+        "targetId": "tree_l2_rr",
+        "content": "all",
+        "region": "right"
+      },
+      {
+        "at": 187,
+        "kind": "draw",
+        "targetId": "linear_chain",
+        "content": "five nodes in a left-to-right horizontal chain labeled F(1)->F(2)->F(3)->F(4)->F(5) with arrows pointing right, each arrow labeled lookup or +",
+        "region": "center"
+      },
+      {
+        "at": 195,
+        "kind": "write",
+        "targetId": "complexity_dp",
+        "content": "DP calls = n   =>   O(n) time",
+        "region": "upper-right-below"
+      },
+      {
+        "at": 205,
+        "kind": "highlight",
+        "targetId": "complexity_naive",
+        "content": "complexity_naive",
+        "region": "upper-right"
+      },
+      {
+        "at": 208,
+        "kind": "highlight",
+        "targetId": "complexity_dp",
+        "content": "complexity_dp",
+        "region": "upper-right"
+      },
+      {
+        "at": 215,
+        "kind": "write",
+        "targetId": "summary_box",
+        "content": "Optimal Substructure => recurrence  |  Overlapping Sub-problems => table  |  Together => exponential becomes polynomial",
+        "region": "bottom-center"
+      },
+      {
+        "at": 230,
+        "kind": "highlight",
+        "targetId": "summary_box",
+        "content": "summary_box",
+        "region": "bottom-center"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 145,
+      "language": "python",
+      "code": "import sys\nsys.setrecursionlimit(10000)\n\nT = [-1] * 1000\n\ndef fib_memo(n):\n    if n == 0: return 0\n    if n == 1: return 1\n    if T[n] != -1:\n        return T[n]\n    T[n] = fib_memo(n-1) + fib_memo(n-2)\n    return T[n]\n\nprint(fib_memo(10))",
+      "purpose": "Shows memoization pattern: check table before recursing, store result before returning — makes the O(n) cost concrete"
+    }
+  ]
+}
+
+Rubric (each criterion: id, label, max integer, scoring guidance):
+
+1) payoff-concreteness  (max 8)
+   The lesson.payoff states a concrete reason a learner should care, ideally with a number or specific stake. Vague payoffs ("important", "useful") score 0-2. Generic-but-true payoffs without numbers or stakes score 3-5. Concrete payoffs with numbers or sharp stakes score 6-8.
+
+2) staircase-coherence  (max 10)
+   The staircase rungs build monotonically: each rung is strictly necessary, no gaps, no rungs reach beyond what's needed. Score down for missing prerequisite, redundant rung, or rung that is actually the destination.
+
+3) destination-precision  (max 8)
+   The destination names a precise object (formula, mechanism, theorem, named technique) the learner can hold afterward. "Understand X" scores 0-2. "Hold formula F and know what each factor protects against" scores 7-8.
+
+4) narration-clarity  (max 12)
+   Every symbol is defined the first time it appears in narration. Every term of jargon is defined or unpacked the first time it appears. Sentences are concrete, not hand-wavy. No contradictions. Read through narration.beats in order and penalize each undefined symbol or jargon term.
+
+5) board-specificity  (max 10)
+   Every "draw" action is concrete enough that a renderer could execute it without inventing details. "Draw a graph" scores 0. "Draw three nodes A, B, C left-to-right with arrows A->B and B->C" scores full credit. "write" actions whose content is "the formula" or "the equation" without the actual content also lose points here.
+
+6) board-coherence  (max 10)
+   The action timeline forms a sensible whiteboard story: nothing is highlighted/transformed/erased without first being introduced; transformations preserve identity in a comprehensible way; the canvas state implied at each moment is plausible (not impossibly cluttered).
+
+7) board-visual-balance  (max 8)
+   Mix of action kinds is appropriate to the topic. Topics that admit diagrams (graphs, distributions, geometry, networks, hierarchies) should have multiple draw actions, not just text writes. Topics that are purely formal still need at least one structural diagram. Heavy text-dump with one-or-zero draws on a visual topic scores 0-3.
+
+8) math-notation-correctness  (max 10)
+   All formulas are mathematically correct. Symbol use is consistent (a symbol means the same thing throughout). Numerical examples are arithmetically correct. Catch incorrect derivations, off-by-one errors, dimension mismatches, wrong constants.
+
+9) code-content-decision  (max 6)
+   Did the lesson make the right decision about whether to include code-as-content? If code is present: is it syntactically valid in its declared language? Is it the right granularity for the beat? Is it correct for the concept? If code is absent: would including code have materially clarified the mechanism? Score 6 for correct decision well-executed; 3 for borderline; 0 for clearly wrong (broken code present, or code obviously needed and absent).
+
+10) pacing-and-density  (max 10)
+    Beats are appropriately spaced for difficulty: intro topics get more seconds per beat, advanced topics get denser pacing. No beat is overloaded with multiple distinct ideas. Total beat times respect durationSeconds. Score down for one beat doing five things, or for huge gaps with no narration.
+
+11) redundancy-and-focus  (max 8)
+    No repeated content across beats. Stays on the topic question. Doesn't waste time on tangents or restate what was just said.
+
+After scoring, write 1-3 topThreeIssues (highest-leverage fixes), set wouldRecommendForPipeline (true only if percent >= 75 AND no criterion below half its max), and write a 2-3 sentence summary.
+
+Return JSON matching this shape exactly:
+
+{
+  "candidateId": "<copy from candidate.id>",
+  "subjectId": "<copy from candidate.topic.id>",
+  "promptVariantId": "<copy from candidate.promptVariant.id>",
+  "criteria": [
+    { "id": "payoff-concreteness", "label": "Payoff concreteness", "max": 8, "score": <0-8>, "notes": "<specific reason for score>" },
+    { "id": "staircase-coherence", "label": "Staircase coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "destination-precision", "label": "Destination precision", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "narration-clarity", "label": "Narration clarity", "max": 12, "score": <0-12>, "notes": "..." },
+    { "id": "board-specificity", "label": "Board specificity", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-coherence", "label": "Board coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-visual-balance", "label": "Board visual balance", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "math-notation-correctness", "label": "Math and notation correctness", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "code-content-decision", "label": "Code-content decision", "max": 6, "score": <0-6>, "notes": "..." },
+    { "id": "pacing-and-density", "label": "Pacing and density", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "redundancy-and-focus", "label": "Redundancy and focus", "max": 8, "score": <0-8>, "notes": "..." }
+  ],
+  "totalScore": <sum of all criterion scores>,
+  "maxScore": 100,
+  "percent": <round(totalScore / maxScore * 100)>,
+  "topThreeIssues": ["<most important fix>", "<second>", "<third>"],
+  "wouldRecommendForPipeline": <true|false>,
+  "summary": "<2-3 sentences>"
+}
+
+Return ONLY the JSON object. No commentary. No fences. No preamble.
+
+Return ONLY the JSON object as your response. No commentary, no markdown fences.

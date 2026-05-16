@@ -1,0 +1,94 @@
+{
+  "candidateId": "rlhf-v0-001",
+  "subjectId": "rlhf",
+  "promptVariantId": "whiteboard-v0",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 7,
+      "notes": "The payoff names a specific beta range (0.01 to 0.5) and frames the alignment-capability tradeoff explicitly. It lacks a concrete stake for the learner (e.g., what breaks without this knowledge) but the numeric anchor and named tradeoff push it firmly into the high band."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Rungs build cleanly: pretrained objective -> gap -> preference data -> reward model -> RL/PPO -> reward hacking -> KL penalty -> full objective -> beta analysis. Each rung is necessary and follows from the prior. Minor issue: rung 3 ('Show how RL (PPO) uses R to update the policy pi') and rung 4 ('Identify reward hacking') are slightly conflated in timing but not a serious gap."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "The destination states the full formula J(pi) = E[R(x,y)] - beta * KL(pi || pi_ref), names beta as a scalar with its role, and explains what each term protects against. This is a textbook-quality precise destination."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 10,
+      "notes": "Almost all symbols are defined on first use: pi-ref defined at intro, R defined in stage two, PPO expanded as proximal policy optimization, KL defined when introduced, beta defined when the full objective appears. Minor issue: 'Bradley-Terry loss' is named but not unpacked beyond the formula -- an advanced learner will know it, but it is jargon that goes undefined. No contradictions found."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 8,
+      "notes": "Most draw actions are concrete: the beta number-line specifies endpoints, bracket range, and labels; the pipeline arrows name source and destination elements; the stage1 diagram specifies two labeled boxes, a human figure, and a checkmark. Slight deduction: the gap_arrow is described as 'horizontal arrow from pretrained_obj rightward to gap_label, labeled alignment gap' -- adequate but the label placement is ambiguous. The human figure icon in stage1_diagram is a conceptual instruction rather than a concrete drawable primitive."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "The timeline is disciplined: elements are written before being highlighted or erased; hacking_desc is erased before the full objective appears in the same region; pipeline arrows reference elements that were already written. One minor issue: at t=32, the alignment_problem label is erased but pretrained_obj and pi_ref_label and gap_label remain, which could leave the upper half cluttered when the three-stage layout is built -- no explicit erase of those elements is shown, but this may be intentional density."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 7,
+      "notes": "Four draw actions are present (gap_arrow, stage1_diagram, pipeline_arrow_12, pipeline_arrow_23, beta_number_line) -- five total. The three-column pipeline plus the beta number line give good structural variety. The KL formula at t=140 is pure text where a small distribution diagram could have reinforced the concept visually, but this is a minor gap for an advanced topic."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 9,
+      "notes": "The full objective J(pi) = E_{x,y~pi}[R(x,y) - beta * KL(pi || pi_ref)] is standard and correct. The Bradley-Terry loss -log sigma(R(x,y_A) - R(x,y_B)) is the correct formulation. KL expansion as sum_y pi(y|x) log[pi(y|x)/pi_ref(y|x)] is correct. The PPO clip ratio pi(y|x)/pi_ref(y|x) is correct terminology. One small issue: narration says 'KL ... in bits' which implies log base 2, but the KL formula in the board uses natural log notation implicitly (no base specified) -- a minor inconsistency for an advanced audience."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 6,
+      "notes": "No code is included, which is correct for this topic. RLHF explanation is inherently mathematical and algorithmic at the conceptual level; pseudocode would add clutter without clarifying the mechanism. The right decision, well-executed."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 8,
+      "notes": "Ten beats over 270 seconds averages 27 seconds per beat, appropriate for advanced material. The longest gap is beats at t=85 to t=115 (30 seconds for PPO introduction) and t=115 to t=140 (25 seconds for reward hacking) -- both reasonable. Beat at t=55 covers reward model definition plus Bradley-Terry loss (two distinct ideas in 30 seconds) which is slightly dense but manageable for the stated advanced level. No beats are overloaded to the point of failure."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 7,
+      "notes": "The lesson stays tightly on the question. The final beat at t=218 partially restates the destination ('maximize human-scored reward while staying KL-close to the pretrained base') which was already implied by the objective written at t=158 -- mild redundancy that functions as a useful synthesis rather than waste. No off-topic tangents."
+    }
+  ],
+  "totalScore": 88,
+  "maxScore": 100,
+  "percent": 88,
+  "topThreeIssues": [
+    "Bradley-Terry loss is introduced as named jargon without being unpacked -- define it as a pairwise comparison loss or explain why it produces the stated formula to close the only significant narration-clarity gap.",
+    "The KL formula on the board specifies 'in bits' in narration but does not mark the log base, creating a minor but real inconsistency; either annotate log_2 in the formula or remove the 'in bits' qualifier from narration.",
+    "The upper-left region (pretrained_obj, pi_ref_label, gap_label, gap_arrow) is never explicitly erased when the three-stage column layout is built at t=33-36, risking canvas clutter; add erase actions for those elements at t=32-33."
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "This is a high-quality lesson plan that correctly structures the RLHF pipeline from alignment motivation through the full objective and beta tradeoff, with a precise destination formula and disciplined board timeline. The primary weaknesses are a minor math-notation inconsistency around KL log base and the undefined Bradley-Terry jargon, neither of which undermines the lesson's instructional integrity. With those two fixes and an explicit canvas-cleanup step, this plan would be production-ready."
+}

@@ -1,0 +1,295 @@
+{
+  "id": "fourier-transform-v0-001",
+  "topic": {
+    "id": "fourier-transform",
+    "title": "Fourier Transform",
+    "question": "Why does the Fourier transform decompose a signal into a sum of sines and cosines, and what does the magnitude of each frequency component mean?",
+    "domain": "pure-math"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v0",
+    "name": "Whiteboard seed prompt v0"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "The Fourier Transform: Hearing the Colors of Sound",
+    "learnerLevel": "intermediate",
+    "durationSeconds": 270,
+    "payoff": "The magnitude |F(f)| tells you exactly how much a pure sinusoid at frequency f Hz contributes to the original signal — a 440 Hz tone with |F(440)|=1 and all others zero is a perfect concert-A.",
+    "staircase": [
+      "Signals live in a space where sines and cosines form an orthogonal basis",
+      "Inner product with e^{i2pi ft} extracts the component at frequency f",
+      "The integral definition of the Fourier transform is that inner product",
+      "Magnitude |F(f)| measures amplitude of the frequency-f sinusoid",
+      "Phase angle(F(f)) measures the time shift of that sinusoid",
+      "Linearity means the transform of a sum is the sum of transforms",
+      "The inverse transform reconstructs the signal as a continuous sum of sinusoids"
+    ],
+    "destination": "The learner can state that F(f) = integral of x(t)e^{-i2pi ft}dt computes the inner product of the signal with a pure sinusoid at frequency f, that |F(f)| is the amplitude of that sinusoidal component, and that the inverse transform reassembles the signal from all such components."
+  },
+  "narration": {
+    "fullText": "Let us ask a surprisingly deep question: why can any signal be written as a sum of sines and cosines? Start with the idea of a basis. In ordinary two-dimensional space, any vector can be written as a combination of two perpendicular arrows, because those arrows are orthogonal — their dot product is zero. The same idea works for functions. Define the inner product of two functions f and g as the integral of f of t times the complex conjugate of g of t, dt. Two functions are orthogonal when that inner product is zero. Now watch: the functions e to the power i two pi f t, where i is the imaginary unit satisfying i squared equals negative one, and f ranges over all real frequencies in Hertz, form a complete orthogonal family — every reasonable signal can be expressed as a combination of these complex exponentials. Each complex exponential e to the i two pi f t is just a cosine at frequency f plus i times a sine at frequency f, by Euler's formula. So sines and cosines are not arbitrary; they are the eigenfunctions of differentiation and the natural orthogonal basis for signals on the real line. To find how much of frequency f is in a signal x of t, take the inner product of x with the basis function at that frequency: integrate x of t times e to the negative i two pi f t dt over all time. That integral is exactly the Fourier transform, written capital F of f or X of f. The negative sign in the exponent comes from taking the complex conjugate of the basis function, just as in an ordinary dot product you multiply by the conjugate of the basis vector. The magnitude of F of f — written vertical bar F of f vertical bar — is the amplitude, meaning the peak height, of the sinusoidal component at frequency f. If your signal is a pure 440-Hertz sine wave at amplitude two, then the magnitude of the transform is two at f equals 440 and f equals negative 440, and zero everywhere else. The angle of F of f, written arg of F of f, is the phase — how far in time that sinusoid is shifted. Finally, the inverse Fourier transform reassembles x of t by integrating F of f times e to the positive i two pi f t df over all frequencies, summing up every sinusoidal component weighted by its complex amplitude. The whole picture: decompose by inner products, read off amplitudes as magnitudes, reconstruct by superposition.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Let us ask a surprisingly deep question: why can any signal be written as a sum of sines and cosines?",
+        "whyThisBeat": "Pose the motivating question to frame the lesson goal"
+      },
+      {
+        "atSec": 8,
+        "text": "Start with the idea of a basis. In ordinary two-dimensional space, any vector can be written as a combination of two perpendicular arrows, because those arrows are orthogonal — their dot product is zero.",
+        "whyThisBeat": "Rung 1: establish orthogonal basis in a familiar concrete setting before lifting to functions"
+      },
+      {
+        "atSec": 22,
+        "text": "The same idea works for functions. Define the inner product of two functions f and g as the integral of f of t times the complex conjugate of g of t, dt. Two functions are orthogonal when that inner product is zero.",
+        "whyThisBeat": "Rung 1 extended: define function inner product and orthogonality, the direct analogue of the vector dot product"
+      },
+      {
+        "atSec": 40,
+        "text": "Now watch: the functions e to the power i two pi f t, where i is the imaginary unit satisfying i squared equals negative one, and f ranges over all real frequencies in Hertz, form a complete orthogonal family — every reasonable signal can be expressed as a combination of these complex exponentials. Each complex exponential is just a cosine at frequency f plus i times a sine at frequency f, by Euler's formula. So sines and cosines are not arbitrary; they are the natural orthogonal basis.",
+        "whyThisBeat": "Rung 1 payoff: name the basis, invoke Euler's formula, explain why sines/cosines appear"
+      },
+      {
+        "atSec": 68,
+        "text": "To find how much of frequency f is in a signal x of t, take the inner product of x with the basis function at that frequency: integrate x of t times e to the negative i two pi f t dt over all time. That integral is exactly the Fourier transform, written capital F of f.",
+        "whyThisBeat": "Rung 2 and 3: derive the transform definition as an inner product, make the formula concrete"
+      },
+      {
+        "atSec": 95,
+        "text": "The negative sign in the exponent comes from taking the complex conjugate of the basis function, just as in an ordinary dot product you multiply by the conjugate of the basis vector.",
+        "whyThisBeat": "Address the one confusing sign, connecting it back to the inner product definition"
+      },
+      {
+        "atSec": 110,
+        "text": "The magnitude of F of f — written vertical bar F of f vertical bar — is the amplitude, meaning the peak height, of the sinusoidal component at frequency f.",
+        "whyThisBeat": "Rung 4: define magnitude as amplitude of the frequency component"
+      },
+      {
+        "atSec": 128,
+        "text": "If your signal is a pure 440-Hertz sine wave at amplitude two, then the magnitude of the transform is two at f equals 440 and f equals negative 440, and zero everywhere else.",
+        "whyThisBeat": "Rung 4 concrete example: anchor magnitude with a real number and a real frequency"
+      },
+      {
+        "atSec": 148,
+        "text": "The angle of F of f, written arg of F of f, is the phase — how far in time that sinusoid is shifted.",
+        "whyThisBeat": "Rung 5: introduce phase as the remaining information in the complex number F(f)"
+      },
+      {
+        "atSec": 162,
+        "text": "Finally, the inverse Fourier transform reassembles x of t by integrating F of f times e to the positive i two pi f t df over all frequencies, summing up every sinusoidal component weighted by its complex amplitude.",
+        "whyThisBeat": "Rung 7: state the inverse transform, completing the decompose-then-reconstruct loop"
+      },
+      {
+        "atSec": 185,
+        "text": "The whole picture: decompose by inner products, read off amplitudes as magnitudes, reconstruct by superposition.",
+        "whyThisBeat": "Destination summary: one sentence that names all three moves the learner now owns"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title_lbl",
+        "content": "The Fourier Transform",
+        "region": "top-center"
+      },
+      {
+        "at": 8,
+        "kind": "draw",
+        "targetId": "vec_diagram",
+        "content": "two perpendicular arrows from origin: e1 pointing right labeled e1, e2 pointing up labeled e2; a vector v pointing upper-right labeled v = a*e1 + b*e2",
+        "region": "left-third"
+      },
+      {
+        "at": 8,
+        "kind": "write",
+        "targetId": "ortho_def_vec",
+        "content": "v = a e1 + b e2,  e1 dot e2 = 0",
+        "region": "left-third-below"
+      },
+      {
+        "at": 22,
+        "kind": "write",
+        "targetId": "inner_product_def",
+        "content": "<f,g> = integral_{-inf}^{inf} f(t) g*(t) dt",
+        "region": "center-top"
+      },
+      {
+        "at": 22,
+        "kind": "write",
+        "targetId": "ortho_func_def",
+        "content": "f orthogonal to g  iff  <f,g> = 0",
+        "region": "center-below"
+      },
+      {
+        "at": 40,
+        "kind": "write",
+        "targetId": "euler_formula",
+        "content": "e^{i2pi ft} = cos(2pi ft) + i sin(2pi ft),   i^2 = -1",
+        "region": "right-third-top"
+      },
+      {
+        "at": 40,
+        "kind": "write",
+        "targetId": "basis_claim",
+        "content": "Family { e^{i2pi ft} : f in R } is a complete orthogonal basis for L^2(R)",
+        "region": "right-third-below"
+      },
+      {
+        "at": 40,
+        "kind": "highlight",
+        "targetId": "euler_formula",
+        "content": "euler_formula",
+        "region": "right-third-top"
+      },
+      {
+        "at": 55,
+        "kind": "draw",
+        "targetId": "sinusoid_sketch",
+        "content": "horizontal time axis labeled t; one full period of a cosine wave labeled cos(2pi*2*t) with amplitude 1, frequency 2 Hz marked",
+        "region": "center-middle"
+      },
+      {
+        "at": 68,
+        "kind": "write",
+        "targetId": "ft_definition",
+        "content": "F(f) = integral_{-inf}^{inf} x(t) e^{-i2pi ft} dt",
+        "region": "center-upper"
+      },
+      {
+        "at": 68,
+        "kind": "highlight",
+        "targetId": "ft_definition",
+        "content": "ft_definition",
+        "region": "center-upper"
+      },
+      {
+        "at": 68,
+        "kind": "write",
+        "targetId": "inner_product_interp",
+        "content": "F(f)  =  <x, e^{i2pi ft}>  (inner product with basis function at freq f)",
+        "region": "center-below2"
+      },
+      {
+        "at": 95,
+        "kind": "highlight",
+        "targetId": "ft_definition",
+        "content": "ft_definition",
+        "region": "center-upper"
+      },
+      {
+        "at": 95,
+        "kind": "write",
+        "targetId": "conjugate_note",
+        "content": "negative sign: complex conjugate of e^{i2pi ft} is e^{-i2pi ft}",
+        "region": "center-below3"
+      },
+      {
+        "at": 110,
+        "kind": "write",
+        "targetId": "magnitude_def",
+        "content": "|F(f)|  =  amplitude of sinusoid at frequency f",
+        "region": "left-center"
+      },
+      {
+        "at": 110,
+        "kind": "draw",
+        "targetId": "spectrum_sketch",
+        "content": "horizontal f-axis from -600 to 600; vertical magnitude axis from 0 to 2.5; two vertical bars of height 2 at f=440 and f=-440, labeled |F(440)|=2 and |F(-440)|=2; all other values at 0",
+        "region": "left-center-below"
+      },
+      {
+        "at": 128,
+        "kind": "highlight",
+        "targetId": "spectrum_sketch",
+        "content": "spectrum_sketch",
+        "region": "left-center-below"
+      },
+      {
+        "at": 128,
+        "kind": "write",
+        "targetId": "example_signal",
+        "content": "x(t) = 2 sin(2pi * 440 t)  =>  |F(440)| = |F(-440)| = 1  (|F(f)| = 0 elsewhere)",
+        "region": "left-center-below2"
+      },
+      {
+        "at": 148,
+        "kind": "write",
+        "targetId": "phase_def",
+        "content": "arg(F(f))  =  phase = time shift of sinusoid at freq f",
+        "region": "right-center"
+      },
+      {
+        "at": 148,
+        "kind": "draw",
+        "targetId": "phase_diagram",
+        "content": "complex plane with Re and Im axes; a point at coordinates (Re F(f), Im F(f)) with radius arrow labeled |F(f)| and angle arc labeled arg(F(f))",
+        "region": "right-center-below"
+      },
+      {
+        "at": 162,
+        "kind": "erase",
+        "targetId": "conjugate_note",
+        "content": "all"
+      },
+      {
+        "at": 162,
+        "kind": "erase",
+        "targetId": "inner_product_interp",
+        "content": "all"
+      },
+      {
+        "at": 162,
+        "kind": "write",
+        "targetId": "inverse_ft",
+        "content": "x(t) = integral_{-inf}^{inf} F(f) e^{+i2pi ft} df",
+        "region": "center-upper-below"
+      },
+      {
+        "at": 162,
+        "kind": "highlight",
+        "targetId": "inverse_ft",
+        "content": "inverse_ft",
+        "region": "center-upper"
+      },
+      {
+        "at": 185,
+        "kind": "erase",
+        "targetId": "vec_diagram",
+        "content": "all"
+      },
+      {
+        "at": 185,
+        "kind": "erase",
+        "targetId": "ortho_def_vec",
+        "content": "all"
+      },
+      {
+        "at": 185,
+        "kind": "erase",
+        "targetId": "sinusoid_sketch",
+        "content": "all"
+      },
+      {
+        "at": 185,
+        "kind": "write",
+        "targetId": "summary_box",
+        "content": "1. Decompose: F(f) = integral x(t) e^{-i2pi ft} dt   (inner product) 2. Read:  |F(f)| = amplitude at freq f 3. Reconstruct: x(t) = integral F(f) e^{+i2pi ft} df   (superposition)",
+        "region": "bottom-center"
+      },
+      {
+        "at": 185,
+        "kind": "highlight",
+        "targetId": "summary_box",
+        "content": "summary_box",
+        "region": "bottom-center"
+      }
+    ]
+  }
+}

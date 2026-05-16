@@ -1,0 +1,43 @@
+Sweep: 2026-05-15-baseline-v0
+Prompt variant(s): whiteboard-v0
+Subjects critiqued: 10
+Mean: 86.7%   Median: 87%   Min: 80%   Max: 91%
+Recommended for pipeline: 10 / 10
+
+Per subject (sorted by percent, descending):
+  91 %  cs-theory           intermediate  dynamic-programming [REC]
+  90 %  ml-dl               advanced      grouped-query-attention [REC]
+  89 %  classical-ml        intro         bias-variance-tradeoff [REC]
+  89 %  probability-stats   intermediate  kl-divergence [REC]
+  88 %  ai-systems          advanced      rlhf [REC]
+  86 %  ml-dl               intro         dropout-regularization [REC]
+  85 %  pure-math           intermediate  eigenvectors-pca [REC]
+  85 %  pure-math           intermediate  fourier-transform [REC]
+  84 %  classical-ml        advanced      em-algorithm [REC]
+  80 %  probability-stats   intro         bayes-rule [REC]
+
+Per criterion (sorted by mean percent, ascending — worst first):
+  pct%  mean/max  criterion-id                       lowest-subject
+  81    8.1/10    pacing-and-density                bayes-rule (8)
+  81.3  6.5/8     board-visual-balance              eigenvectors-pca (3)
+  83    8.3/10    board-specificity                 bayes-rule (6)
+  84.2  10.1/12   narration-clarity                 bayes-rule (9)
+  85    6.8/8     payoff-concreteness               bias-variance-tradeoff (6)
+  86    8.6/10    board-coherence                   bayes-rule (8)
+  88    8.8/10    staircase-coherence               bayes-rule (8)
+  88    8.8/10    math-notation-correctness         dropout-regularization (7)
+  88.8  7.1/8     redundancy-and-focus              bayes-rule (7)
+  95    5.7/6     code-content-decision             dropout-regularization (5)
+  98.8  7.9/8     destination-precision             dynamic-programming (7)
+
+Most common issues raised across subjects:
+  x1  board visual balance is severely underdeveloped -- only one draw action exists for a topic with strong diagrammatic affordances; adding a t…
+  x1  the derivation step (staircase rung 4: 'derive bayes' rule from conditional probability') is promised but never executed -- the formula is …
+  x1  the final ~60 seconds of board actions (t=194-240) have no corresponding narration beats, leaving the audio-visual sync undefined for the l…
+  x1  the narration introduces the decomposition formula (beat at t=20) before bias and variance are defined (beats at t=32 and t=55), creating a…
+  x1  the pacing gap between t=160 and t=240 has no narration beat despite 80 seconds remaining, and the fulltext narration ends at approximately…
+  x1  the term 'data-generating process' in the sigma^2 paragraph is used without definition, which is a jargon gap for intro-level learners who …
+  x1  math/notation consistency: the t=60 board note 'divide by p' (inverted dropout training-time scaling) appears before the lesson has introdu…
+  x1  code clarity: nn.dropout(p=1-p) uses mismatched variable semantics without sufficient inline annotation -- the outer constructor's p means …
+  x1  destination-narration mismatch: the lesson.destination references 'geometric mean of all 2^n subnetwork predictions' but the narration neve…
+  x1  staircase order lists 'show recursion tree' as rung 5 (after defining both conditions) but the lesson correctly builds the tree before defi…

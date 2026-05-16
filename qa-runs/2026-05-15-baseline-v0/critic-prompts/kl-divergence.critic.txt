@@ -1,0 +1,289 @@
+You are a senior teaching evaluator and a senior whiteboard-lecture director. You are reviewing a structured plan for a continuous-whiteboard narrated video lesson and scoring it against a fixed rubric. The plan was produced by an LLM under a specific prompt variant; your scoring drives prompt iteration. Be exact, fair, and specific. Reward concrete decisions; penalize hand-waving and unjustified omissions.
+
+You will read:
+  - The subject (topic, question, domain, difficulty, intended learner level)
+  - The candidate lesson plan as JSON
+  - The rubric below
+
+You will score every criterion. You will not skip any. You will not invent criteria. You will use the integer maxes exactly as defined.
+
+You will then return a single JSON object. No prose. No markdown. JSON only.
+
+---
+
+SUBJECT
+  id: kl-divergence
+  domain: probability-stats
+  difficulty: intermediate
+  title: KL Divergence
+  question: Why is KL divergence asymmetric, and what does choosing forward vs reverse KL mean for the distribution you fit?
+
+CANDIDATE LESSON PLAN (JSON)
+{
+  "id": "kl-divergence-v0-001",
+  "topic": {
+    "id": "kl-divergence",
+    "title": "KL Divergence",
+    "question": "Why is KL divergence asymmetric, and what does choosing forward vs reverse KL mean for the distribution you fit?",
+    "domain": "probability-stats"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v0",
+    "name": "Whiteboard seed prompt v0"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "KL Divergence: Asymmetry and Its Consequences",
+    "learnerLevel": "intermediate",
+    "durationSeconds": 270,
+    "payoff": "Choosing forward vs reverse KL can shift a fitted distribution from mean-seeking to mode-seeking, a difference that can mean covering all modes of P versus collapsing onto just one",
+    "staircase": [
+      "Define KL divergence as a measure of information loss when approximating one distribution with another",
+      "Show the asymmetric formula and why swapping P and Q gives a different number",
+      "Build intuition: KL(P||Q) penalizes zeros in Q where P has mass",
+      "Build intuition: KL(Q||P) penalizes zeros in P where Q has mass",
+      "Forward KL forces Q to cover all of P, producing mean-seeking or mass-covering fits",
+      "Reverse KL forces Q to stay inside P, producing mode-seeking fits",
+      "Summarize the practical choice rule"
+    ],
+    "destination": "Learner can state the KL formula in both directions, explain why each term is asymmetric via the log ratio, and predict whether a fitted Q will be mean-seeking or mode-seeking based on which KL direction is minimized"
+  },
+  "narration": {
+    "fullText": "We want to measure how much information we lose when we use an approximate distribution Q to represent the true distribution P. The tool for this is KL divergence, written KL of P given Q, defined as the sum over all outcomes x of P of x times the log of P of x divided by Q of x. Think of the log ratio as a surprise penalty: if Q assigns low probability where P says things actually happen, that ratio blows up and we pay a large cost. Now watch what happens when we swap the arguments and write KL of Q given P instead. The formula becomes the sum of Q of x times log of Q of x divided by P of x. These two expressions look similar but they are not equal, because the weighting measure out front changes from P to Q, and that changes everything. To see why, consider a simple two-hump distribution P with mass at two separate peaks, and let Q be a single Gaussian we are trying to fit. Under forward KL, we minimize KL of P given Q. The expectation is taken under P, so every x where P of x is positive must be explained by Q. If Q puts zero probability anywhere that P is nonzero, the log ratio becomes log of P over zero, which is infinite, so Q is forced to stretch and cover both humps. The result is a mean-seeking fit: Q lands between the peaks even if the valley between them has low probability under P. Under reverse KL, we minimize KL of Q given P. Now the expectation is taken under Q. If Q wanders into a region where P of x equals zero, the log ratio log of Q over zero blows up, so Q is repelled from regions of low P mass. Q therefore hugs one peak and ignores the other. This is mode-seeking behavior. The asymmetry is not a bug: forward KL is used in maximum likelihood estimation and variational inference when you want to be conservative and not miss any mode of P. Reverse KL dominates in variational autoencoders and many modern generative models where a compact, sharp Q is preferred. The rule of thumb: forward KL spreads Q to cover P, reverse KL shrinks Q to fit inside P.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "We want to measure how much information we lose when we use an approximate distribution Q to represent the true distribution P.",
+        "whyThisBeat": "Establishes the motivation and introduces the two named distributions P and Q before any formula appears"
+      },
+      {
+        "atSec": 14,
+        "text": "The tool for this is KL divergence, written KL of P given Q, defined as the sum over all outcomes x of P of x times the log of P of x divided by Q of x.",
+        "whyThisBeat": "Rung 1: states the formula precisely and anchors the notation"
+      },
+      {
+        "atSec": 30,
+        "text": "Think of the log ratio as a surprise penalty: if Q assigns low probability where P says things actually happen, that ratio blows up and we pay a large cost.",
+        "whyThisBeat": "Gives immediate intuition for the formula before introducing asymmetry"
+      },
+      {
+        "atSec": 44,
+        "text": "Now watch what happens when we swap the arguments and write KL of Q given P instead. The formula becomes the sum of Q of x times log of Q of x divided by P of x.",
+        "whyThisBeat": "Rung 2: shows the swapped formula side by side to make asymmetry visible"
+      },
+      {
+        "atSec": 62,
+        "text": "These two expressions look similar but they are not equal, because the weighting measure out front changes from P to Q, and that changes everything.",
+        "whyThisBeat": "Names the exact source of asymmetry: the outer weighting distribution differs"
+      },
+      {
+        "atSec": 76,
+        "text": "To see why, consider a simple two-hump distribution P with mass at two separate peaks, and let Q be a single Gaussian we are trying to fit.",
+        "whyThisBeat": "Sets up the concrete bimodal example that will drive both intuition beats"
+      },
+      {
+        "atSec": 90,
+        "text": "Under forward KL, we minimize KL of P given Q. The expectation is taken under P, so every x where P of x is positive must be explained by Q. If Q puts zero probability anywhere that P is nonzero, the log ratio becomes log of P over zero, which is infinite, so Q is forced to stretch and cover both humps.",
+        "whyThisBeat": "Rung 3 and Rung 5: shows forward KL zero-avoidance and mass-covering consequence"
+      },
+      {
+        "atSec": 130,
+        "text": "The result is a mean-seeking fit: Q lands between the peaks even if the valley between them has low probability under P.",
+        "whyThisBeat": "Names the mean-seeking label and shows it on the diagram"
+      },
+      {
+        "atSec": 148,
+        "text": "Under reverse KL, we minimize KL of Q given P. Now the expectation is taken under Q. If Q wanders into a region where P of x equals zero, the log ratio log of Q over zero blows up, so Q is repelled from regions of low P mass.",
+        "whyThisBeat": "Rung 4 and Rung 6: shows reverse KL zero-avoidance and mode-seeking consequence"
+      },
+      {
+        "atSec": 188,
+        "text": "Q therefore hugs one peak and ignores the other. This is mode-seeking behavior.",
+        "whyThisBeat": "Names the mode-seeking label and shows it on the diagram"
+      },
+      {
+        "atSec": 204,
+        "text": "The asymmetry is not a bug: forward KL is used in maximum likelihood estimation and variational inference when you want to be conservative and not miss any mode of P. Reverse KL dominates in variational autoencoders and many modern generative models where a compact, sharp Q is preferred.",
+        "whyThisBeat": "Grounds the two directions in real algorithms learners will encounter"
+      },
+      {
+        "atSec": 240,
+        "text": "The rule of thumb: forward KL spreads Q to cover P, reverse KL shrinks Q to fit inside P.",
+        "whyThisBeat": "Rung 7: distills the takeaway into a single memorable contrast"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "label_P_Q",
+        "content": "P = true distribution, Q = approximate distribution",
+        "region": "top-left"
+      },
+      {
+        "at": 14,
+        "kind": "write",
+        "targetId": "formula_forward",
+        "content": "KL(P || Q) = sum_x P(x) log( P(x) / Q(x) )",
+        "region": "upper-center"
+      },
+      {
+        "at": 30,
+        "kind": "highlight",
+        "targetId": "formula_forward",
+        "content": "formula_forward",
+        "region": "upper-center"
+      },
+      {
+        "at": 44,
+        "kind": "write",
+        "targetId": "formula_reverse",
+        "content": "KL(Q || P) = sum_x Q(x) log( Q(x) / P(x) )",
+        "region": "center"
+      },
+      {
+        "at": 62,
+        "kind": "highlight",
+        "targetId": "formula_reverse",
+        "content": "formula_reverse",
+        "region": "center"
+      },
+      {
+        "at": 62,
+        "kind": "write",
+        "targetId": "asymmetry_note",
+        "content": "weight P(x) vs weight Q(x): different => KL(P||Q) != KL(Q||P)",
+        "region": "right-center"
+      },
+      {
+        "at": 76,
+        "kind": "draw",
+        "targetId": "bimodal_P",
+        "content": "x-axis labeled x, y-axis labeled probability; draw smooth curve with two humps: left hump centered at x=2 height 0.5, right hump centered at x=6 height 0.5, trough near zero at x=4; label curve P(x)",
+        "region": "lower-left"
+      },
+      {
+        "at": 90,
+        "kind": "draw",
+        "targetId": "forward_Q",
+        "content": "on same axes as bimodal_P, draw wide Gaussian centered at x=4 with standard deviation 2.5, peak height 0.25; label curve Q_forward(x) in blue; add annotation: forward KL => Q covers both humps",
+        "region": "lower-left"
+      },
+      {
+        "at": 130,
+        "kind": "write",
+        "targetId": "mean_seeking_label",
+        "content": "mean-seeking: Q lands at mean of P even in low-P valley",
+        "region": "lower-center"
+      },
+      {
+        "at": 148,
+        "kind": "draw",
+        "targetId": "reverse_Q",
+        "content": "on new axes to the right mirroring bimodal_P shape, draw narrow Gaussian centered at x=2 with standard deviation 0.6, peak height 0.7; label curve Q_reverse(x) in red; add annotation: reverse KL => Q collapses to one peak",
+        "region": "lower-right"
+      },
+      {
+        "at": 188,
+        "kind": "write",
+        "targetId": "mode_seeking_label",
+        "content": "mode-seeking: Q hugs one peak, ignores the other",
+        "region": "lower-right"
+      },
+      {
+        "at": 204,
+        "kind": "write",
+        "targetId": "applications",
+        "content": "Forward KL: MLE, variational inference (cover all modes)  |  Reverse KL: VAEs, generative models (sharp fit)",
+        "region": "upper-right"
+      },
+      {
+        "at": 240,
+        "kind": "erase",
+        "targetId": "asymmetry_note",
+        "content": "asymmetry_note",
+        "region": "right-center"
+      },
+      {
+        "at": 240,
+        "kind": "write",
+        "targetId": "summary_rule",
+        "content": "Forward KL: spread Q to cover P  |  Reverse KL: shrink Q to fit inside P",
+        "region": "right-center"
+      }
+    ]
+  }
+}
+
+Rubric (each criterion: id, label, max integer, scoring guidance):
+
+1) payoff-concreteness  (max 8)
+   The lesson.payoff states a concrete reason a learner should care, ideally with a number or specific stake. Vague payoffs ("important", "useful") score 0-2. Generic-but-true payoffs without numbers or stakes score 3-5. Concrete payoffs with numbers or sharp stakes score 6-8.
+
+2) staircase-coherence  (max 10)
+   The staircase rungs build monotonically: each rung is strictly necessary, no gaps, no rungs reach beyond what's needed. Score down for missing prerequisite, redundant rung, or rung that is actually the destination.
+
+3) destination-precision  (max 8)
+   The destination names a precise object (formula, mechanism, theorem, named technique) the learner can hold afterward. "Understand X" scores 0-2. "Hold formula F and know what each factor protects against" scores 7-8.
+
+4) narration-clarity  (max 12)
+   Every symbol is defined the first time it appears in narration. Every term of jargon is defined or unpacked the first time it appears. Sentences are concrete, not hand-wavy. No contradictions. Read through narration.beats in order and penalize each undefined symbol or jargon term.
+
+5) board-specificity  (max 10)
+   Every "draw" action is concrete enough that a renderer could execute it without inventing details. "Draw a graph" scores 0. "Draw three nodes A, B, C left-to-right with arrows A->B and B->C" scores full credit. "write" actions whose content is "the formula" or "the equation" without the actual content also lose points here.
+
+6) board-coherence  (max 10)
+   The action timeline forms a sensible whiteboard story: nothing is highlighted/transformed/erased without first being introduced; transformations preserve identity in a comprehensible way; the canvas state implied at each moment is plausible (not impossibly cluttered).
+
+7) board-visual-balance  (max 8)
+   Mix of action kinds is appropriate to the topic. Topics that admit diagrams (graphs, distributions, geometry, networks, hierarchies) should have multiple draw actions, not just text writes. Topics that are purely formal still need at least one structural diagram. Heavy text-dump with one-or-zero draws on a visual topic scores 0-3.
+
+8) math-notation-correctness  (max 10)
+   All formulas are mathematically correct. Symbol use is consistent (a symbol means the same thing throughout). Numerical examples are arithmetically correct. Catch incorrect derivations, off-by-one errors, dimension mismatches, wrong constants.
+
+9) code-content-decision  (max 6)
+   Did the lesson make the right decision about whether to include code-as-content? If code is present: is it syntactically valid in its declared language? Is it the right granularity for the beat? Is it correct for the concept? If code is absent: would including code have materially clarified the mechanism? Score 6 for correct decision well-executed; 3 for borderline; 0 for clearly wrong (broken code present, or code obviously needed and absent).
+
+10) pacing-and-density  (max 10)
+    Beats are appropriately spaced for difficulty: intro topics get more seconds per beat, advanced topics get denser pacing. No beat is overloaded with multiple distinct ideas. Total beat times respect durationSeconds. Score down for one beat doing five things, or for huge gaps with no narration.
+
+11) redundancy-and-focus  (max 8)
+    No repeated content across beats. Stays on the topic question. Doesn't waste time on tangents or restate what was just said.
+
+After scoring, write 1-3 topThreeIssues (highest-leverage fixes), set wouldRecommendForPipeline (true only if percent >= 75 AND no criterion below half its max), and write a 2-3 sentence summary.
+
+Return JSON matching this shape exactly:
+
+{
+  "candidateId": "<copy from candidate.id>",
+  "subjectId": "<copy from candidate.topic.id>",
+  "promptVariantId": "<copy from candidate.promptVariant.id>",
+  "criteria": [
+    { "id": "payoff-concreteness", "label": "Payoff concreteness", "max": 8, "score": <0-8>, "notes": "<specific reason for score>" },
+    { "id": "staircase-coherence", "label": "Staircase coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "destination-precision", "label": "Destination precision", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "narration-clarity", "label": "Narration clarity", "max": 12, "score": <0-12>, "notes": "..." },
+    { "id": "board-specificity", "label": "Board specificity", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-coherence", "label": "Board coherence", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "board-visual-balance", "label": "Board visual balance", "max": 8, "score": <0-8>, "notes": "..." },
+    { "id": "math-notation-correctness", "label": "Math and notation correctness", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "code-content-decision", "label": "Code-content decision", "max": 6, "score": <0-6>, "notes": "..." },
+    { "id": "pacing-and-density", "label": "Pacing and density", "max": 10, "score": <0-10>, "notes": "..." },
+    { "id": "redundancy-and-focus", "label": "Redundancy and focus", "max": 8, "score": <0-8>, "notes": "..." }
+  ],
+  "totalScore": <sum of all criterion scores>,
+  "maxScore": 100,
+  "percent": <round(totalScore / maxScore * 100)>,
+  "topThreeIssues": ["<most important fix>", "<second>", "<third>"],
+  "wouldRecommendForPipeline": <true|false>,
+  "summary": "<2-3 sentences>"
+}
+
+Return ONLY the JSON object. No commentary. No fences. No preamble.
+
+Return ONLY the JSON object as your response. No commentary, no markdown fences.

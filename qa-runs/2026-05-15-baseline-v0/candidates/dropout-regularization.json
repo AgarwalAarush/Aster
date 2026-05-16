@@ -1,0 +1,269 @@
+{
+  "id": "dropout-regularization-v0-001",
+  "topic": {
+    "id": "dropout-regularization",
+    "title": "Dropout Regularization",
+    "question": "Why does randomly zeroing activations during training regularize a neural network, and what is happening at test time?",
+    "domain": "ml-dl"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v0",
+    "name": "Whiteboard seed prompt v0"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "Dropout: Ensemble Training in a Single Network",
+    "learnerLevel": "intro",
+    "durationSeconds": 240,
+    "payoff": "Dropout trains an implicit ensemble of 2^n subnetworks and recovers their average at test time by scaling activations by keep-probability p",
+    "staircase": [
+      "Understand why large neural networks overfit by memorizing training data",
+      "See how dropout randomly zeroes activations each forward pass during training",
+      "Recognize that each mini-batch trains a different thinned subnetwork",
+      "Grasp that this implicitly trains an ensemble of 2^n subnetworks",
+      "Understand the weight-scaling trick that approximates ensemble averaging at test time",
+      "Connect the geometric intuition: co-adaptation of neurons is broken"
+    ],
+    "destination": "Dropout during training samples a subnetwork by zeroing each unit independently with probability (1-p); at test time all units are active but weights are multiplied by p, approximating the geometric mean of all 2^n subnetwork predictions"
+  },
+  "narration": {
+    "fullText": "Let us start with the core problem: a deep neural network with many parameters tends to overfit, meaning it memorizes the training data rather than learning general patterns. Overfitting happens because neurons can co-adapt — they learn to correct each other's mistakes on the training set in brittle ways that fail on new data. Dropout is a regularization technique — a method to reduce overfitting — introduced by Srivastava and Hinton in 2014. Here is the idea. During each training step, we independently zero out, or drop, each hidden unit — each neuron in a hidden layer — with probability one minus p, where p is called the keep probability, typically set to 0.5. The units that survive are scaled so the expected sum into the next layer stays the same. What remains after zeroing is called a thinned network. Because a different random subset is dropped every mini-batch, we are effectively training a huge number of different subnetworks, each sharing the same weights. With n hidden units, there are two-to-the-n possible subnetworks. This is an implicit ensemble: a collection of models trained together. Ensemble methods reduce variance — the sensitivity to noise in training data — and that is exactly what makes dropout a regularizer. Crucially, because neurons cannot rely on any particular partner being present, they must learn independently useful features, breaking co-adaptation. Now, at test time we want to approximate averaging over all two-to-the-n subnetworks, but we cannot run them all. The trick: keep every unit active, but multiply each weight by p. This is called weight scaling or the dropout correction. Multiplying by p ensures the expected activation into each neuron matches what it saw during training on average. In modern frameworks like PyTorch, this scaling is applied during training instead — dividing surviving activations by p, so test-time inference needs no modification. This variant is called inverted dropout. In summary: dropout trains an exponentially large ensemble implicitly, forces neuron independence, and recovers the ensemble average at test time through weight scaling.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "Let us start with the core problem: a deep neural network with many parameters tends to overfit, meaning it memorizes the training data rather than learning general patterns.",
+        "whyThisBeat": "Establish the problem dropout solves — overfitting — so every subsequent step has motivation"
+      },
+      {
+        "atSec": 18,
+        "text": "Overfitting happens because neurons can co-adapt — they learn to correct each other's mistakes on the training set in brittle ways that fail on new data.",
+        "whyThisBeat": "Name the mechanism of overfitting specific to neural nets: co-adaptation, which dropout directly targets"
+      },
+      {
+        "atSec": 34,
+        "text": "Dropout is a regularization technique — a method to reduce overfitting — introduced by Srivastava and Hinton in 2014. During each training step, we independently zero out, or drop, each hidden unit with probability one minus p, where p is the keep probability, typically 0.5.",
+        "whyThisBeat": "Define dropout and its key parameter p precisely so the formula is grounded"
+      },
+      {
+        "atSec": 60,
+        "text": "The units that survive are scaled so the expected sum into the next layer stays the same. What remains after zeroing is called a thinned network.",
+        "whyThisBeat": "Introduce thinned network and the scaling invariant — necessary to connect training to test time"
+      },
+      {
+        "atSec": 80,
+        "text": "Because a different random subset is dropped every mini-batch, we are effectively training a huge number of different subnetworks sharing the same weights. With n hidden units, there are two-to-the-n possible subnetworks.",
+        "whyThisBeat": "Introduce the ensemble interpretation and the exponential count 2^n — the central insight"
+      },
+      {
+        "atSec": 106,
+        "text": "This is an implicit ensemble: a collection of models trained together. Ensemble methods reduce variance — the sensitivity to noise in training data — and that is exactly what makes dropout a regularizer. Crucially neurons cannot rely on any partner being present, so they learn independently useful features, breaking co-adaptation.",
+        "whyThisBeat": "Connect ensemble to variance reduction and loop back to co-adaptation to unify both threads"
+      },
+      {
+        "atSec": 138,
+        "text": "At test time we want to approximate averaging over all two-to-the-n subnetworks. The trick: keep every unit active but multiply each weight by p. This is called weight scaling or the dropout correction.",
+        "whyThisBeat": "Resolve the test-time question — the weight scaling trick — which is the second half of the lesson question"
+      },
+      {
+        "atSec": 168,
+        "text": "Multiplying by p ensures the expected activation into each neuron matches what it saw during training on average. In modern frameworks like PyTorch this scaling is applied during training instead — dividing surviving activations by p — so test-time inference needs no modification. This variant is called inverted dropout.",
+        "whyThisBeat": "Deliver the mathematical justification for scaling and introduce inverted dropout as the practical modern form"
+      },
+      {
+        "atSec": 210,
+        "text": "In summary: dropout trains an exponentially large ensemble implicitly, forces neuron independence, and recovers the ensemble average at test time through weight scaling.",
+        "whyThisBeat": "Crystallize all rungs into the destination statement the learner walks away holding"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title_label",
+        "content": "Dropout Regularization",
+        "region": "top-center"
+      },
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "overfit_label",
+        "content": "Problem: Overfitting",
+        "region": "top-left"
+      },
+      {
+        "at": 5,
+        "kind": "write",
+        "targetId": "overfit_def",
+        "content": "Network memorizes training data; fails on new data",
+        "region": "left"
+      },
+      {
+        "at": 18,
+        "kind": "write",
+        "targetId": "coadapt_label",
+        "content": "Co-adaptation: neurons correct each other on training set -> brittle",
+        "region": "left"
+      },
+      {
+        "at": 34,
+        "kind": "write",
+        "targetId": "dropout_def",
+        "content": "Dropout: zero each hidden unit independently with prob (1-p)",
+        "region": "center"
+      },
+      {
+        "at": 34,
+        "kind": "write",
+        "targetId": "p_def",
+        "content": "p = keep probability (typical: p = 0.5)",
+        "region": "center-below-dropout_def"
+      },
+      {
+        "at": 45,
+        "kind": "draw",
+        "targetId": "full_net",
+        "content": "draw 3-layer network: input layer 3 nodes (i1,i2,i3), hidden layer 4 nodes (h1,h2,h3,h4), output layer 1 node (o1); arrows from every i to every h, every h to o1; label 'Full network'",
+        "region": "center-right"
+      },
+      {
+        "at": 60,
+        "kind": "draw",
+        "targetId": "thinned_net",
+        "content": "draw same 3-layer network beside full_net but cross out h2 and h4 with X marks; label 'Thinned network (one mini-batch)'",
+        "region": "right"
+      },
+      {
+        "at": 60,
+        "kind": "write",
+        "targetId": "scaling_note",
+        "content": "Surviving units scaled: divide by p to keep expected sum constant",
+        "region": "right-below-thinned_net"
+      },
+      {
+        "at": 80,
+        "kind": "write",
+        "targetId": "ensemble_label",
+        "content": "Each mini-batch -> different thinned net -> implicit ensemble",
+        "region": "center"
+      },
+      {
+        "at": 80,
+        "kind": "write",
+        "targetId": "count_label",
+        "content": "n hidden units -> 2^n possible subnetworks",
+        "region": "center-below-ensemble_label"
+      },
+      {
+        "at": 106,
+        "kind": "highlight",
+        "targetId": "count_label",
+        "content": "count_label",
+        "region": "center"
+      },
+      {
+        "at": 106,
+        "kind": "write",
+        "targetId": "variance_note",
+        "content": "Ensemble reduces variance = reduces overfitting",
+        "region": "left-center"
+      },
+      {
+        "at": 106,
+        "kind": "highlight",
+        "targetId": "coadapt_label",
+        "content": "coadapt_label",
+        "region": "left"
+      },
+      {
+        "at": 106,
+        "kind": "write",
+        "targetId": "independence_note",
+        "content": "Neurons learn independent features (no reliable partner)",
+        "region": "left"
+      },
+      {
+        "at": 138,
+        "kind": "erase",
+        "targetId": "thinned_net",
+        "content": "all",
+        "region": "right"
+      },
+      {
+        "at": 138,
+        "kind": "write",
+        "targetId": "testtime_label",
+        "content": "Test time: all units active",
+        "region": "right"
+      },
+      {
+        "at": 138,
+        "kind": "draw",
+        "targetId": "full_net_test",
+        "content": "draw same 3-layer network: input 3 nodes (i1,i2,i3), hidden 4 nodes (h1,h2,h3,h4), output 1 node (o1); all arrows present; label 'Test network (all units active)'",
+        "region": "right"
+      },
+      {
+        "at": 138,
+        "kind": "write",
+        "targetId": "scale_trick",
+        "content": "Weight scaling: W_test = p * W_train",
+        "region": "right-below-full_net_test"
+      },
+      {
+        "at": 168,
+        "kind": "highlight",
+        "targetId": "scale_trick",
+        "content": "scale_trick",
+        "region": "right"
+      },
+      {
+        "at": 168,
+        "kind": "write",
+        "targetId": "expect_note",
+        "content": "E[activation at test] = E[activation at train]",
+        "region": "right-below-scale_trick"
+      },
+      {
+        "at": 185,
+        "kind": "write",
+        "targetId": "inverted_label",
+        "content": "Inverted dropout (PyTorch): divide surviving activations by p during training; test time unchanged",
+        "region": "right-bottom"
+      },
+      {
+        "at": 210,
+        "kind": "erase",
+        "targetId": "overfit_def",
+        "content": "overfit_def",
+        "region": "left"
+      },
+      {
+        "at": 210,
+        "kind": "erase",
+        "targetId": "scaling_note",
+        "content": "scaling_note",
+        "region": "right"
+      },
+      {
+        "at": 210,
+        "kind": "write",
+        "targetId": "summary_box",
+        "content": "SUMMARY: Train: zero units w/ prob (1-p), implicit 2^n ensemble | Test: multiply weights by p (or use inverted dropout) | Effect: reduce co-adaptation, reduce variance",
+        "region": "bottom-center"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 168,
+      "language": "python",
+      "code": "import torch\nimport torch.nn as nn\n\nclass TwoLayerNet(nn.Module):\n    def __init__(self, in_dim, hidden_dim, out_dim, p=0.5):\n        super().__init__()\n        self.fc1 = nn.Linear(in_dim, hidden_dim)\n        # nn.Dropout uses inverted dropout: divides by p during training,\n        # does nothing at test time (model.eval() disables it automatically)\n        self.drop = nn.Dropout(p=1 - p)\n        self.fc2 = nn.Linear(hidden_dim, out_dim)\n\n    def forward(self, x):\n        x = torch.relu(self.fc1(x))\n        x = self.drop(x)\n        return self.fc2(x)\n\nmodel = TwoLayerNet(784, 256, 10, p=0.5)\nmodel.train()\nmodel.eval()",
+      "purpose": "Show inverted dropout in PyTorch: Dropout(p) zeros with probability p and divides survivors by (1-p) during training; calling model.eval() disables it so no test-time modification is needed"
+    }
+  ]
+}

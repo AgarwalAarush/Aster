@@ -1,0 +1,286 @@
+{
+  "sweepId": "2026-05-15-baseline-v0",
+  "promptVariantIds": [
+    "whiteboard-v0"
+  ],
+  "subjectCount": 10,
+  "recommendedCount": 10,
+  "mean": 86.7,
+  "median": 87,
+  "min": 80,
+  "max": 91,
+  "perSubject": [
+    {
+      "subjectId": "dynamic-programming",
+      "domain": "cs-theory",
+      "difficulty": "intermediate",
+      "percent": 91,
+      "totalScore": 91,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Staircase order lists 'show recursion tree' as rung 5 (after defining both conditions) but the lesson correctly builds the tree before defining conditions -- the staircase description should be reordered to match the actual pedagogical sequence to avoid confusing lesson planners.",
+        "The erase-and-replace transition at 175-187s leaves the F(5) root and level-1 nodes (F(4), F(3)) on the canvas while drawing the new linear chain in the same 'center' region -- specify that all tree nodes are erased or relocated to avoid visual clutter when the linear chain is introduced.",
+        "The memoization code block uses a global mutable array and sys.setrecursionlimit, which are Python implementation workarounds rather than DP concepts; replace with a dict-based or functools.lru_cache version to keep the code focused on the memoization pattern."
+      ]
+    },
+    {
+      "subjectId": "grouped-query-attention",
+      "domain": "ml-dl",
+      "difficulty": "advanced",
+      "percent": 90,
+      "totalScore": 90,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Board canvas clutter at the GQA transition: the erase actions at t=120 remove only the head diagrams but leave kvcache_box, mha_heads_label, title_mha, mqa_label, and bottleneck_label on the canvas when GQA content begins -- add erase actions for all MHA/MQA ancillary elements or make the region strategy explicit so a renderer knows what survives into the GQA section.",
+        "Payoff field mislabels G: it says 'reduction by a factor of G (number of query heads divided by number of KV heads)' but G is the number of KV groups, not the reduction factor (which is H/G). This introduces a terminology inconsistency right at the hook sentence -- rewrite as 'GQA cuts KV-cache memory by a factor of H/G, where H is the number of query heads and G is the number of KV-head groups.'",
+        "Beat at t=48 is overloaded with two conceptually distinct ideas -- the quantitative cache formula and the qualitative bottleneck framing (memory bandwidth vs. FLOPs) -- which are both important enough to deserve separate beats; splitting them would improve pacing and allow the board to write the formula before the bottleneck label, matching the narration order more cleanly."
+      ]
+    },
+    {
+      "subjectId": "bias-variance-tradeoff",
+      "domain": "classical-ml",
+      "difficulty": "intro",
+      "percent": 89,
+      "totalScore": 89,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "The narration introduces the decomposition formula (beat at t=20) before Bias and Variance are defined (beats at t=32 and t=55), creating a forward-reference that could confuse intro learners; the staircase should define terms before presenting the formula they compose",
+        "The pacing gap between t=160 and t=240 has no narration beat despite 80 seconds remaining, and the fullText narration ends at approximately 200 seconds worth of content, suggesting the durationSeconds is over-allocated or a concluding beat summarizing the key takeaway is missing",
+        "The term 'data-generating process' in the sigma^2 paragraph is used without definition, which is a jargon gap for intro-level learners who may not know what a DGP is"
+      ]
+    },
+    {
+      "subjectId": "kl-divergence",
+      "domain": "probability-stats",
+      "difficulty": "intermediate",
+      "percent": 89,
+      "totalScore": 89,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "The narration introduces 'variational inference', 'VAE', and 'MLE' at the t=204 beat without any unpacking -- at intermediate level these are high-leverage application anchors and even a one-clause gloss ('MLE, the standard way of fitting models to data') would sharpen clarity without adding length.",
+        "The t=90 and t=204 beats each carry two staircase rungs simultaneously; splitting the forward-KL zero-avoidance explanation (currently covering both the infinity argument and the mass-covering consequence) into two beats with a board action between them would reduce cognitive load at the densest moment.",
+        "The highlight board actions at t=30 and t=62 specify only the targetId as content rather than which portion of the formula to highlight (e.g., the log-ratio term, or the outer weighting factor), leaving a renderer without enough information to produce a precise highlight -- replace content with a specific sub-expression or a region description."
+      ]
+    },
+    {
+      "subjectId": "rlhf",
+      "domain": "ai-systems",
+      "difficulty": "advanced",
+      "percent": 88,
+      "totalScore": 88,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Bradley-Terry loss is introduced as named jargon without being unpacked -- define it as a pairwise comparison loss or explain why it produces the stated formula to close the only significant narration-clarity gap.",
+        "The KL formula on the board specifies 'in bits' in narration but does not mark the log base, creating a minor but real inconsistency; either annotate log_2 in the formula or remove the 'in bits' qualifier from narration.",
+        "The upper-left region (pretrained_obj, pi_ref_label, gap_label, gap_arrow) is never explicitly erased when the three-stage column layout is built at t=33-36, risking canvas clutter; add erase actions for those elements at t=32-33."
+      ]
+    },
+    {
+      "subjectId": "dropout-regularization",
+      "domain": "ml-dl",
+      "difficulty": "intro",
+      "percent": 86,
+      "totalScore": 86,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Math/notation consistency: the t=60 board note 'divide by p' (inverted dropout training-time scaling) appears before the lesson has introduced inverted dropout, conflating standard and inverted dropout conventions mid-lesson and potentially confusing learners about when each scaling applies.",
+        "Code clarity: nn.Dropout(p=1-p) uses mismatched variable semantics without sufficient inline annotation -- the outer constructor's p means keep-probability while PyTorch's Dropout p means drop-probability; an intro learner will likely misread the API usage.",
+        "Destination-narration mismatch: the lesson.destination references 'geometric mean of all 2^n subnetwork predictions' but the narration never uses the term 'geometric mean', leaving a conceptual gap between what the lesson promises and what it delivers."
+      ]
+    },
+    {
+      "subjectId": "eigenvectors-pca",
+      "domain": "pure-math",
+      "difficulty": "intermediate",
+      "percent": 85,
+      "totalScore": 85,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "No draw actions anywhere in the board plan -- the topic has strong geometric content (data cloud, projection arrow, variance spread) that is never visualized, leaving learners with pure text on a visually rich concept",
+        "The orthogonality of successive principal components is implied in narration ('orthogonal to the first') but never derived or placed in the staircase, leaving an unexplained claim for intermediate learners",
+        "Beat 118-145 covers constrained optimization (Lagrangian setup through gradient-zero derivation) in 27 seconds without unpacking the gradient step, which may lose learners who have not seen Lagrange multipliers before"
+      ]
+    },
+    {
+      "subjectId": "fourier-transform",
+      "domain": "pure-math",
+      "difficulty": "intermediate",
+      "percent": 85,
+      "totalScore": 85,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Math inconsistency in the spectrum example: the spectrum_sketch draw action at t=110 draws bars of height 2 for x(t)=2sin(...), but the write action at t=128 labels |F(440)|=1 -- fix by making both the diagram and the text agree on the correct amplitude (1 for each delta when using the bilateral convention with the factor-of-2 split, or 2 if not splitting).",
+        "The 'complete' in 'complete orthogonal family' and the 'arg' function used in narration are left undefined for an intermediate learner -- add a one-sentence gloss for each ('complete means every signal in L-squared can be approximated arbitrarily well'; 'arg is the angle of the complex number in the plane').",
+        "The linearity rung in the staircase never appears in narration or board actions -- either remove it from the staircase or add a beat and board action that explicitly demonstrates linearity (e.g., F(x+y)=F(x)+F(y)), since listing it in the staircase without teaching it misleads a reader about the lesson's scope."
+      ]
+    },
+    {
+      "subjectId": "em-algorithm",
+      "domain": "classical-ml",
+      "difficulty": "advanced",
+      "percent": 84,
+      "totalScore": 84,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Board visual balance is the biggest gap: only one draw action exists and it appears near the end; EM's core geometric insight -- the ELBO as a lower bound surface touching the likelihood curve -- demands at least one diagram earlier (e.g., at ~t=65 when the ELBO is introduced), showing log p(X|theta) as a curve above a touching parabola labeled ELBO.",
+        "The code block at t=130 lands inside the already-dense M-step beat window, adding a third distinct idea; moving it to a dedicated beat after t=155 (post-ascent-proof) would clarify that the GMM code illustrates the full E+M cycle rather than just the M-step.",
+        "The 'bounded above by zero' convergence claim is presented without qualification; for continuous models p(X|theta) can exceed 1, so the argument should invoke monotone convergence for bounded-above sequences or restrict the claim to discrete Z, avoiding a factual imprecision for the advanced learner audience."
+      ]
+    },
+    {
+      "subjectId": "bayes-rule",
+      "domain": "probability-stats",
+      "difficulty": "intro",
+      "percent": 80,
+      "totalScore": 80,
+      "maxScore": 100,
+      "wouldRecommendForPipeline": true,
+      "topThreeIssues": [
+        "Board visual balance is severely underdeveloped -- only one draw action exists for a topic with strong diagrammatic affordances; adding a two-branch probability tree or a belief-update bar would materially improve comprehension.",
+        "The derivation step (staircase rung 4: 'derive Bayes' rule from conditional probability') is promised but never executed -- the formula is simply stated; either deliver the derivation or remove that rung.",
+        "The final ~60 seconds of board actions (t=194-240) have no corresponding narration beats, leaving the audio-visual sync undefined for the lesson's closing visual."
+      ]
+    }
+  ],
+  "perCriterion": [
+    {
+      "id": "pacing-and-density",
+      "meanScore": 8.1,
+      "maxScore": 10,
+      "meanPercent": 81,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    },
+    {
+      "id": "board-visual-balance",
+      "meanScore": 6.5,
+      "maxScore": 8,
+      "meanPercent": 81.3,
+      "lowestSubjectId": "eigenvectors-pca",
+      "lowestScore": 3
+    },
+    {
+      "id": "board-specificity",
+      "meanScore": 8.3,
+      "maxScore": 10,
+      "meanPercent": 83,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 6
+    },
+    {
+      "id": "narration-clarity",
+      "meanScore": 10.1,
+      "maxScore": 12,
+      "meanPercent": 84.2,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 9
+    },
+    {
+      "id": "payoff-concreteness",
+      "meanScore": 6.8,
+      "maxScore": 8,
+      "meanPercent": 85,
+      "lowestSubjectId": "bias-variance-tradeoff",
+      "lowestScore": 6
+    },
+    {
+      "id": "board-coherence",
+      "meanScore": 8.6,
+      "maxScore": 10,
+      "meanPercent": 86,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    },
+    {
+      "id": "staircase-coherence",
+      "meanScore": 8.8,
+      "maxScore": 10,
+      "meanPercent": 88,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 8
+    },
+    {
+      "id": "math-notation-correctness",
+      "meanScore": 8.8,
+      "maxScore": 10,
+      "meanPercent": 88,
+      "lowestSubjectId": "dropout-regularization",
+      "lowestScore": 7
+    },
+    {
+      "id": "redundancy-and-focus",
+      "meanScore": 7.1,
+      "maxScore": 8,
+      "meanPercent": 88.8,
+      "lowestSubjectId": "bayes-rule",
+      "lowestScore": 7
+    },
+    {
+      "id": "code-content-decision",
+      "meanScore": 5.7,
+      "maxScore": 6,
+      "meanPercent": 95,
+      "lowestSubjectId": "dropout-regularization",
+      "lowestScore": 5
+    },
+    {
+      "id": "destination-precision",
+      "meanScore": 7.9,
+      "maxScore": 8,
+      "meanPercent": 98.8,
+      "lowestSubjectId": "dynamic-programming",
+      "lowestScore": 7
+    }
+  ],
+  "commonIssues": [
+    {
+      "issue": "board visual balance is severely underdeveloped -- only one draw action exists for a topic with strong diagrammatic affordances; adding a two-branch probability tree or a belief-update bar would materially improve comprehension.",
+      "count": 1
+    },
+    {
+      "issue": "the derivation step (staircase rung 4: 'derive bayes' rule from conditional probability') is promised but never executed -- the formula is simply stated; either deliver the derivation or remove that rung.",
+      "count": 1
+    },
+    {
+      "issue": "the final ~60 seconds of board actions (t=194-240) have no corresponding narration beats, leaving the audio-visual sync undefined for the lesson's closing visual.",
+      "count": 1
+    },
+    {
+      "issue": "the narration introduces the decomposition formula (beat at t=20) before bias and variance are defined (beats at t=32 and t=55), creating a forward-reference that could confuse intro learners; the staircase should define terms before presenting the formula they compose",
+      "count": 1
+    },
+    {
+      "issue": "the pacing gap between t=160 and t=240 has no narration beat despite 80 seconds remaining, and the fulltext narration ends at approximately 200 seconds worth of content, suggesting the durationseconds is over-allocated or a concluding beat summarizing the key takeaway is missing",
+      "count": 1
+    },
+    {
+      "issue": "the term 'data-generating process' in the sigma^2 paragraph is used without definition, which is a jargon gap for intro-level learners who may not know what a dgp is",
+      "count": 1
+    },
+    {
+      "issue": "math/notation consistency: the t=60 board note 'divide by p' (inverted dropout training-time scaling) appears before the lesson has introduced inverted dropout, conflating standard and inverted dropout conventions mid-lesson and potentially confusing learners about when each scaling applies.",
+      "count": 1
+    },
+    {
+      "issue": "code clarity: nn.dropout(p=1-p) uses mismatched variable semantics without sufficient inline annotation -- the outer constructor's p means keep-probability while pytorch's dropout p means drop-probability; an intro learner will likely misread the api usage.",
+      "count": 1
+    },
+    {
+      "issue": "destination-narration mismatch: the lesson.destination references 'geometric mean of all 2^n subnetwork predictions' but the narration never uses the term 'geometric mean', leaving a conceptual gap between what the lesson promises and what it delivers.",
+      "count": 1
+    },
+    {
+      "issue": "staircase order lists 'show recursion tree' as rung 5 (after defining both conditions) but the lesson correctly builds the tree before defining conditions -- the staircase description should be reordered to match the actual pedagogical sequence to avoid confusing lesson planners.",
+      "count": 1
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "candidateId": "grouped-query-attention-v0-001",
+  "subjectId": "grouped-query-attention",
+  "promptVariantId": "whiteboard-v0",
+  "criteria": [
+    {
+      "id": "payoff-concreteness",
+      "label": "Payoff concreteness",
+      "max": 8,
+      "score": 7,
+      "notes": "Payoff states a concrete factor (H/G memory reduction) and names the mechanism (KV-cache memory and bandwidth pressure) with a specific stake (inference cost). Only minor deduction because 'minimal quality loss' is not quantified and the phrasing 'a factor of G (number of query heads divided by number of KV heads)' is slightly circular -- G is H/G_groups, not H/G itself -- but the core claim is clear and numerical enough to score well."
+    },
+    {
+      "id": "staircase-coherence",
+      "label": "Staircase coherence",
+      "max": 10,
+      "score": 9,
+      "notes": "Rungs flow logically: MHA structure -> KV cache existence -> cache scaling + bottleneck -> MQA as extreme -> GQA definition -> memory reduction derivation -> quality tradeoff. No gaps and no rung that is itself the destination. Tiny deduction: rung 3 ('Introduce MHA notation') and rung 1 ('Understand what MHA stores') slightly overlap in that both concern MHA, but the distinction between what is stored vs. the notation is real enough not to penalize heavily."
+    },
+    {
+      "id": "destination-precision",
+      "label": "Destination precision",
+      "max": 8,
+      "score": 8,
+      "notes": "Destination names precise objects: the grouping structure (H query heads partitioned into G groups), the formula (KV-cache shrinks by H/G), the bandwidth proportionality, and the explicit quality tradeoff (reduced per-head KV expressiveness). A learner can hold all these after the lesson. Full marks."
+    },
+    {
+      "id": "narration-clarity",
+      "label": "Narration clarity",
+      "max": 12,
+      "score": 10,
+      "notes": "Nearly all symbols defined on first use: H, d_k, L, G all introduced clearly. MHA, MQA, GQA abbreviations unpacked on introduction. 'Memory bandwidth' explained with concrete GPU streaming imagery. Minor issues: 'd_k' is written as 'per-head dimension' but the letter itself appears inline without a formal 'where d_k is...' preamble the very first time it appears in the formula beat (it is defined in the same sentence, so marginal). The Shazeer 2019 citation adds a nice grounding. One small concern: 'Ainslie et al. 2023' is cited in narration but not traceable to a beat -- it appears in fullText only. Overall clarity is high with no contradictions."
+    },
+    {
+      "id": "board-specificity",
+      "label": "Board specificity",
+      "max": 10,
+      "score": 9,
+      "notes": "All draw actions are highly specific: the MHA diagram specifies 4 labeled rectangles Q1-Q4, K1-K4, V1-V4 with vertical arrows; the MQA diagram specifies 4 Q rectangles converging to single K and V; the GQA diagram specifies 4 Q boxes, 2 KV-group boxes, explicit arrow assignments, and a bracket label. The expressiveness bar is described with widths, labels, and sub-label text. Write actions include actual formula strings. Only micro-deduction: the 'highlight' actions repeat the targetId as content rather than specifying what visual effect to use, which is mildly ambiguous for a renderer."
+    },
+    {
+      "id": "board-coherence",
+      "label": "Board coherence",
+      "max": 10,
+      "score": 8,
+      "notes": "Timeline is mostly coherent: MHA diagram drawn before highlighted elements are referenced; MQA drawn before MQA cache formula written; erase actions at t=120 clear MHA and MQA diagrams before GQA diagram is drawn, which is good canvas hygiene. However, the erase at t=120 removes mha_diagram (drawn at t=15) and mqa_diagram (drawn at t=90) but does NOT erase kvcache_box, kvcache_formula, bottleneck_label, mha_heads_label, title_mha, or mqa_label -- the canvas could be cluttered when GQA section begins. The gqa_title write at t=125 overwrites title_mha in top-center but uses a different targetId, implying both might coexist. Minor coherence debt but not severe."
+    },
+    {
+      "id": "board-visual-balance",
+      "label": "Board visual balance",
+      "max": 8,
+      "score": 8,
+      "notes": "Three distinct draw actions (mha_diagram, mqa_diagram, gqa_diagram, expressiveness_bar) appear alongside formula writes and highlight actions. The GQA grouping diagram is the visual centerpiece and directly encodes the mechanism. The expressiveness bar provides a comparative visual for the quality tradeoff. Mix is well-suited to a structural/architectural topic. Full marks."
+    },
+    {
+      "id": "math-notation-correctness",
+      "label": "Math and notation correctness",
+      "max": 10,
+      "score": 9,
+      "notes": "MHA cache formula 2*H*d_k*L is correct. GQA cache formula 2*G*d_k*L is correct. Reduction factor H/G is correct. Llama 3 8B: H=32, G=8, reduction=32/8=4x -- arithmetic correct. MQA cache 2*1*d_k*L described as H times smaller -- correct. All symbols used consistently throughout. Minor deduction: the payoff states 'reduction by a factor of G (number of query heads divided by number of KV heads)' which conflates G (the number of KV groups) with H/G (the reduction factor); G here is the number of KV heads, not H/G. This is a labeling imprecision in the payoff field, not in the narration or board formulas themselves."
+    },
+    {
+      "id": "code-content-decision",
+      "label": "Code-content decision",
+      "max": 6,
+      "score": 6,
+      "notes": "No code included. This is correct for an advanced conceptual/architectural explanation of GQA mechanics. The lesson is about the memory arithmetic and grouping structure, not an implementation. Including PyTorch code would distract from the core derivation without adding clarity. Correct decision, full marks."
+    },
+    {
+      "id": "pacing-and-density",
+      "label": "Pacing and density",
+      "max": 10,
+      "score": 8,
+      "notes": "10 beats across 270 seconds averages ~27 seconds per beat, reasonable for advanced content. Beat at t=48 (cache size formula + bottleneck identification) packs two distinct ideas -- quantification of cache and naming the bottleneck -- into one beat, slightly dense. Beat at t=160 (Llama example) and t=185 (tradeoff) are single-idea and well-spaced. Last beat at t=220 fits within the 270s window. Small deduction for the t=48 dual-concept beat and a mild gap between t=220 and t=270 with no narration beat."
+    },
+    {
+      "id": "redundancy-and-focus",
+      "label": "Redundancy and focus",
+      "max": 8,
+      "score": 8,
+      "notes": "No significant repetition across beats. The lesson stays tightly on the question: KV-cache cost reduction mechanism and what GQA trades away. MQA is introduced only as a stepping stone to motivate GQA, not as a tangent. The conclusion beat restates the core result without adding new information, which is appropriate closure rather than redundancy. Full marks."
+    }
+  ],
+  "totalScore": 90,
+  "maxScore": 100,
+  "percent": 90,
+  "topThreeIssues": [
+    "Board canvas clutter at the GQA transition: the erase actions at t=120 remove only the head diagrams but leave kvcache_box, mha_heads_label, title_mha, mqa_label, and bottleneck_label on the canvas when GQA content begins -- add erase actions for all MHA/MQA ancillary elements or make the region strategy explicit so a renderer knows what survives into the GQA section.",
+    "Payoff field mislabels G: it says 'reduction by a factor of G (number of query heads divided by number of KV heads)' but G is the number of KV groups, not the reduction factor (which is H/G). This introduces a terminology inconsistency right at the hook sentence -- rewrite as 'GQA cuts KV-cache memory by a factor of H/G, where H is the number of query heads and G is the number of KV-head groups.'",
+    "Beat at t=48 is overloaded with two conceptually distinct ideas -- the quantitative cache formula and the qualitative bottleneck framing (memory bandwidth vs. FLOPs) -- which are both important enough to deserve separate beats; splitting them would improve pacing and allow the board to write the formula before the bottleneck label, matching the narration order more cleanly."
+  ],
+  "wouldRecommendForPipeline": true,
+  "summary": "This is a high-quality lesson plan that correctly derives the GQA memory reduction formula, motivates it through the MHA-to-MQA-to-GQA progression, and grounds the tradeoff in concrete expressiveness terms with a real model example. The board actions are unusually specific and the staircase is tightly coherent. The main weaknesses are a canvas-clutter risk at the GQA section transition and a labeling error in the payoff field where G is conflated with the reduction factor H/G, both of which are straightforward to fix without restructuring the lesson."
+}

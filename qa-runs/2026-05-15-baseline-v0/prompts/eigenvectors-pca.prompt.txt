@@ -1,0 +1,94 @@
+You are an expert university lecturer producing a structured plan for a whiteboard-style narrated video lesson. Your output drives a downstream renderer, so every field you produce must be precise, executable, and valid JSON.
+
+The video is a single continuous whiteboard. There are NO scenes. There is no slide deck. The narrator speaks while writing equations, sketching diagrams, highlighting key terms, transforming expressions step by step, and erasing what is no longer needed. Imagine a professor at a blackboard for ninety seconds to five minutes: things accumulate, get pointed at, get rewritten, get erased to make room.
+
+Every drawn or written element has a unique targetId. You can transform, highlight, or erase elements only by referencing an id you have already introduced. Nothing appears on the board without a corresponding board action.
+
+Define every symbol the first time you use it. Define every term of jargon the first time it appears. If a beat does two things, split it.
+
+You will plan in four passes before emitting JSON:
+  1) Decide payoff, staircase, destination.
+  2) Outline the narration as ordered beats, each with whyThisBeat naming the rung it adds.
+  3) For each beat, decide what board actions accompany it: what gets written, what gets drawn, what gets pointed at, what gets erased.
+  4) Decide whether code-as-content (Python, pseudocode, etc.) clarifies any beat. If not, omit codeBlocks.
+
+Then emit a single JSON object. No prose before or after. No markdown fences. No explanation. JSON only.
+
+---
+
+Topic: Eigenvectors and PCA
+Question: Why are PCA's principal components the eigenvectors of the data covariance matrix, ranked by eigenvalue?
+Domain: pure-math
+Difficulty: intermediate
+
+Produce a JSON object matching this exact shape (omit codeBlocks if no code is needed):
+
+{
+  "id": "eigenvectors-pca-v0-001",
+  "topic": {
+    "id": "eigenvectors-pca",
+    "title": "Eigenvectors and PCA",
+    "question": "Why are PCA's principal components the eigenvectors of the data covariance matrix, ranked by eigenvalue?",
+    "domain": "pure-math"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v0",
+    "name": "Whiteboard seed prompt v0"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "ISO-8601 timestamp"
+  },
+  "lesson": {
+    "title": "specific lesson title",
+    "learnerLevel": "intended audience in one short phrase",
+    "durationSeconds": integer between 90 and 300,
+    "payoff": "the concrete reason a learner should care, with a number when the topic admits one",
+    "staircase": ["rung 1", "rung 2", "rung 3", "..."],
+    "destination": "the precise mechanism, definition, theorem, or formula the learner should hold afterward"
+  },
+  "narration": {
+    "fullText": "the complete spoken script as one paragraph",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "what the narrator says during this beat",
+        "whyThisBeat": "the rung this beat adds to the staircase"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write" | "draw" | "highlight" | "transform" | "erase",
+        "targetId": "stable_kebab_or_snake_id",
+        "content": "for write: the text or LaTeX. for draw: a concrete description executable by a renderer (e.g. 'circle labeled q at center-left, three arrows to circles labeled k1 k2 k3 stacked on the right'). for highlight: what to emphasize and how. for transform: the new content the targetId becomes. for erase: 'all' or the targetId to clear.",
+        "region": "optional hint like 'top-left', 'center', 'right-half'"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 0,
+      "language": "python",
+      "code": "the runnable code shown on the board",
+      "purpose": "what this code makes concrete for the learner"
+    }
+  ]
+}
+
+Hard constraints:
+- durationSeconds is between 90 and 300. Pick what suits the topic complexity.
+- narration.beats[i].atSec is monotonically non-decreasing and ends at or before durationSeconds.
+- board.actions[i].at is monotonically non-decreasing and ends at or before durationSeconds.
+- Every transform/highlight/erase action references a targetId previously introduced by write or draw (or "all" for erase).
+- Every drawn element has executable specificity. "Draw a graph" fails. "Draw a directed graph with three nodes A, B, C arranged left-to-right, edges A->B and B->C, edge labels 0.7 and 0.3" passes.
+- Every symbol and every jargon term is defined the first time it appears in narration.
+- staircase has between 2 and 8 rungs. Each rung is a short noun phrase.
+- payoff is concrete. "It is important" fails. "Cuts KV-cache memory by 4x with under one percent quality loss" passes.
+- destination is precise. "You will understand attention" fails. "You will hold the formula softmax(QK^T / sqrt(d_k)) V and know what each factor protects against" passes.
+- No HTML, no markdown, no image URLs, no code fences in any string field.
+- Output is a single JSON object. Nothing before. Nothing after.
+
+Your final response must be exactly the JSON object. No commentary, no markdown fences, no preamble, no closing remarks. Just the JSON.

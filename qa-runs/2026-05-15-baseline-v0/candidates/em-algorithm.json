@@ -1,0 +1,345 @@
+{
+  "id": "em-algorithm-v0-001",
+  "topic": {
+    "id": "em-algorithm",
+    "title": "Expectation-Maximization",
+    "question": "How does the EM algorithm find local maxima of likelihood for latent-variable models, and why does it always converge?",
+    "domain": "classical-ml"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v0",
+    "name": "Whiteboard seed prompt v0"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "EM: Guaranteed Ascent in Likelihood via a Tight Lower Bound",
+    "learnerLevel": "advanced",
+    "durationSeconds": 270,
+    "payoff": "EM guarantees log-likelihood never decreases each iteration because the Q-function is a global lower bound that touches the true likelihood at the current parameters, so maximizing Q always moves parameters uphill or stays flat",
+    "staircase": [
+      "Recognize why direct maximization of incomplete-data log-likelihood is intractable when latent variables are summed inside a log",
+      "Introduce Jensen's inequality to pull the sum outside the log and construct a valid lower bound",
+      "Name the E-step: compute Q, the expected complete-data log-likelihood under the current posterior over latents",
+      "Name the M-step: maximize Q exactly, guaranteeing the bound and the true likelihood both rise",
+      "Prove the ascent property: the gap between bound and true likelihood is the KL divergence from the posterior to the variational distribution, which is zero after the E-step",
+      "Identify convergence to a stationary point and acknowledge the local-maximum caveat"
+    ],
+    "destination": "The learner can state that EM maximizes a succession of tight lower bounds (the ELBO equals log-likelihood when KL=0), that each M-step raises the bound and therefore raises the true log-likelihood, and that this monotone ascent guarantees convergence to a stationary point of the log-likelihood"
+  },
+  "narration": {
+    "fullText": "We want to fit a model with observed data X and hidden variables Z, meaning variables we never see, by maximizing the log-likelihood log p of X given parameters theta. The problem: p of X equals the sum over all Z of the joint p of X comma Z, and that sum sits inside a log, making direct optimization intractable for most interesting models. We escape using Jensen's inequality, which says that for any concave function f, f of an expectation is at least the expectation of f. Because log is concave, we can introduce any distribution q of Z, write log p of X as log of the sum over Z of q of Z times the joint divided by q of Z, and apply Jensen to pull the log inside, obtaining the evidence lower bound, or ELBO: the expectation under q of log p of X comma Z minus log q of Z. This ELBO is a lower bound on log p of X for any choice of q. The gap between log p of X and the ELBO is exactly the KL divergence from q of Z to the true posterior p of Z given X comma theta, which is always non-negative. Now the two-step algorithm. E-step: set q of Z equal to the exact posterior p of Z given X and the current parameters theta-old. This makes KL equal to zero, so the ELBO touches log p of X from below at theta-old; the bound is tight. M-step: holding q fixed, maximize the ELBO over theta. Because q no longer depends on theta, maximizing the ELBO is the same as maximizing Q of theta given theta-old, defined as the expectation under q of the complete-data log-likelihood log p of X comma Z given theta. After the M-step the new parameters theta-new satisfy ELBO at theta-new is at least ELBO at theta-old. But at theta-old the ELBO equaled the true log-likelihood. So log p of X given theta-new is at least log p of X given theta-old. Likelihood is guaranteed never to decrease. Repeating these steps produces a monotone non-decreasing sequence of log-likelihood values. Because log-likelihood is bounded above by zero for normalized models, the sequence must converge. It converges to a stationary point, which is typically a local maximum. The global maximum is not guaranteed; initialization matters.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "We want to fit a model with observed data X and hidden variables Z, meaning variables we never see, by maximizing the log-likelihood log p of X given parameters theta.",
+        "whyThisBeat": "Establish the objective and introduce every symbol before using it"
+      },
+      {
+        "atSec": 18,
+        "text": "The problem: p of X equals the sum over all Z of the joint p of X comma Z, and that sum sits inside a log, making direct optimization intractable for most interesting models.",
+        "whyThisBeat": "First rung: name the intractability that motivates EM"
+      },
+      {
+        "atSec": 36,
+        "text": "We escape using Jensen's inequality, which says that for any concave function f, f of an expectation is at least the expectation of f. Because log is concave, we introduce any distribution q of Z and apply Jensen to obtain the evidence lower bound, or ELBO.",
+        "whyThisBeat": "Second rung: Jensen's inequality as the key mathematical tool"
+      },
+      {
+        "atSec": 60,
+        "text": "The ELBO equals the expectation under q of log p of X comma Z minus log q of Z. It is a lower bound on log p of X for any choice of q. The gap is exactly the KL divergence from q of Z to the true posterior p of Z given X comma theta, always non-negative.",
+        "whyThisBeat": "Third rung: write the ELBO explicitly and identify the gap as KL divergence"
+      },
+      {
+        "atSec": 90,
+        "text": "E-step: set q of Z equal to the exact posterior p of Z given X and the current parameters theta-old. This makes KL equal to zero, so the ELBO touches log p of X from below at theta-old; the bound is tight.",
+        "whyThisBeat": "Fourth rung: E-step definition and the tightness condition"
+      },
+      {
+        "atSec": 120,
+        "text": "M-step: holding q fixed, maximize the ELBO over theta. Because q no longer depends on theta, this is equivalent to maximizing Q of theta given theta-old, the expected complete-data log-likelihood under the current posterior.",
+        "whyThisBeat": "Fifth rung: M-step definition and reduction to Q-function"
+      },
+      {
+        "atSec": 155,
+        "text": "After the M-step, ELBO at theta-new is at least ELBO at theta-old. But at theta-old the ELBO equaled the true log-likelihood. So log p of X given theta-new is at least log p of X given theta-old. Likelihood is guaranteed never to decrease.",
+        "whyThisBeat": "Sixth rung: the ascent proof by chaining the two inequalities"
+      },
+      {
+        "atSec": 200,
+        "text": "Repeating produces a monotone non-decreasing sequence of log-likelihood values. Because log-likelihood is bounded above by zero for normalized models, the sequence must converge to a stationary point, typically a local maximum. The global maximum is not guaranteed; initialization matters.",
+        "whyThisBeat": "Complete the convergence argument and state the local-maximum caveat"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "title",
+        "content": "Expectation-Maximization (EM)",
+        "region": "top-center"
+      },
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "objective_label",
+        "content": "Goal: maximize log p(X | theta)",
+        "region": "top-left"
+      },
+      {
+        "at": 5,
+        "kind": "write",
+        "targetId": "symbol_X",
+        "content": "X = observed data",
+        "region": "left-column-row1"
+      },
+      {
+        "at": 8,
+        "kind": "write",
+        "targetId": "symbol_Z",
+        "content": "Z = latent (hidden) variables",
+        "region": "left-column-row2"
+      },
+      {
+        "at": 11,
+        "kind": "write",
+        "targetId": "symbol_theta",
+        "content": "theta = model parameters",
+        "region": "left-column-row3"
+      },
+      {
+        "at": 18,
+        "kind": "write",
+        "targetId": "marginal_eq",
+        "content": "p(X|theta) = sum_Z p(X,Z|theta)",
+        "region": "center-left"
+      },
+      {
+        "at": 25,
+        "kind": "write",
+        "targetId": "loglik_eq",
+        "content": "log p(X|theta) = log [ sum_Z p(X,Z|theta) ]",
+        "region": "center-left-below"
+      },
+      {
+        "at": 30,
+        "kind": "write",
+        "targetId": "problem_label",
+        "content": "Problem: sum inside log => intractable",
+        "region": "center-left-below2"
+      },
+      {
+        "at": 36,
+        "kind": "write",
+        "targetId": "jensen_label",
+        "content": "Jensen's inequality: for concave f,  f(E[g]) >= E[f(g)]",
+        "region": "right-column-top"
+      },
+      {
+        "at": 44,
+        "kind": "write",
+        "targetId": "log_concave_note",
+        "content": "log is concave  =>  apply Jensen",
+        "region": "right-column-row2"
+      },
+      {
+        "at": 50,
+        "kind": "write",
+        "targetId": "q_intro",
+        "content": "Introduce any distribution q(Z)",
+        "region": "right-column-row3"
+      },
+      {
+        "at": 55,
+        "kind": "write",
+        "targetId": "jensen_step",
+        "content": "log p(X|theta) = log sum_Z q(Z) * [p(X,Z|theta)/q(Z)]  >=  E_q[ log p(X,Z|theta) - log q(Z) ]",
+        "region": "center-wide"
+      },
+      {
+        "at": 60,
+        "kind": "highlight",
+        "targetId": "jensen_step",
+        "content": "jensen_step",
+        "region": "center-wide"
+      },
+      {
+        "at": 65,
+        "kind": "write",
+        "targetId": "elbo_def",
+        "content": "ELBO(q,theta) = E_q[ log p(X,Z|theta) ] - E_q[ log q(Z) ]",
+        "region": "center-wide-below"
+      },
+      {
+        "at": 72,
+        "kind": "write",
+        "targetId": "elbo_bound",
+        "content": "log p(X|theta)  >=  ELBO(q,theta)   for any q",
+        "region": "center-wide-below2"
+      },
+      {
+        "at": 78,
+        "kind": "write",
+        "targetId": "kl_gap",
+        "content": "Gap = KL( q(Z) || p(Z|X,theta) ) >= 0",
+        "region": "center-wide-below3"
+      },
+      {
+        "at": 90,
+        "kind": "write",
+        "targetId": "estep_label",
+        "content": "E-step:",
+        "region": "bottom-left"
+      },
+      {
+        "at": 92,
+        "kind": "write",
+        "targetId": "estep_def",
+        "content": "Set q(Z) := p(Z | X, theta_old)",
+        "region": "bottom-left-row2"
+      },
+      {
+        "at": 100,
+        "kind": "write",
+        "targetId": "kl_zero",
+        "content": "=> KL = 0  =>  ELBO = log p(X|theta_old)   [bound is tight]",
+        "region": "bottom-left-row3"
+      },
+      {
+        "at": 108,
+        "kind": "highlight",
+        "targetId": "kl_zero",
+        "content": "kl_zero",
+        "region": "bottom-left-row3"
+      },
+      {
+        "at": 120,
+        "kind": "write",
+        "targetId": "mstep_label",
+        "content": "M-step:",
+        "region": "bottom-center"
+      },
+      {
+        "at": 122,
+        "kind": "write",
+        "targetId": "mstep_def",
+        "content": "theta_new = argmax_theta  ELBO(q_fixed, theta)",
+        "region": "bottom-center-row2"
+      },
+      {
+        "at": 130,
+        "kind": "write",
+        "targetId": "Q_def",
+        "content": "= argmax_theta  E_{p(Z|X,theta_old)}[ log p(X,Z|theta) ]  :=  Q(theta | theta_old)",
+        "region": "bottom-center-row3"
+      },
+      {
+        "at": 140,
+        "kind": "highlight",
+        "targetId": "Q_def",
+        "content": "Q_def",
+        "region": "bottom-center-row3"
+      },
+      {
+        "at": 155,
+        "kind": "write",
+        "targetId": "ascent_line1",
+        "content": "ELBO(q, theta_new) >= ELBO(q, theta_old)   [M-step maximized]",
+        "region": "bottom-right-row1"
+      },
+      {
+        "at": 162,
+        "kind": "write",
+        "targetId": "ascent_line2",
+        "content": "ELBO(q, theta_old) = log p(X|theta_old)       [E-step made KL=0]",
+        "region": "bottom-right-row2"
+      },
+      {
+        "at": 170,
+        "kind": "write",
+        "targetId": "ascent_chain",
+        "content": "=> log p(X|theta_new) >= ELBO(q,theta_new) >= log p(X|theta_old)",
+        "region": "bottom-right-row3"
+      },
+      {
+        "at": 178,
+        "kind": "highlight",
+        "targetId": "ascent_chain",
+        "content": "ascent_chain",
+        "region": "bottom-right-row3"
+      },
+      {
+        "at": 183,
+        "kind": "write",
+        "targetId": "ascent_conclusion",
+        "content": "Likelihood never decreases each EM iteration.",
+        "region": "bottom-right-row4"
+      },
+      {
+        "at": 200,
+        "kind": "write",
+        "targetId": "convergence_label",
+        "content": "Convergence:",
+        "region": "bottom-wide"
+      },
+      {
+        "at": 203,
+        "kind": "write",
+        "targetId": "convergence_body",
+        "content": "Monotone sequence + upper bound (log p <= 0) => sequence converges to a stationary point (local max).",
+        "region": "bottom-wide-row2"
+      },
+      {
+        "at": 215,
+        "kind": "write",
+        "targetId": "caveat",
+        "content": "Caveat: global max NOT guaranteed. Initialization matters.",
+        "region": "bottom-wide-row3"
+      },
+      {
+        "at": 220,
+        "kind": "highlight",
+        "targetId": "caveat",
+        "content": "caveat",
+        "region": "bottom-wide-row3"
+      },
+      {
+        "at": 230,
+        "kind": "erase",
+        "targetId": "jensen_label",
+        "content": "all"
+      },
+      {
+        "at": 232,
+        "kind": "erase",
+        "targetId": "log_concave_note",
+        "content": "all"
+      },
+      {
+        "at": 234,
+        "kind": "erase",
+        "targetId": "q_intro",
+        "content": "all"
+      },
+      {
+        "at": 236,
+        "kind": "draw",
+        "targetId": "convergence_diagram",
+        "content": "draw a curve labeled L(theta)=log p(X|theta) on a 2D axes (x=theta, y=L) with a single hump peaking at theta-star; mark three points theta_0 < theta_1 < theta_2 each with a short vertical arrow pointing up labeled +delta_L; draw dashed horizontal line at the peak labeled local max; annotate base of arrows with EM iterates",
+        "region": "right-column-middle"
+      }
+    ]
+  },
+  "codeBlocks": [
+    {
+      "atSec": 130,
+      "language": "python",
+      "code": "import numpy as np\n\ndef em_gmm_1d(X, K=2, n_iter=50):\n    N = len(X)\n    rng = np.random.default_rng(0)\n    mu = rng.choice(X, K, replace=False)\n    sigma = np.ones(K)\n    pi = np.ones(K) / K\n    for iteration in range(n_iter):\n        log_r = np.array([np.log(pi[k]+1e-300) - 0.5*((X-mu[k])/sigma[k])**2 - np.log(sigma[k]) for k in range(K)]).T\n        log_r -= log_r.max(axis=1, keepdims=True)\n        r = np.exp(log_r); r /= r.sum(axis=1, keepdims=True)\n        Nk = r.sum(axis=0)\n        pi = Nk / N\n        mu = (r * X[:, None]).sum(axis=0) / Nk\n        sigma = np.sqrt((r * (X[:, None] - mu)**2).sum(axis=0) / Nk)\n    return mu, sigma, pi",
+      "purpose": "Concrete implementation showing the E-step (posterior responsibilities make KL=0) and M-step (closed-form Q maximization) for a 1-D Gaussian Mixture"
+    }
+  ]
+}

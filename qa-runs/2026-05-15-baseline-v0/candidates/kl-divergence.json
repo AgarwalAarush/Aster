@@ -1,0 +1,200 @@
+{
+  "id": "kl-divergence-v0-001",
+  "topic": {
+    "id": "kl-divergence",
+    "title": "KL Divergence",
+    "question": "Why is KL divergence asymmetric, and what does choosing forward vs reverse KL mean for the distribution you fit?",
+    "domain": "probability-stats"
+  },
+  "promptVariant": {
+    "id": "whiteboard-v0",
+    "name": "Whiteboard seed prompt v0"
+  },
+  "metadata": {
+    "generator": "sonnet-via-agent",
+    "createdAt": "2026-05-15T00:00:00Z"
+  },
+  "lesson": {
+    "title": "KL Divergence: Asymmetry and Its Consequences",
+    "learnerLevel": "intermediate",
+    "durationSeconds": 270,
+    "payoff": "Choosing forward vs reverse KL can shift a fitted distribution from mean-seeking to mode-seeking, a difference that can mean covering all modes of P versus collapsing onto just one",
+    "staircase": [
+      "Define KL divergence as a measure of information loss when approximating one distribution with another",
+      "Show the asymmetric formula and why swapping P and Q gives a different number",
+      "Build intuition: KL(P||Q) penalizes zeros in Q where P has mass",
+      "Build intuition: KL(Q||P) penalizes zeros in P where Q has mass",
+      "Forward KL forces Q to cover all of P, producing mean-seeking or mass-covering fits",
+      "Reverse KL forces Q to stay inside P, producing mode-seeking fits",
+      "Summarize the practical choice rule"
+    ],
+    "destination": "Learner can state the KL formula in both directions, explain why each term is asymmetric via the log ratio, and predict whether a fitted Q will be mean-seeking or mode-seeking based on which KL direction is minimized"
+  },
+  "narration": {
+    "fullText": "We want to measure how much information we lose when we use an approximate distribution Q to represent the true distribution P. The tool for this is KL divergence, written KL of P given Q, defined as the sum over all outcomes x of P of x times the log of P of x divided by Q of x. Think of the log ratio as a surprise penalty: if Q assigns low probability where P says things actually happen, that ratio blows up and we pay a large cost. Now watch what happens when we swap the arguments and write KL of Q given P instead. The formula becomes the sum of Q of x times log of Q of x divided by P of x. These two expressions look similar but they are not equal, because the weighting measure out front changes from P to Q, and that changes everything. To see why, consider a simple two-hump distribution P with mass at two separate peaks, and let Q be a single Gaussian we are trying to fit. Under forward KL, we minimize KL of P given Q. The expectation is taken under P, so every x where P of x is positive must be explained by Q. If Q puts zero probability anywhere that P is nonzero, the log ratio becomes log of P over zero, which is infinite, so Q is forced to stretch and cover both humps. The result is a mean-seeking fit: Q lands between the peaks even if the valley between them has low probability under P. Under reverse KL, we minimize KL of Q given P. Now the expectation is taken under Q. If Q wanders into a region where P of x equals zero, the log ratio log of Q over zero blows up, so Q is repelled from regions of low P mass. Q therefore hugs one peak and ignores the other. This is mode-seeking behavior. The asymmetry is not a bug: forward KL is used in maximum likelihood estimation and variational inference when you want to be conservative and not miss any mode of P. Reverse KL dominates in variational autoencoders and many modern generative models where a compact, sharp Q is preferred. The rule of thumb: forward KL spreads Q to cover P, reverse KL shrinks Q to fit inside P.",
+    "beats": [
+      {
+        "atSec": 0,
+        "text": "We want to measure how much information we lose when we use an approximate distribution Q to represent the true distribution P.",
+        "whyThisBeat": "Establishes the motivation and introduces the two named distributions P and Q before any formula appears"
+      },
+      {
+        "atSec": 14,
+        "text": "The tool for this is KL divergence, written KL of P given Q, defined as the sum over all outcomes x of P of x times the log of P of x divided by Q of x.",
+        "whyThisBeat": "Rung 1: states the formula precisely and anchors the notation"
+      },
+      {
+        "atSec": 30,
+        "text": "Think of the log ratio as a surprise penalty: if Q assigns low probability where P says things actually happen, that ratio blows up and we pay a large cost.",
+        "whyThisBeat": "Gives immediate intuition for the formula before introducing asymmetry"
+      },
+      {
+        "atSec": 44,
+        "text": "Now watch what happens when we swap the arguments and write KL of Q given P instead. The formula becomes the sum of Q of x times log of Q of x divided by P of x.",
+        "whyThisBeat": "Rung 2: shows the swapped formula side by side to make asymmetry visible"
+      },
+      {
+        "atSec": 62,
+        "text": "These two expressions look similar but they are not equal, because the weighting measure out front changes from P to Q, and that changes everything.",
+        "whyThisBeat": "Names the exact source of asymmetry: the outer weighting distribution differs"
+      },
+      {
+        "atSec": 76,
+        "text": "To see why, consider a simple two-hump distribution P with mass at two separate peaks, and let Q be a single Gaussian we are trying to fit.",
+        "whyThisBeat": "Sets up the concrete bimodal example that will drive both intuition beats"
+      },
+      {
+        "atSec": 90,
+        "text": "Under forward KL, we minimize KL of P given Q. The expectation is taken under P, so every x where P of x is positive must be explained by Q. If Q puts zero probability anywhere that P is nonzero, the log ratio becomes log of P over zero, which is infinite, so Q is forced to stretch and cover both humps.",
+        "whyThisBeat": "Rung 3 and Rung 5: shows forward KL zero-avoidance and mass-covering consequence"
+      },
+      {
+        "atSec": 130,
+        "text": "The result is a mean-seeking fit: Q lands between the peaks even if the valley between them has low probability under P.",
+        "whyThisBeat": "Names the mean-seeking label and shows it on the diagram"
+      },
+      {
+        "atSec": 148,
+        "text": "Under reverse KL, we minimize KL of Q given P. Now the expectation is taken under Q. If Q wanders into a region where P of x equals zero, the log ratio log of Q over zero blows up, so Q is repelled from regions of low P mass.",
+        "whyThisBeat": "Rung 4 and Rung 6: shows reverse KL zero-avoidance and mode-seeking consequence"
+      },
+      {
+        "atSec": 188,
+        "text": "Q therefore hugs one peak and ignores the other. This is mode-seeking behavior.",
+        "whyThisBeat": "Names the mode-seeking label and shows it on the diagram"
+      },
+      {
+        "atSec": 204,
+        "text": "The asymmetry is not a bug: forward KL is used in maximum likelihood estimation and variational inference when you want to be conservative and not miss any mode of P. Reverse KL dominates in variational autoencoders and many modern generative models where a compact, sharp Q is preferred.",
+        "whyThisBeat": "Grounds the two directions in real algorithms learners will encounter"
+      },
+      {
+        "atSec": 240,
+        "text": "The rule of thumb: forward KL spreads Q to cover P, reverse KL shrinks Q to fit inside P.",
+        "whyThisBeat": "Rung 7: distills the takeaway into a single memorable contrast"
+      }
+    ]
+  },
+  "board": {
+    "actions": [
+      {
+        "at": 0,
+        "kind": "write",
+        "targetId": "label_P_Q",
+        "content": "P = true distribution, Q = approximate distribution",
+        "region": "top-left"
+      },
+      {
+        "at": 14,
+        "kind": "write",
+        "targetId": "formula_forward",
+        "content": "KL(P || Q) = sum_x P(x) log( P(x) / Q(x) )",
+        "region": "upper-center"
+      },
+      {
+        "at": 30,
+        "kind": "highlight",
+        "targetId": "formula_forward",
+        "content": "formula_forward",
+        "region": "upper-center"
+      },
+      {
+        "at": 44,
+        "kind": "write",
+        "targetId": "formula_reverse",
+        "content": "KL(Q || P) = sum_x Q(x) log( Q(x) / P(x) )",
+        "region": "center"
+      },
+      {
+        "at": 62,
+        "kind": "highlight",
+        "targetId": "formula_reverse",
+        "content": "formula_reverse",
+        "region": "center"
+      },
+      {
+        "at": 62,
+        "kind": "write",
+        "targetId": "asymmetry_note",
+        "content": "weight P(x) vs weight Q(x): different => KL(P||Q) != KL(Q||P)",
+        "region": "right-center"
+      },
+      {
+        "at": 76,
+        "kind": "draw",
+        "targetId": "bimodal_P",
+        "content": "x-axis labeled x, y-axis labeled probability; draw smooth curve with two humps: left hump centered at x=2 height 0.5, right hump centered at x=6 height 0.5, trough near zero at x=4; label curve P(x)",
+        "region": "lower-left"
+      },
+      {
+        "at": 90,
+        "kind": "draw",
+        "targetId": "forward_Q",
+        "content": "on same axes as bimodal_P, draw wide Gaussian centered at x=4 with standard deviation 2.5, peak height 0.25; label curve Q_forward(x) in blue; add annotation: forward KL => Q covers both humps",
+        "region": "lower-left"
+      },
+      {
+        "at": 130,
+        "kind": "write",
+        "targetId": "mean_seeking_label",
+        "content": "mean-seeking: Q lands at mean of P even in low-P valley",
+        "region": "lower-center"
+      },
+      {
+        "at": 148,
+        "kind": "draw",
+        "targetId": "reverse_Q",
+        "content": "on new axes to the right mirroring bimodal_P shape, draw narrow Gaussian centered at x=2 with standard deviation 0.6, peak height 0.7; label curve Q_reverse(x) in red; add annotation: reverse KL => Q collapses to one peak",
+        "region": "lower-right"
+      },
+      {
+        "at": 188,
+        "kind": "write",
+        "targetId": "mode_seeking_label",
+        "content": "mode-seeking: Q hugs one peak, ignores the other",
+        "region": "lower-right"
+      },
+      {
+        "at": 204,
+        "kind": "write",
+        "targetId": "applications",
+        "content": "Forward KL: MLE, variational inference (cover all modes)  |  Reverse KL: VAEs, generative models (sharp fit)",
+        "region": "upper-right"
+      },
+      {
+        "at": 240,
+        "kind": "erase",
+        "targetId": "asymmetry_note",
+        "content": "asymmetry_note",
+        "region": "right-center"
+      },
+      {
+        "at": 240,
+        "kind": "write",
+        "targetId": "summary_rule",
+        "content": "Forward KL: spread Q to cover P  |  Reverse KL: shrink Q to fit inside P",
+        "region": "right-center"
+      }
+    ]
+  }
+}
