@@ -1,0 +1,63 @@
+{
+  "sweepId": "autonomous-2026-05-16-templates-iter02-video",
+  "variantId": "whiteboard-v5-templates",
+  "architecture": "templates",
+  "mean": 71,
+  "min": 63,
+  "perSubject": [
+    {
+      "subjectId": "bayes-rule",
+      "percent": 82
+    },
+    {
+      "subjectId": "dropout-regularization",
+      "percent": 74
+    },
+    {
+      "subjectId": "dynamic-programming",
+      "percent": 68
+    },
+    {
+      "subjectId": "eigenvectors-pca",
+      "percent": 68
+    },
+    {
+      "subjectId": "em-algorithm",
+      "percent": 63
+    }
+  ],
+  "perCriterion": [
+    {
+      "id": "text-overlap",
+      "meanPercent": 58
+    },
+    {
+      "id": "narration-sync",
+      "meanPercent": 60
+    },
+    {
+      "id": "pacing-60s",
+      "meanPercent": 70
+    },
+    {
+      "id": "overall-usability",
+      "meanPercent": 70
+    },
+    {
+      "id": "diagram-correctness",
+      "meanPercent": 76
+    },
+    {
+      "id": "text-legibility",
+      "meanPercent": 78.7
+    },
+    {
+      "id": "region-discipline",
+      "meanPercent": 80
+    },
+    {
+      "id": "diagram-presence",
+      "meanPercent": 82
+    }
+  ]
+}
