@@ -47,24 +47,44 @@ export async function captureTimelineFrames(
     // Use "load" not "networkidle" — file:// + CDN scripts often never reach networkidle.
     await page.goto(fileUrl, { waitUntil: "load", timeout: 60_000 });
 
-    const compositionIdLiteral = JSON.stringify(COMPOSITION_ID);
     await page.waitForFunction(
-      `() => { const tl = window.__timelines && window.__timelines[${compositionIdLiteral}]; return !!tl; }`,
+      () => typeof (window as unknown as { gsap?: unknown }).gsap !== "undefined",
       undefined,
+      { timeout: 30_000 },
+    );
+    await page.waitForFunction(
+      (compositionId: string) => {
+        const timelines = (window as unknown as { __timelines?: Record<string, { duration: () => number }> })
+          .__timelines;
+        const tl = timelines?.[compositionId];
+        return !!tl && tl.duration() > 0;
+      },
+      COMPOSITION_ID,
       { timeout: 30_000 },
     );
 
     for (const timestampSec of options.timestampsSec) {
+      const seekSec = timestampSec === 0 ? 0.05 : timestampSec;
       await page.evaluate(
-        `({ compositionId, t }) => {
-          const tl = window.__timelines && window.__timelines[compositionId];
-          if (!tl) throw new Error("Timeline not found: " + compositionId);
+        ({ compositionId, t }: { compositionId: string; t: number }) => {
+          const timelines = (window as unknown as {
+            __timelines?: Record<string, { time: (value: number) => void }>;
+          }).__timelines;
+          const tl = timelines?.[compositionId];
+          if (!tl) {
+            throw new Error(`Timeline not found: ${compositionId}`);
+          }
           tl.time(t);
-        }`,
-        { compositionId: COMPOSITION_ID, t: timestampSec },
+        },
+        { compositionId: COMPOSITION_ID, t: seekSec },
       );
 
-      await page.waitForTimeout(150);
+      await page.evaluate(() => {
+        return new Promise<void>((resolve) => {
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+        });
+      });
+      await page.waitForTimeout(50);
 
       const label = frameLabel(timestampSec);
       const absolutePath = join(outDir, `${label}.png`);
