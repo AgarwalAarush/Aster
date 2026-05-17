@@ -8,6 +8,7 @@ export type BayesNetParams = {
 export function renderBayesNetSvg(params: BayesNetParams): string {
   const nodes = params.nodes.slice(0, 6);
   const edges = params.edges.slice(0, 10);
+  const markerId = `bn-arrow-${nodes.map((n) => n.id).join("-") || "default"}`;
   const positions = new Map<string, { x: number; y: number }>();
 
   const nodeEls = nodes
@@ -29,12 +30,12 @@ export function renderBayesNetSvg(params: BayesNetParams): string {
       if (!from || !to) {
         return "";
       }
-      return `<line x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke="#1a1a1a" stroke-width="2" marker-end="url(#bn-arrow)"/>`;
+      return `<line x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke="#1a1a1a" stroke-width="2" marker-end="url(#${markerId})"/>`;
     })
     .join("\n");
 
   return `<svg class="template-diagram bayes-net" viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg">
-    <defs><marker id="bn-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1a1a1a"/></marker></defs>
+    <defs><marker id="${markerId}" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1a1a1a"/></marker></defs>
     ${edgeEls}
     ${nodeEls}
   </svg>`;
