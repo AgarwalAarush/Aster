@@ -1,0 +1,11 @@
+- MANDATORY: every draw action uses templateId (flowchart | bayes-net | matrix-block) with complete templateParams; never rely on freeform DIAGRAM placeholder text alone.
+- At t=0 include a write in top-left with payoff headline (visible on first frame); do not start with only a draw.
+- Use at least two templated draws per lesson; first templated draw at or before t=18s.
+- Before reusing a region, erase the prior targetId in that region (erase.targetId must match an earlier draw/write).
+- bayes-net: always provide edges as {from,to} pairs with at least one directed edge; keep ≤3 nodes per diagram.
+- flowchart: ≤5 nodes and ≤6 edges; short labels (≤12 chars); use for DP recurrence and EM E/M loop separately (not both stacked in center).
+- matrix-block: ≤4 data rows; keep table in center or right-half only after erasing prior center draws.
+- Split concurrent visuals across regions (e.g., bayes-net in left-half, matrix-block in right-half) instead of two draws both in center without erase between.
+- Narration must not say "arrows" unless bayes-net edges are directed parent→child in templateParams.
+- Define jargon on first use (posterior, DAG, ELBO, r mask vector, Bellman) in the beat that introduces the symbol.
+- Align beat atSec with board.at within ±2s; last beat ≤ durationSeconds−8; last board action ≤ durationSeconds−3.

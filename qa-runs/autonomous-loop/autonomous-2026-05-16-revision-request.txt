@@ -1,0 +1,55 @@
+You are improving a whiteboard lesson GENERATOR prompt (variant: whiteboard-v5-short).
+
+Read the critique summaries below from iteration 1 of autonomous run "autonomous-2026-05-16".
+
+LESSON JSON CRITIQUE SUMMARY (autonomous-2026-05-16-iter01-lesson)
+Mean: 86.8%
+Common issues:
+- (1x) define posterior explicitly the first time it is spoken (map p(h|e) to updated belief) so beat three avoids unexplained jargon.
+- (1x) tighten one normalization/proportionality repetition between beats to reduce overlap while keeping the key insight.
+- (1x) when stating ~8% on board or audio, name one concrete assumption (e.g., specificity or false-positive rate) so learners can reconstruct the arithmetic.
+- (1x) briefly unpack co-adaptation and bagging/ensemble parallels in narration for introductory listeners without adding length (one clarifying clause per jargon term).
+- (1x) specify layout for the first mlp draw (counts per layer or simple left-right chain) so the renderer never invents contradictory topology.
+- (1x) deduplicate the validation-error payoff claim versus beat-level generalization wording so payoff adds a sharper unique stake distinct from narration.
+- (1x) define dag, bellman/optimal-subproblem equation, and any bagged constants like w before using them in payoff or beats
+- (1x) tighten board draw instructions with explicit small graphs (labeled nodes, which edges merge) so renderers do not guess geometry
+- (1x) align complexity examples with one anchored problem or soften to standard known budgets to avoid questionable o(n^2·w)
+- (1x) say explicitly that σ is symmetric psd so eigenvectors for distinct λ are orthogonal—this completes the “why pcs form an orthogonal basis” part of the question.
+Worst criteria:
+- narration-clarity: 70%
+- board-specificity: 82%
+- redundancy-and-focus: 85%
+- staircase-coherence: 86%
+
+VISUAL CRITIQUE SUMMARY (autonomous-2026-05-16-iter01-video)
+Mean: 59.4%
+Architecture: baseline
+Common issues:
+- (1x) diagram regions never rasterize beyond dashed boxes verbose instructions despite scheduled draw beats, so bayesian intuition scaffolding is unavailable on pixels.
+- (1x) t00 renders an empty pedagogical slate while narration already cues multiplicative updating, and t50 still pairs bayes typography with scaffolding plus spatial overlap.
+- (1x) narrative closer mentioning ~8% posterior odds lacks matching board reinforcement (payoff/recap sketches absent or delayed), blunting mnemonic payoff.
+- (1x) network and mask drawings remain diagram placeholders—no actual mlp or bernoulli visualization is visible in any frame.
+- (1x) first second (t00) lacks substantive board content before the narrative typography arrives.
+- (1x) strong text/formula storytelling cannot fully substitute for missing diagrams when teaching dropout visually.
+- (1x) draw actions never materialize as real diagrams—only diagram placeholders with illustrator instructions through t50.
+- (1x) opening frame (t00) shows almost no instructional content before the board fills in, hurting first-impression pacing.
+- (1x) visual learners cannot confirm optimal-substructure vs overlapping-subproblem stories from graphics; correctness rests on text and placeholder blurbs.
+- (1x) draw beats never graduate past diagram dossiers—gaussian scatter, axes, ellipse, and orthogonal pc arrows never appear as ink.
+Worst criteria:
+- diagram-presence: 30%
+- diagram-correctness: 38.7%
+- overall-usability: 50%
+- pacing-60s: 58%
+
+
+CURRENT PROMPT REVISION APPENDIX (concatenated to the user prompt on the next iteration):
+(empty — first revision)
+
+Write a NEW PROMPT REVISION APPENDIX (plain text, not JSON) that will be appended to the generator user prompt next iteration.
+Rules for the appendix:
+- Bullet list of concrete, testable changes (region erase before reuse, diagram timing, sync rules, etc.)
+- Fix the top failures from the critiques (especially text-overlap and board-visual-balance if visual scores are low)
+- Do NOT repeat the entire base prompt — only the delta
+- Max 40 lines
+
+Return ONLY the appendix text. No markdown fences. No preamble.

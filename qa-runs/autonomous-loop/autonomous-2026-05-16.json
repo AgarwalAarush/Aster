@@ -1,0 +1,12 @@
+{
+  "runId": "autonomous-2026-05-16",
+  "iteration": 1,
+  "promptRevision": "- MANDATORY: every draw action uses templateId (flowchart | bayes-net | matrix-block) with complete templateParams; never rely on freeform DIAGRAM placeholder text alone.\n- At t=0 include a write in top-left with payoff headline (visible on first frame); do not start with only a draw.\n- Use at least two templated draws per lesson; first templated draw at or before t=18s.\n- Before reusing a region, erase the prior targetId in that region (erase.targetId must match an earlier draw/write).\n- bayes-net: always provide edges as {from,to} pairs with at least one directed edge; keep ≤3 nodes per diagram.\n- flowchart: ≤5 nodes and ≤6 edges; short labels (≤12 chars); use for DP recurrence and EM E/M loop separately (not both stacked in center).\n- matrix-block: ≤4 data rows; keep table in center or right-half only after erasing prior center draws.\n- Split concurrent visuals across regions (e.g., bayes-net in left-half, matrix-block in right-half) instead of two draws both in center without erase between.\n- Narration must not say \"arrows\" unless bayes-net edges are directed parent→child in templateParams.\n- Define jargon on first use (posterior, DAG, ELBO, r mask vector, Bellman) in the beat that introduces the symbol.\n- Align beat atSec with board.at within ±2s; last beat ≤ durationSeconds−8; last board action ≤ durationSeconds−3.",
+  "architecture": "baseline",
+  "variantModule": "lib/education/loop/prompts/v5-templates.ts",
+  "variantExport": "WHITEBOARD_V5_TEMPLATES",
+  "architecture": "templates",
+  "pendingStep": "done",
+  "lastLessonSweepId": "autonomous-2026-05-16-iter01-lesson",
+  "lastVideoSweepId": "autonomous-2026-05-16-iter01-video"
+}

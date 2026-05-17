@@ -1,0 +1,13 @@
+{
+  "runId": "autonomous-2026-05-16-templates",
+  "iteration": 1,
+  "promptRevision": "- t=0 MUST include write top-left payoff line (frames showed empty boards at t00).\n- Never place two templated draws in center without an erase of the first draw’s targetId between them; prefer left-half + right-half for back-to-back diagrams.\n- bayes-net: 2–3 nodes max; edges must list explicit from→to; narration must not claim “arrows” if only one edge—say “directed link” or add a second edge.\n- flowchart (EM/DP): cap at 5 nodes; node labels ≤10 characters; avoid long edge labels overlapping strokes—put detail in narration not on edges.\n- matrix-block: max 4 body rows; narrow columns; use after erasing prior center content.\n- eigenvectors-pca: flowchart at t=0 in center for pipeline; matrix Σ at t≥18 in center only after erase; do not skip t=0 diagram.\n- em-algorithm: bayes-net at t≤18 in left-half; EM cycle flowchart at t≥34 in right-half (not both centered/overlapping).\n- dropout: flowchart train path at t≤10; matrix train vs inference at t≥24 after erase; keep “r” label off connector lines (use node label only).\n- dynamic-programming: first flowchart shows fan-in overlap (multiple edges into one node), not a single chain; second flowchart is recurrence with DP[i-1], DP[i-2] → DP[i].\n- After erase at time T, no highlight may target erased content; highlights only on visible writes.\n- Keep durationSeconds 60–72; 4–5 beats; unique targetIds on all board actions.",
+  "architecture": "templates",
+  "variantModule": "lib/education/loop/prompts/v5-templates.ts",
+  "variantExport": "WHITEBOARD_V5_TEMPLATES",
+  "pendingStep": "video-critic-generate",
+  "lastLessonSweepId": "autonomous-2026-05-16-templates-iter02-lesson",
+  "lastVideoSweepId": "autonomous-2026-05-16-templates-iter02-video",
+  "currentLessonSweepId": "autonomous-2026-05-16-templates-iter02-lesson",
+  "currentVideoSweepId": "autonomous-2026-05-16-templates-iter02-video"
+}
