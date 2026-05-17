@@ -1,5 +1,3 @@
-import { Agent, CursorAgentError } from "@cursor/sdk";
-
 export type CursorAgentResult = {
   text: string;
   runId: string;
@@ -22,6 +20,7 @@ export async function runCursorAgent(
   prompt: string,
   options: { model?: string; cwd?: string } = {},
 ): Promise<CursorAgentResult> {
+  const { Agent, CursorAgentError } = await import("@cursor/sdk");
   const apiKey = requireCursorApiKey();
   const model = options.model ?? process.env.CURSOR_AGENT_MODEL ?? "composer-2";
   const cwd = options.cwd ?? process.cwd();
