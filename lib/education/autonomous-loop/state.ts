@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { ArchitectureMode } from "../video-eval/manifest.ts";
 
@@ -9,8 +9,12 @@ export type LoopState = {
   architecture: ArchitectureMode;
   variantModule: string;
   variantExport: string;
+  /** Active iteration sweep ids (in-IDE mode). */
+  currentLessonSweepId?: string;
+  currentVideoSweepId?: string;
   lastLessonSweepId?: string;
   lastVideoSweepId?: string;
+  pendingStep?: string;
   stoppedReason?: string;
 };
 
@@ -30,6 +34,7 @@ export async function loadLoopState(runId: string): Promise<LoopState | null> {
 }
 
 export async function saveLoopState(state: LoopState): Promise<void> {
+  await mkdir(STATE_DIR, { recursive: true });
   await writeFile(statePath(state.runId), `${JSON.stringify(state, null, 2)}\n`, "utf8");
 }
 
