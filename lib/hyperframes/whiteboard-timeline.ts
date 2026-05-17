@@ -38,13 +38,17 @@ export function renderWhiteboardTimeline(
         overlay.style.height = (rect.height + 12) + 'px';
       }
 
-      function transformTarget(targetSel, newContent) {
+      function transformTarget(targetSel, newContent, transformHtml) {
         var elements = document.querySelectorAll(targetSel + ':not(.kind-highlight):not(.kind-transform):not(.kind-erase)');
         var target = elements.length > 0 ? elements[elements.length - 1] : null;
         if (!target) return;
         var inner = target.querySelector('.write-content, .draw-description');
         if (inner) {
-          inner.textContent = newContent;
+          if (transformHtml && inner.classList.contains('write-equation')) {
+            inner.innerHTML = transformHtml;
+          } else {
+            inner.textContent = newContent;
+          }
         } else {
           target.textContent = newContent;
         }
@@ -96,8 +100,9 @@ function renderActionOp(
     case "transform": {
       const targetSel = `[data-action-id="${action.targetId}"]`;
       const literal = JSON.stringify(action.content);
+      const transformOpSel = `[data-action-index="${index}"]`;
       return [
-        `tl.call(function () { transformTarget('${targetSel}', ${literal}); }, [], ${at});`,
+        `tl.call(function () { var op = document.querySelector('${transformOpSel}'); var html = op ? op.getAttribute('data-transform-html') : null; transformTarget('${targetSel}', ${literal}, html); }, [], ${at});`,
         `tl.fromTo('${targetSel} > *', { backgroundColor: 'rgba(255,224,102,0.6)' }, { backgroundColor: 'transparent', duration: 0.6 }, ${at});`,
       ].join("\n        ");
     }

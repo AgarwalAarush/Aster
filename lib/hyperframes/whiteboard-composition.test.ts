@@ -116,4 +116,41 @@ describe("generateWhiteboardHtml", () => {
     const html = generateWhiteboardHtml(makeLesson(), "Why?");
     expect(html).toContain("positionHighlight(");
   });
+
+  it("emits layout chrome when board.layout is set", () => {
+    const base = makeLesson();
+    const lesson = makeLesson({
+      board: {
+        layout: { id: "split-vertical", ratio: "50-50", divider: true },
+        actions: base.board.actions,
+      },
+    });
+    const html = generateWhiteboardHtml(lesson, "Why?");
+    expect(html).toContain("board-layout-chrome");
+    expect(html).toContain("layout-divider");
+  });
+
+  it("renders katex for equation writeStyle", () => {
+    const lesson = makeLesson({
+      board: {
+        actions: [
+          {
+            at: 0,
+            kind: "write",
+            targetId: "eq",
+            content: "E = mc^2",
+            region: "center",
+            writeStyle: "equation",
+          },
+          { at: 10, kind: "write", targetId: "p2", content: ".", region: "center" },
+          { at: 11, kind: "write", targetId: "p3", content: ".", region: "center" },
+          { at: 12, kind: "write", targetId: "p4", content: ".", region: "center" },
+          { at: 13, kind: "write", targetId: "p5", content: ".", region: "center" },
+        ],
+      },
+    });
+    const html = generateWhiteboardHtml(lesson, "Why?");
+    expect(html).toContain("katex");
+    expect(html).toContain("write-equation");
+  });
 });

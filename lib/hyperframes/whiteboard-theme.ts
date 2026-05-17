@@ -71,11 +71,35 @@ export function renderWhiteboardTheme(): string {
       overflow: hidden;
     }
 
+    .board-layout-chrome {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .layout-pane {
+      position: absolute;
+      box-sizing: border-box;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.35);
+      border: 1px solid var(--rule);
+    }
+
+    .layout-divider {
+      position: absolute;
+      width: 2px;
+      background: var(--rule);
+      transform: translateX(-1px);
+      z-index: 1;
+    }
+
     .board-item {
       position: absolute;
       opacity: 0;
       padding: 12px 18px;
       box-sizing: border-box;
+      z-index: 2;
     }
 
     .board-item.kind-write {
@@ -94,6 +118,21 @@ export function renderWhiteboardTheme(): string {
       white-space: pre-wrap;
     }
 
+    .write-content.write-header {
+      font-size: 52px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .write-content.write-equation {
+      white-space: normal;
+    }
+
+    .write-content.write-equation .katex {
+      font-size: 1.05em;
+    }
+
     .draw-content {
       border: 2px dashed rgba(0, 0, 0, 0.4);
       background: var(--paper-tint);
@@ -102,6 +141,86 @@ export function renderWhiteboardTheme(): string {
       display: flex;
       flex-direction: column;
       gap: 10px;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .draw-content:has(.matrix-grid),
+    .draw-content:has(.matrix-block),
+    .draw-content:has(.matrix-math-grid),
+    .draw-content:has(.attention-mask) {
+      border: none;
+      background: transparent;
+      padding: 8px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .draw-template {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .matrix-grid-wrap {
+      overflow: auto;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .matrix-grid-table {
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .matrix-grid-table .matrix-cell {
+      border: 1px solid rgba(26, 26, 26, 0.45);
+      text-align: center;
+      vertical-align: middle;
+      padding: 2px 4px;
+      color: var(--ink);
+      box-sizing: border-box;
+    }
+
+    .matrix-scale-md .matrix-cell {
+      min-width: 36px;
+      min-height: 32px;
+      font-size: 15px;
+    }
+
+    .matrix-scale-lg .matrix-cell {
+      min-width: 28px;
+      min-height: 26px;
+      font-size: 13px;
+    }
+
+    .matrix-scale-xl .matrix-cell {
+      width: 14px;
+      height: 14px;
+      min-width: 14px;
+      min-height: 14px;
+      padding: 0;
+      font-size: 0;
+      line-height: 0;
+    }
+
+    .matrix-caption {
+      margin: 10px 0 0;
+      font-size: 18px;
+      color: var(--ink-muted);
+      text-align: center;
+    }
+
+    .attention-mask .matrix-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-align: center;
     }
 
     .draw-tag {

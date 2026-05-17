@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { regionToBox, regionToCssInline } from "./regions.ts";
+import type { BoardLayout } from "./layouts/types.ts";
 
 describe("regionToBox", () => {
   it("returns a centered fallback when region is undefined", () => {
@@ -40,5 +41,14 @@ describe("regionToCssInline", () => {
 
   it("produces fallback CSS for an unknown region", () => {
     expect(regionToCssInline("???")).toBe("top: 5%; left: 5%; width: 90%; height: 90%;");
+  });
+
+  it("maps pane regions for split layout", () => {
+    const layout: BoardLayout = { id: "split-vertical", ratio: "33-67" };
+    const left = regionToBox("pane:left", { layout });
+    expect(left.left).toBe("4%");
+    expect(left.width).toContain("33.333%");
+    const right = regionToBox("pane:right", { layout });
+    expect(right.left).toBe("33.333%");
   });
 });

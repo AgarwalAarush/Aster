@@ -1,5 +1,5 @@
 import type { PromptVariant, Subject } from "../schema.ts";
-import { TEMPLATE_IDS } from "../../../hyperframes/templates/registry.ts";
+import { TEMPLATE_IDS } from "../../../hyperframes/templates/ids.ts";
 
 const SYSTEM_PROMPT = `You are an expert lecturer planning a ~60 second whiteboard video using FIXED diagram templates. Output JSON only.
 

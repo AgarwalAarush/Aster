@@ -32,12 +32,21 @@ export const boardActionKindSchema = z.enum([
   "erase",
 ]);
 
+export const writeStyleSchema = z.enum(["body", "header", "equation"]);
+
+export const boardLayoutSchema = z.object({
+  id: z.enum(["full", "split-vertical"]),
+  ratio: z.enum(["50-50", "33-67"]).optional(),
+  divider: z.boolean().optional(),
+});
+
 const boardActionSchema = z.object({
   at: z.number().min(0).max(360),
   kind: boardActionKindSchema,
   targetId: z.string().trim().min(1).max(80).regex(/^[A-Za-z0-9][A-Za-z0-9_-]*$/),
   content: z.string().trim().min(1).max(1200),
   region: z.string().trim().min(1).max(80).optional(),
+  writeStyle: writeStyleSchema.optional(),
   templateId: z.string().trim().min(1).max(80).optional(),
   templateParams: z.record(z.string(), z.unknown()).optional(),
 });
@@ -84,6 +93,7 @@ export const lectureLessonSchema = z.object({
     beats: z.array(narrationBeatSchema).min(3).max(40),
   }),
   board: z.object({
+    layout: boardLayoutSchema.optional(),
     actions: z.array(boardActionSchema).min(5).max(150),
   }),
   codeBlocks: z.array(codeBlockSchema).max(20).optional(),
@@ -93,6 +103,8 @@ export type Subject = z.infer<typeof subjectSchema>;
 export type PromptVariant = z.infer<typeof promptVariantSchema>;
 export type LectureLesson = z.infer<typeof lectureLessonSchema>;
 export type BoardAction = z.infer<typeof boardActionSchema>;
+export type BoardLayoutConfig = z.infer<typeof boardLayoutSchema>;
+export type WriteStyle = z.infer<typeof writeStyleSchema>;
 export type NarrationBeat = z.infer<typeof narrationBeatSchema>;
 
 export function parseLectureLesson(value: unknown): LectureLesson {
